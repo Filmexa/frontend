@@ -4,18 +4,15 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
-  selector: 'app-reset-password',
+  selector: 'app-verify-account',
   imports: [ReactiveFormsModule, RouterLink],
-  templateUrl: './reset-password.component.html',
-  styleUrl: './reset-password.component.css'
+  templateUrl: './verify-account.component.html',
+  styleUrl: './verify-account.component.css'
 })
-export class ResetPasswordComponent implements OnInit {
+export class VerifyAccountComponent implements OnInit {
   form: FormGroup;
   errorMessage = '';
   isSubmitting: boolean = false;
-  submitted: boolean = false;
-  showPassword: boolean = false;
-
 
   isResending: boolean = false;
   resendMessage = '';
@@ -29,7 +26,6 @@ export class ResetPasswordComponent implements OnInit {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
       code: ['', [Validators.required]],
-      newPassword: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/)]],
     });
   }
 
@@ -49,17 +45,14 @@ export class ResetPasswordComponent implements OnInit {
     this.errorMessage = '';
     this.isSubmitting = true;
 
-    this.authService.resetPassword(this.form.value).subscribe({
+    this.authService.verify(this.form.value).subscribe({
       next: () => {
         this.isSubmitting = false;
-        this.submitted = true;
         this.router.navigate(['/login']);
       },
       error: (err) => {
         this.isSubmitting = false;
-        this.errorMessage = typeof err?.error === 'string' && err.error
-          ? err.error
-          : 'Could not reset password. Check your code and try again.';
+        this.errorMessage = err?.error?.message ?? 'Could not verify your account. Check your code and try again.';
       },
     });
   }
@@ -71,10 +64,11 @@ export class ResetPasswordComponent implements OnInit {
       return;
     }
 
+    this.errorMessage = '';
     this.resendMessage = '';
     this.isResending = true;
 
-    this.authService.resendPasswordReset({ email }).subscribe({
+    this.authService.resendVerification({ email }).subscribe({
       next: () => {
         this.isResending = false;
         this.resendMessage = 'A new code has been sent to your email.';

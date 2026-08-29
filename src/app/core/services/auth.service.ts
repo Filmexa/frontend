@@ -7,6 +7,7 @@ import { AuthResponse } from '../interfaces/AuthResponse';
 import { RegisterRequest } from '../interfaces/RegisterRequest';
 import { ForgotPasswordRequest } from '../interfaces/ForgotPasswordRequest';
 import { ResetPasswordRequest } from '../interfaces/ResetPasswordRequest';
+import { VerifyEmailRequest } from '../interfaces/VerifyEmailRequest';
 
 
 @Injectable({
@@ -40,8 +41,16 @@ export class AuthService {
     );
   }
 
-  signup(request: RegisterRequest): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/register`, request);
+  signup(request: RegisterRequest): Observable<string> {
+    return this.http.post(`${this.apiUrl}/register`, request, { responseType: 'text' });
+  }
+
+  verify(request: VerifyEmailRequest): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/verify`, request);
+  }
+
+  resendVerification(request: ForgotPasswordRequest): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/resend-verification`, request);
   }
 
   forgotPassword(request: ForgotPasswordRequest): Observable<void> {
@@ -52,8 +61,8 @@ export class AuthService {
     return this.http.post<void>(`${this.apiUrl}/resend-password-reset`, request);
   }
 
-  resetPassword(request: ResetPasswordRequest): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/reset-password`, request);
+  resetPassword(request: ResetPasswordRequest): Observable<string> {
+    return this.http.post(`${this.apiUrl}/reset-password`, request, { responseType: 'text' });
   }
 
   logout(): void {

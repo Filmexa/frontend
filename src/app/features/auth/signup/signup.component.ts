@@ -41,11 +41,13 @@ export class SignupComponent {
     this.authService.signup(this.form.value).subscribe({
       next: () => {
         this.isSubmitting = false;
-        this.router.navigate(['/login']);
+        this.router.navigate(['/verify-account'], { queryParams: { email: this.form.value.email } });
       },
       error: (err) => {
         this.isSubmitting = false;
-        this.errorMessage = err?.error?.message ?? 'Could not create account.';
+        this.errorMessage = typeof err?.error === 'string' && err.error
+          ? err.error
+          : 'Could not create account.';
       },
     });
   }
