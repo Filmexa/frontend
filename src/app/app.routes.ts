@@ -6,6 +6,7 @@ import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-
 import { ResetPasswordComponent } from './features/auth/reset-password/reset-password.component';
 import { VerifyAccountComponent } from './features/auth/verify-account/verify-account.component';
 import { AuthCallbackComponent } from './features/auth/auth-callback/auth-callback.component';
+import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -16,4 +17,5 @@ export const routes: Routes = [
   { path: 'verify-account', component: VerifyAccountComponent },
   { path: 'auth/google/callback', component: AuthCallbackComponent, data: { provider: 'google' } },
   { path: 'auth/42/callback', component: AuthCallbackComponent, data: { provider: 'intra' } },
+  { path: '**', component: NotFoundComponent },
 ];
