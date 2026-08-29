@@ -4,7 +4,7 @@ import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoginRequest } from '../interfaces/LoginRequest';
 import { AuthResponse } from '../interfaces/AuthResponse';
-import { SignupRequest } from '../interfaces/SignupRequest';
+import { RegisterRequest } from '../interfaces/RegisterRequest';
 import { ForgotPasswordRequest } from '../interfaces/ForgotPasswordRequest';
 import { ResetPasswordRequest } from '../interfaces/ResetPasswordRequest';
 
@@ -40,13 +40,8 @@ export class AuthService {
     );
   }
 
-  signup(request: SignupRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/signup`, request).pipe(
-      tap((response) => {
-        this.accessToken = response.accessToken;
-        this.refreshToken = response.refreshToken;
-      }),
-    );
+  signup(request: RegisterRequest): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/register`, request);
   }
 
   forgotPassword(request: ForgotPasswordRequest): Observable<void> {
@@ -65,5 +60,39 @@ export class AuthService {
     this.accessToken = null;
     this.refreshToken = null;
     this.isLoggedIn.set(false);
+  }
+
+  loginWithGoogle(): void {
+    window.location.href = `${this.apiUrl}/google`;
+  }
+
+  loginWithIntra(): void {
+    window.location.href = `${this.apiUrl}/42`;
+  }
+
+  handleGoogleCallback(code: string, state: string): Observable<AuthResponse> {
+    return this.http.get<AuthResponse>(`${this.apiUrl}/google/callback`, {
+      params: { code, state },
+      withCredentials: true,
+    }).pipe(
+      tap((response) => {
+        this.accessToken = response.accessToken;
+        this.refreshToken = response.refreshToken;
+        this.isLoggedIn.set(true);
+      }),
+    );
+  }
+
+  handleIntraCallback(code: string, state: string): Observable<AuthResponse> {
+    return this.http.get<AuthResponse>(`${this.apiUrl}/42/callback`, {
+      params: { code, state },
+      withCredentials: true,
+    }).pipe(
+      tap((response) => {
+        this.accessToken = response.accessToken;
+        this.refreshToken = response.refreshToken;
+        this.isLoggedIn.set(true);
+      }),
+    );
   }
 }
