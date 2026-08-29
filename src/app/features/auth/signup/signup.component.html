@@ -4,7 +4,31 @@
     [formGroup]="form"
     (ngSubmit)="onSubmit()"
   >
-    <h1 class="text-2xl font-bold mb-4">Sign Up</h1>
+    <h1 class="text-2xl font-bold mb-4 text-center">Sign Up</h1>
+
+    <button
+      type="button"
+      (click)="signupWithGoogle()"
+      class="flex items-center justify-center gap-2 rounded bg-neutral-800 hover:bg-neutral-700 py-2.5 font-semibold cursor-pointer transition-colors"
+    >
+      <img src="assets/google-logo.svg" alt="Google logo" class="w-5 h-5" />
+      Sign up with Google
+    </button>
+
+    <button
+      type="button"
+      (click)="signupWithIntra()"
+      class="flex items-center justify-center gap-2 rounded bg-neutral-800 hover:bg-neutral-700 py-2.5 font-semibold cursor-pointer transition-colors"
+    >
+      <img src="assets/intra-logo.svg" alt="Intra logo" class="w-5 h-5" />
+      Sign up with Intra
+    </button>
+
+    <div class="flex items-center my-4">
+      <hr class="flex-grow border-neutral-700" />
+      <span class="mx-2 text-sm text-neutral-400">or</span>
+      <hr class="flex-grow border-neutral-700" />
+    </div>
 
     <label for="username" class="text-sm mt-2">Username</label>
     <input
@@ -16,6 +40,33 @@
     />
     @if (form.controls['username'].invalid && form.controls['username'].touched) {
       <span class="text-red-400 text-xs">Username must be at least 3 characters.</span>
+    }
+
+    <div class="grid grid-cols-2 gap-2 mt-2">
+      <div class="flex flex-col">
+        <label for="firstName" class="text-sm">First name</label>
+        <input
+          id="firstName"
+          type="text"
+          formControlName="firstName"
+          autocomplete="given-name"
+          class="rounded border border-neutral-700 bg-neutral-800 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
+        />
+      </div>
+
+      <div class="flex flex-col">
+        <label for="lastName" class="text-sm">Last name</label>
+        <input
+          id="lastName"
+          type="text"
+          formControlName="lastName"
+          autocomplete="family-name"
+          class="rounded border border-neutral-700 bg-neutral-800 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
+        />
+      </div>
+    </div>
+    @if ((form.controls['firstName'].invalid && form.controls['firstName'].touched) || (form.controls['lastName'].invalid && form.controls['lastName'].touched)) {
+      <span class="text-red-400 text-xs">First and last name are required.</span>
     }
 
     <label for="email" class="text-sm mt-2">Email</label>
@@ -31,13 +82,28 @@
     }
 
     <label for="password" class="text-sm mt-2">Password</label>
-    <input
-      id="password"
-      type="password"
-      formControlName="password"
-      autocomplete="new-password"
-      class="rounded border border-neutral-700 bg-neutral-800 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-    />
+    <div class="relative">
+      <input
+        id="password"
+        [type]="showPassword ? 'text' : 'password'"
+        formControlName="password"
+        autocomplete="new-password"
+        class="w-full rounded border border-neutral-700 bg-neutral-800 px-3 py-2.5 pr-10 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
+      />
+      <button
+        type="button"
+        (click)="showPassword = !showPassword"
+        class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white "
+        [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+      >
+      @if (showPassword) {
+        <img src="assets/eye-slash.svg" alt="Hide password" class="h-5 w-5" />
+      } @else {
+        <img src="assets/eye.svg" alt="Show password" class="h-5 w-5" />
+      }
+      </button>
+    </div>
+
     @if (form.controls['password'].invalid && form.controls['password'].touched) {
       <span class="text-red-400 text-xs">Password must be at least 6 characters.</span>
     }
@@ -56,7 +122,7 @@
 
     <p class="mt-4 text-sm text-center">
       Already have an account?
-      <a routerLink="/login" class="text-red-500 hover:underline">Login</a>
+      <a routerLink="/login" class="text-red-500 hover:underline">Sign in</a>
     </p>
   </form>
 </div>

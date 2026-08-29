@@ -48,11 +48,11 @@ export class LoginComponent {
   }
 
   loginWithGoogle(): void {
-    // Implement Google login logic here
+    this.authService.loginWithGoogle();
   }
 
   loginWithIntra(): void {
-    // Implement Intra login logic here
+    this.authService.loginWithIntra();
   }
 
 }

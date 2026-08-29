@@ -12,7 +12,8 @@ import { AuthService } from '../../../core/services/auth.service';
 export class SignupComponent {
   form: FormGroup;
   errorMessage = '';
-  isSubmitting = false;
+  isSubmitting: boolean = false;
+  showPassword: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -21,6 +22,8 @@ export class SignupComponent {
   ) {
     this.form = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
@@ -45,5 +48,13 @@ export class SignupComponent {
         this.errorMessage = err?.error?.message ?? 'Could not create account.';
       },
     });
+  }
+
+  signupWithGoogle(): void {
+    this.authService.loginWithGoogle();
+  }
+
+  signupWithIntra(): void {
+    this.authService.loginWithIntra();
   }
 }

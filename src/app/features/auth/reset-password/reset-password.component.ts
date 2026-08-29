@@ -12,10 +12,12 @@ import { AuthService } from '../../../core/services/auth.service';
 export class ResetPasswordComponent implements OnInit {
   form: FormGroup;
   errorMessage = '';
-  isSubmitting = false;
-  submitted = false;
+  isSubmitting: boolean = false;
+  submitted: boolean = false;
+  showPassword: boolean = false;
 
-  isResending = false;
+
+  isResending: boolean = false;
   resendMessage = '';
 
   constructor(
