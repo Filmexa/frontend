@@ -5,6 +5,8 @@ import { environment } from '../../../environments/environment';
 import { LoginRequest } from '../interfaces/LoginRequest';
 import { AuthResponse } from '../interfaces/AuthResponse';
 import { SignupRequest } from '../interfaces/SignupRequest';
+import { ForgotPasswordRequest } from '../interfaces/ForgotPasswordRequest';
+import { ResetPasswordRequest } from '../interfaces/ResetPasswordRequest';
 
 
 @Injectable({
@@ -45,6 +47,18 @@ export class AuthService {
         this.refreshToken = response.refreshToken;
       }),
     );
+  }
+
+  forgotPassword(request: ForgotPasswordRequest): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/forgot-password`, request);
+  }
+
+  resendPasswordReset(request: ForgotPasswordRequest): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/resend-password-reset`, request);
+  }
+
+  resetPassword(request: ResetPasswordRequest): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/reset-password`, request);
   }
 
   logout(): void {

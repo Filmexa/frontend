@@ -4,7 +4,7 @@
     [formGroup]="form"
     (ngSubmit)="onSubmit()"
   >
-    <h1 class="text-2xl font-bold mb-4">Login</h1>
+    <h1 class="text-2xl font-bold mb-4 text-center">Sign in to Filmexa</h1>
 
     <label for="username" class="text-sm mt-2">Username</label>
     <input
@@ -20,7 +20,7 @@
 
     <div class="flex items-baseline justify-between mt-2">
       <label for="password" class="text-sm mt-2">Password</label>
-      <a routerLink="/reset-password" class="text-sm text-red-500 hover:underline ">Forgot your password?</a>
+      <a routerLink="/forgot-password" class="text-sm text-red-500 hover:underline ">Forgot your password?</a>
     </div>
 
     <div class="relative">
@@ -35,7 +35,7 @@
       <button
         type="button"
         (click)="showPassword = !showPassword"
-        class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white"
+        class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white "
         [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
       >
       @if (showPassword) {
