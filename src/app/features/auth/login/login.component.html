@@ -1,0 +1,95 @@
+<div class="flex items-center justify-center min-h-[80vh] p-4">
+  <form
+    class="flex flex-col gap-2 w-full max-w-sm rounded-lg bg-neutral-900 text-white p-8"
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+  >
+    <h1 class="text-2xl font-bold mb-4">Login</h1>
+
+    <label for="username" class="text-sm mt-2">Username</label>
+    <input
+      id="username"
+      type="username"
+      formControlName="username"
+      autocomplete="username"
+      class="rounded border border-neutral-700 bg-neutral-800 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
+    />
+    @if (form.controls['username'].invalid && form.controls['username'].touched) {
+      <span class="text-red-400 text-xs">Enter a valid username.</span>
+    }
+
+    <div class="flex items-baseline justify-between mt-2">
+      <label for="password" class="text-sm mt-2">Password</label>
+      <a routerLink="/reset-password" class="text-sm text-red-500 hover:underline ">Forgot your password?</a>
+    </div>
+
+    <div class="relative">
+      <input
+        id="password"
+        [type]="showPassword ? 'text' : 'password'"
+        formControlName="password"
+        autocomplete="current-password"
+        class="w-full rounded border border-neutral-700 bg-neutral-800 px-3 py-2.5 pr-10 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
+      />
+
+      <button
+        type="button"
+        (click)="showPassword = !showPassword"
+        class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white"
+        [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+      >
+      @if (showPassword) {
+        <img src="assets/eye-slash.svg" alt="Hide password" class="h-5 w-5" />
+      } @else {
+        <img src="assets/eye.svg" alt="Show password" class="h-5 w-5" />
+      }
+      </button>
+    </div>
+
+
+    @if (form.controls['password'].invalid && form.controls['password'].touched) {
+      <span class="text-red-400 text-xs">Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number, and a special character.</span>
+    }
+
+    @if (errorMessage) {
+      <p class="text-red-400 text-sm mt-2">{{ errorMessage }}</p>
+    }
+
+    <button
+      type="submit"
+      [disabled]="isSubmitting"
+      class="mt-4 rounded bg-red-600 hover:bg-red-500 disabled:opacity-60 disabled:cursor-not-allowed py-2.5 font-semibold cursor-pointer transition-colors"
+    >
+      {{ isSubmitting ? 'Logging in...' : 'Login' }}
+    </button>
+
+    <div class="flex items-center my-4">
+      <hr class="flex-grow border-neutral-700" />
+      <span class="mx-2 text-sm text-neutral-400">or</span>
+      <hr class="flex-grow border-neutral-700" />
+    </div>
+
+    <button
+      type="button"
+      (click)="loginWithGoogle()"
+      class="flex items-center justify-center gap-2 rounded bg-neutral-800 hover:bg-neutral-700 py-2.5 font-semibold cursor-pointer transition-colors"
+    >
+      <img src="assets/google-logo.svg" alt="Google logo" class="w-5 h-5" />
+      Login with Google
+    </button>
+
+    <button
+      type="button"
+      (click)="loginWithIntra()"
+      class="flex items-center justify-center gap-2 rounded bg-neutral-800 hover:bg-neutral-700 py-2.5 font-semibold cursor-pointer transition-colors"
+    >
+      <img src="assets/intra-logo.svg" alt="Intra logo" class="w-5 h-5" />
+      Login with Intra
+    </button>
+
+    <p class="mt-4 text-sm text-center">
+      New to Filmexa?
+      <a routerLink="/signup" class="text-red-500 hover:underline">Create an account</a>
+    </p>
+  </form>
+</div>
