@@ -1,14 +1,37 @@
 <header class="flex items-center justify-between px-8 py-4 bg-neutral-900 text-white">
   <div class="text-2xl font-bold">Filmexa</div>
 
-  <nav class="flex items-center gap-4">
+  <nav class="flex items-center gap-6 text-sm font-medium text-neutral-200">
+    <a routerLink="/home" class="hover:text-white transition-colors">Home</a>
+    <a routerLink="/movies" class="hover:text-white transition-colors">Movies</a>
+    <a routerLink="/my-list" class="hover:text-white transition-colors">My List</a>
+  </nav>
+
+  <div class="flex items-center gap-4">
     @if (authService.isLoggedIn()) {
+      <a routerLink="/profile" title="Profile" class="p-2 rounded hover:bg-neutral-800 transition-colors">
+        <img src="/assets/user-profile.svg" alt="Profile" class="h-5 w-5 brightness-0 invert" />
+
+      </a>
+
+      <div class="flex items-center gap-2">
+        <div class="h-8 w-8 rounded-full bg-red-600 flex items-center justify-center text-sm font-semibold uppercase overflow-hidden">
+          @if (userService.avatarUrl()) {
+            <img [src]="userService.avatarUrl()" alt="Profile picture" class="h-full w-full object-cover" />
+          } @else {
+            {{ userService.profile()?.username?.charAt(0) }}
+          }
+        </div>
+        <span class="text-sm font-medium">{{ userService.profile()?.username }}</span>
+      </div>
+
       <button
         type="button"
         (click)="onLogout()"
-        class="rounded px-5 py-2 text-sm font-semibold bg-red-600 hover:bg-red-500 transition-colors cursor-pointer"
+        title="Logout"
+        class="p-2 rounded hover:bg-neutral-800 transition-colors cursor-pointer"
       >
-        Logout
+        <img src="/assets/logout.svg" alt="Logout" class="h-5 w-5 brightness-0 invert" />
       </button>
     } @else {
       <button
@@ -19,5 +42,5 @@
         Login
       </button>
     }
-  </nav>
+  </div>
 </header>

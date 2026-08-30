@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { UserService } from '../../../core/services/user/user.service';
 import { ErrorResponse } from '../../../shared/interfaces/ErrorResponse';
 
 @Component({
@@ -19,6 +20,7 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private userService: UserService,
     private router: Router,
   ) {
     this.form = this.fb.group({
@@ -39,6 +41,7 @@ export class LoginComponent {
     this.authService.login(this.form.value).subscribe({
       next: () => {
         this.isSubmitting = false;
+        this.userService.loadCurrentUser();
         this.router.navigate(['/']);
       },
       error: (err: ErrorResponse) => {

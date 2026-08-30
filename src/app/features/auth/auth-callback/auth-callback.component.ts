@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { UserService } from '../../../core/services/user/user.service';
 import { ErrorResponse } from '../../../shared/interfaces/ErrorResponse';
 
 @Component({
@@ -19,6 +20,7 @@ export class AuthCallbackComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
+    private userService: UserService,
   ) { }
 
   ngOnInit(): void {
@@ -40,7 +42,10 @@ export class AuthCallbackComponent implements OnInit, OnDestroy {
       : this.authService.handleIntraCallback(code, state);
 
     callback$.subscribe({
-      next: () => this.router.navigate(['/']),
+      next: () => {
+        this.userService.loadCurrentUser();
+        this.router.navigate(['/']);
+      },
       error: (err: ErrorResponse) => {
         this.errorMessage = err.message ?? `${provider} login failed.`;
         setTimeout(() => this.router.navigate(['/login']), 2000);

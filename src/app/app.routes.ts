@@ -6,10 +6,13 @@ import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-
 import { ResetPasswordComponent } from './features/auth/reset-password/reset-password.component';
 import { VerifyAccountComponent } from './features/auth/verify-account/verify-account.component';
 import { AuthCallbackComponent } from './features/auth/auth-callback/auth-callback.component';
+import { ProfileComponent } from './features/profile/profile.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'home', component: HomeComponent },
+  { path: 'profile', component: ProfileComponent },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
