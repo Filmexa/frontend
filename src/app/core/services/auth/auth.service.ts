@@ -17,7 +17,6 @@ export class AuthService {
   private readonly apiUrl = `${environment.apiUrl}/auth`;
 
   private accessToken: string | null = null;
-  private refreshToken: string | null = null;
 
   readonly isLoggedIn = signal(false);
 
@@ -27,16 +26,18 @@ export class AuthService {
     return this.accessToken;
   }
 
-  getRefreshToken(): string | null {
-    return this.refreshToken;
+  login(request: LoginRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, request, { withCredentials: true }).pipe(
+      tap((response) => this.setSession(response)),
+    );
   }
 
-  login(request: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, request).pipe(
-      tap((response) => {
-        this.accessToken = response.accessToken;
-        this.refreshToken = response.refreshToken;
-        this.isLoggedIn.set(true);
+  restoreSession(): Observable<AuthResponse | null> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/refresh`, {}, { withCredentials: true }).pipe(
+      tap((response) => this.setSession(response)),
+      catchError(() => {
+        this.clearSession();
+        return of(null);
       }),
     );
   }
@@ -46,7 +47,7 @@ export class AuthService {
       ? new HttpHeaders({ Authorization: `Bearer ${this.accessToken}` })
       : undefined;
 
-    return this.http.post<void>(`${this.apiUrl}/logout`, {}, { headers }).pipe(
+    return this.http.post<void>(`${this.apiUrl}/logout`, {}, { headers, withCredentials: true }).pipe(
       tap(() => this.clearSession()),
       catchError(() => {
         this.clearSession();
@@ -55,9 +56,13 @@ export class AuthService {
     );
   }
 
+  private setSession(response: AuthResponse): void {
+    this.accessToken = response.accessToken;
+    this.isLoggedIn.set(true);
+  }
+
   private clearSession(): void {
     this.accessToken = null;
-    this.refreshToken = null;
     this.isLoggedIn.set(false);
   }
 
@@ -98,11 +103,7 @@ export class AuthService {
       params: { code, state },
       withCredentials: true,
     }).pipe(
-      tap((response) => {
-        this.accessToken = response.accessToken;
-        this.refreshToken = response.refreshToken;
-        this.isLoggedIn.set(true);
-      }),
+      tap((response) => this.setSession(response)),
     );
   }
 
@@ -111,11 +112,7 @@ export class AuthService {
       params: { code, state },
       withCredentials: true,
     }).pipe(
-      tap((response) => {
-        this.accessToken = response.accessToken;
-        this.refreshToken = response.refreshToken;
-        this.isLoggedIn.set(true);
-      }),
+      tap((response) => this.setSession(response)),
     );
   }
 }
