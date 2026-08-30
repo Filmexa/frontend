@@ -1,13 +1,13 @@
 import { Injectable, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { LoginRequest } from '../interfaces/LoginRequest';
-import { AuthResponse } from '../interfaces/AuthResponse';
-import { RegisterRequest } from '../interfaces/RegisterRequest';
-import { ForgotPasswordRequest } from '../interfaces/ForgotPasswordRequest';
-import { ResetPasswordRequest } from '../interfaces/ResetPasswordRequest';
-import { VerifyEmailRequest } from '../interfaces/VerifyEmailRequest';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, tap, catchError, of } from 'rxjs';
+import { environment } from '../../../../environments/environment';
+import { LoginRequest } from '../../interfaces/auth/LoginRequest';
+import { AuthResponse } from '../../interfaces/auth/AuthResponse';
+import { RegisterRequest } from '../../interfaces/auth/RegisterRequest';
+import { ForgotPasswordRequest } from '../../interfaces/auth/ForgotPasswordRequest';
+import { ResetPasswordRequest } from '../../interfaces/auth/ResetPasswordRequest';
+import { VerifyEmailRequest } from '../../interfaces/auth/VerifyEmailRequest';
 
 
 @Injectable({
@@ -41,6 +41,26 @@ export class AuthService {
     );
   }
 
+  logout(): Observable<void> {
+    const headers = this.accessToken
+      ? new HttpHeaders({ Authorization: `Bearer ${this.accessToken}` })
+      : undefined;
+
+    return this.http.post<void>(`${this.apiUrl}/logout`, {}, { headers }).pipe(
+      tap(() => this.clearSession()),
+      catchError(() => {
+        this.clearSession();
+        return of(void 0);
+      }),
+    );
+  }
+
+  private clearSession(): void {
+    this.accessToken = null;
+    this.refreshToken = null;
+    this.isLoggedIn.set(false);
+  }
+
   signup(request: RegisterRequest): Observable<string> {
     return this.http.post(`${this.apiUrl}/register`, request, { responseType: 'text' });
   }
@@ -63,12 +83,6 @@ export class AuthService {
 
   resetPassword(request: ResetPasswordRequest): Observable<string> {
     return this.http.post(`${this.apiUrl}/reset-password`, request, { responseType: 'text' });
-  }
-
-  logout(): void {
-    this.accessToken = null;
-    this.refreshToken = null;
-    this.isLoggedIn.set(false);
   }
 
   loginWithGoogle(): void {
