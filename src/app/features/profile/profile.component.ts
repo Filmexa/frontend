@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../core/services/user/user.service';
+import { AuthService } from '../../core/services/auth/auth.service';
 import { ErrorResponse } from '../../shared/interfaces/ErrorResponse';
 
 @Component({
@@ -14,23 +15,28 @@ export class ProfileComponent implements OnInit {
   languageForm: FormGroup;
   emailForm: FormGroup;
   confirmEmailForm: FormGroup;
+  passwordForm: FormGroup;
 
   isSubmittingProfile = false;
   isSubmittingLanguage = false;
   isSubmittingEmail = false;
   isSubmittingConfirmEmail = false;
   isUploadingAvatar = false;
+  isSubmittingPassword = false;
+  showPassword = false;
 
   profileMessage = '';
   languageMessage = '';
   emailMessage = '';
   confirmEmailMessage = '';
   avatarMessage = '';
+  passwordMessage = '';
 
   emailChangeRequested = false;
 
   constructor(
     protected userService: UserService,
+    private authService: AuthService,
     private fb: FormBuilder,
   ) {
     this.profileForm = this.fb.group({
@@ -49,6 +55,10 @@ export class ProfileComponent implements OnInit {
 
     this.confirmEmailForm = this.fb.group({
       code: ['', Validators.required],
+    });
+
+    this.passwordForm = this.fb.group({
+      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/)]],
     });
   }
 
@@ -150,6 +160,28 @@ export class ProfileComponent implements OnInit {
       error: (err: ErrorResponse) => {
         this.isSubmittingConfirmEmail = false;
         this.confirmEmailMessage = err.message ?? 'Failed to confirm email change.';
+      },
+    });
+  }
+
+  onSetPassword(): void {
+    if (this.passwordForm.invalid) {
+      this.passwordForm.markAllAsTouched();
+      return;
+    }
+
+    this.passwordMessage = '';
+    this.isSubmittingPassword = true;
+
+    this.authService.setPassword(this.passwordForm.value).subscribe({
+      next: () => {
+        this.isSubmittingPassword = false;
+        this.passwordMessage = 'Password set successfully. You can now log in with your username and password.';
+        this.passwordForm.reset();
+      },
+      error: (err: ErrorResponse) => {
+        this.isSubmittingPassword = false;
+        this.passwordMessage = err.message ?? 'Failed to set password.';
       },
     });
   }
