@@ -1,1 +1,27 @@
 @import "tailwindcss";
+
+.app-bg {
+  position: relative;
+  background:
+    radial-gradient(ellipse at top left, rgba(220, 38, 38, 0.45), transparent 55%),
+    radial-gradient(ellipse at bottom right, rgba(220, 38, 38, 0.45), transparent 55%),
+    radial-gradient(ellipse at top, rgba(31, 10, 10, 0.6), transparent 60%),
+    linear-gradient(180deg, #0a0a0a 0%, #141414 50%, #0a0a0a 100%);
+}
+
+.app-bg > *:not(router-outlet) {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+.app-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.025) 0px, transparent 1px, transparent 2px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0px, transparent 1px, transparent 2px);
+  pointer-events: none;
+}
