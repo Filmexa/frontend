@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../core/services/user/user.service';
 import { AuthService } from '../../core/services/auth/auth.service';
+import { LanguageService } from '../../core/services/language/language.service';
 import { ErrorResponse } from '../../shared/interfaces/ErrorResponse';
 
 @Component({
@@ -25,6 +26,9 @@ export class ProfileComponent implements OnInit {
   isSubmittingPassword = false;
   showPassword = false;
 
+  readonly showPasswordLabel = $localize`:@@login.showPassword:Show password`;
+  readonly hidePasswordLabel = $localize`:@@login.hidePassword:Hide password`;
+
   profileMessage = '';
   languageMessage = '';
   emailMessage = '';
@@ -37,6 +41,7 @@ export class ProfileComponent implements OnInit {
   constructor(
     protected userService: UserService,
     private authService: AuthService,
+    private languageService: LanguageService,
     private fb: FormBuilder,
   ) {
     this.profileForm = this.fb.group({
@@ -106,10 +111,13 @@ export class ProfileComponent implements OnInit {
     this.languageMessage = '';
     this.isSubmittingLanguage = true;
 
+    const preferredLanguage = this.languageForm.value.preferredLanguage;
+
     this.userService.changePreferredLanguage(this.languageForm.value).subscribe({
       next: () => {
         this.isSubmittingLanguage = false;
         this.languageMessage = 'Preferred language updated.';
+        this.languageService.redirectToPreferredLanguage(preferredLanguage);
       },
       error: (err: ErrorResponse) => {
         this.isSubmittingLanguage = false;

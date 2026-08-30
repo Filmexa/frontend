@@ -3,7 +3,7 @@
     <div class="flex items-center gap-6">
       <div class="h-24 w-24 rounded-full bg-red-600 flex items-center justify-center text-3xl font-semibold uppercase overflow-hidden shrink-0">
         @if (userService.avatarUrl()) {
-          <img [src]="userService.avatarUrl()" alt="Profile picture" class="h-full w-full object-cover" />
+          <img [src]="userService.avatarUrl()" alt="Profile picture" i18n-alt="@@profile.avatar" class="h-full w-full object-cover" />
         } @else {
           {{ profile.username.charAt(0) }}
         }
@@ -14,7 +14,11 @@
         <p class="text-neutral-400">{{ profile.firstName }} {{ profile.lastName }}</p>
 
         <label class="inline-block mt-3 text-sm font-medium text-red-500 hover:text-red-400 cursor-pointer">
-          {{ isUploadingAvatar ? 'Uploading...' : 'Change profile picture' }}
+          @if (isUploadingAvatar) {
+            <span i18n="@@profile.uploadingAvatar">Uploading...</span>
+          } @else {
+            <span i18n="@@profile.changeAvatar">Change profile picture</span>
+          }
           <input type="file" accept="image/*" class="hidden" (change)="onAvatarSelected($event)" [disabled]="isUploadingAvatar" />
         </label>
         @if (avatarMessage) {
@@ -25,36 +29,40 @@
 
     <dl class="mt-10 divide-y divide-neutral-800 border-t border-neutral-800">
       <div class="flex justify-between py-4">
-        <dt class="text-neutral-400">Username</dt>
+        <dt class="text-neutral-400" i18n="@@login.username">Username</dt>
         <dd class="font-medium">{{ profile.username }}</dd>
       </div>
       <div class="flex justify-between py-4">
-        <dt class="text-neutral-400">First name</dt>
+        <dt class="text-neutral-400" i18n="@@signup.firstName">First name</dt>
         <dd class="font-medium">{{ profile.firstName }}</dd>
       </div>
       <div class="flex justify-between py-4">
-        <dt class="text-neutral-400">Last name</dt>
+        <dt class="text-neutral-400" i18n="@@signup.lastName">Last name</dt>
         <dd class="font-medium">{{ profile.lastName }}</dd>
       </div>
     </dl>
 
     <section class="mt-12 border-t border-neutral-800 pt-8">
-      <h2 class="text-lg font-semibold mb-4">Edit profile</h2>
+      <h2 class="text-lg font-semibold mb-4" i18n="@@profile.editTitle">Edit profile</h2>
       <form [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()" class="space-y-4">
         <div>
-          <label class="block text-sm text-neutral-400 mb-1">First name</label>
+          <label class="block text-sm text-neutral-400 mb-1" i18n="@@signup.firstName">First name</label>
           <input type="text" formControlName="firstName" class="w-full rounded bg-neutral-800 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-red-600" />
         </div>
         <div>
-          <label class="block text-sm text-neutral-400 mb-1">Last name</label>
+          <label class="block text-sm text-neutral-400 mb-1" i18n="@@signup.lastName">Last name</label>
           <input type="text" formControlName="lastName" class="w-full rounded bg-neutral-800 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-red-600" />
         </div>
         <div>
-          <label class="block text-sm text-neutral-400 mb-1">Phone number</label>
+          <label class="block text-sm text-neutral-400 mb-1" i18n="@@profile.phoneNumber">Phone number</label>
           <input type="tel" formControlName="phoneNumber" class="w-full rounded bg-neutral-800 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-red-600" />
         </div>
         <button type="submit" [disabled]="isSubmittingProfile" class="rounded px-5 py-2 text-sm font-semibold bg-red-600 hover:bg-red-500 transition-colors cursor-pointer disabled:opacity-50">
-          {{ isSubmittingProfile ? 'Saving...' : 'Save changes' }}
+          @if (isSubmittingProfile) {
+            <span i18n="@@profile.saving">Saving...</span>
+          } @else {
+            <span i18n="@@profile.saveChanges">Save changes</span>
+          }
         </button>
         @if (profileMessage) {
           <p class="text-sm text-neutral-400">{{ profileMessage }}</p>
@@ -63,19 +71,23 @@
     </section>
 
     <section class="mt-12 border-t border-neutral-800 pt-8">
-      <h2 class="text-lg font-semibold mb-4">Preferred language</h2>
+      <h2 class="text-lg font-semibold mb-4" i18n="@@profile.languageTitle">Preferred language</h2>
       <form [formGroup]="languageForm" (ngSubmit)="onChangeLanguage()" class="space-y-4">
         <div>
-          <label class="block text-sm text-neutral-400 mb-1">Language</label>
+          <label class="block text-sm text-neutral-400 mb-1" i18n="@@profile.language">Language</label>
           <select formControlName="preferredLanguage" class="w-full rounded bg-neutral-800 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-red-600">
-            <option value="" disabled selected>Select a language</option>
-            <option value="ENGLISH">English</option>
-            <option value="FRENCH">French</option>
-            <option value="ARABIC">Arabic</option>
+            <option value="" disabled selected i18n="@@profile.selectLanguage">Select a language</option>
+            <option value="ENGLISH" i18n="@@profile.english">English</option>
+            <option value="FRENCH" i18n="@@profile.french">French</option>
+            <option value="ARABIC" i18n="@@profile.arabic">Arabic</option>
           </select>
         </div>
         <button type="submit" [disabled]="isSubmittingLanguage" class="rounded px-5 py-2 text-sm font-semibold bg-red-600 hover:bg-red-500 transition-colors cursor-pointer disabled:opacity-50">
-          {{ isSubmittingLanguage ? 'Saving...' : 'Save language' }}
+          @if (isSubmittingLanguage) {
+            <span i18n="@@profile.saving">Saving...</span>
+          } @else {
+            <span i18n="@@profile.saveLanguage">Save language</span>
+          }
         </button>
         @if (languageMessage) {
           <p class="text-sm text-neutral-400">{{ languageMessage }}</p>
@@ -84,13 +96,13 @@
     </section>
 
     <section class="mt-12 border-t border-neutral-800 pt-8">
-      <h2 class="text-lg font-semibold mb-4">Set a password</h2>
-      <p class="text-sm text-neutral-400 mb-4">
+      <h2 class="text-lg font-semibold mb-4" i18n="@@profile.passwordTitle">Set a password</h2>
+      <p class="text-sm text-neutral-400 mb-4" i18n="@@profile.passwordHint">
         Signed in with Google or Intra? Set a password to also log in with your username.
       </p>
       <form [formGroup]="passwordForm" (ngSubmit)="onSetPassword()" class="space-y-4">
         <div class="relative">
-          <label class="block text-sm text-neutral-400 mb-1">New password</label>
+          <label class="block text-sm text-neutral-400 mb-1" i18n="@@resetPassword.newPassword">New password</label>
           <input
             [type]="showPassword ? 'text' : 'password'"
             formControlName="password"
@@ -101,20 +113,24 @@
             type="button"
             (click)="showPassword = !showPassword"
             class="absolute right-3 top-9 -translate-y-1/2 text-neutral-400 hover:text-white"
-            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+            [attr.aria-label]="showPassword ? hidePasswordLabel : showPasswordLabel"
           >
             @if (showPassword) {
-              <img src="assets/eye-slash.svg" alt="Hide password" class="h-5 w-5" />
+              <img src="assets/eye-slash.svg" alt="Hide password" i18n-alt="@@login.hidePassword" class="h-5 w-5" />
             } @else {
-              <img src="assets/eye.svg" alt="Show password" class="h-5 w-5" />
+              <img src="assets/eye.svg" alt="Show password" i18n-alt="@@login.showPassword" class="h-5 w-5" />
             }
           </button>
           @if (passwordForm.controls['password'].invalid && passwordForm.controls['password'].touched) {
-            <span class="text-red-400 text-xs">Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number, and a special character.</span>
+            <span class="text-red-400 text-xs" i18n="@@login.passwordError">Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number, and a special character.</span>
           }
         </div>
         <button type="submit" [disabled]="isSubmittingPassword" class="rounded px-5 py-2 text-sm font-semibold bg-red-600 hover:bg-red-500 transition-colors cursor-pointer disabled:opacity-50">
-          {{ isSubmittingPassword ? 'Saving...' : 'Set password' }}
+          @if (isSubmittingPassword) {
+            <span i18n="@@profile.saving">Saving...</span>
+          } @else {
+            <span i18n="@@profile.setPassword">Set password</span>
+          }
         </button>
         @if (passwordMessage) {
           <p class="text-sm text-neutral-400">{{ passwordMessage }}</p>
@@ -123,16 +139,20 @@
     </section>
 
     <section class="mt-12 border-t border-neutral-800 pt-8 pb-4">
-      <h2 class="text-lg font-semibold mb-4">Change email</h2>
+      <h2 class="text-lg font-semibold mb-4" i18n="@@profile.emailTitle">Change email</h2>
 
       @if (!emailChangeRequested) {
         <form [formGroup]="emailForm" (ngSubmit)="onChangeEmail()" class="space-y-4">
           <div>
-            <label class="block text-sm text-neutral-400 mb-1">New email</label>
+            <label class="block text-sm text-neutral-400 mb-1" i18n="@@profile.newEmail">New email</label>
             <input type="email" formControlName="email" class="w-full rounded bg-neutral-800 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-red-600" />
           </div>
           <button type="submit" [disabled]="isSubmittingEmail" class="rounded px-5 py-2 text-sm font-semibold bg-red-600 hover:bg-red-500 transition-colors cursor-pointer disabled:opacity-50">
-            {{ isSubmittingEmail ? 'Sending...' : 'Send confirmation code' }}
+            @if (isSubmittingEmail) {
+              <span i18n="@@profile.sending">Sending...</span>
+            } @else {
+              <span i18n="@@profile.sendCode">Send confirmation code</span>
+            }
           </button>
           @if (emailMessage) {
             <p class="text-sm text-neutral-400">{{ emailMessage }}</p>
@@ -141,11 +161,15 @@
       } @else {
         <form [formGroup]="confirmEmailForm" (ngSubmit)="onConfirmEmailChange()" class="space-y-4">
           <div>
-            <label class="block text-sm text-neutral-400 mb-1">Confirmation code</label>
+            <label class="block text-sm text-neutral-400 mb-1" i18n="@@profile.confirmationCode">Confirmation code</label>
             <input type="text" formControlName="code" class="w-full rounded bg-neutral-800 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-red-600" />
           </div>
           <button type="submit" [disabled]="isSubmittingConfirmEmail" class="rounded px-5 py-2 text-sm font-semibold bg-red-600 hover:bg-red-500 transition-colors cursor-pointer disabled:opacity-50">
-            {{ isSubmittingConfirmEmail ? 'Confirming...' : 'Confirm email change' }}
+            @if (isSubmittingConfirmEmail) {
+              <span i18n="@@profile.confirming">Confirming...</span>
+            } @else {
+              <span i18n="@@profile.confirmEmail">Confirm email change</span>
+            }
           </button>
           @if (confirmEmailMessage) {
             <p class="text-sm text-neutral-400">{{ confirmEmailMessage }}</p>
@@ -154,6 +178,6 @@
       }
     </section>
   } @else {
-    <p class="text-neutral-400">Loading profile...</p>
+    <p class="text-neutral-400" i18n="@@profile.loading">Loading profile...</p>
   }
 </div>

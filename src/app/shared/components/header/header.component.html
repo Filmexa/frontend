@@ -2,15 +2,15 @@
   <div class="text-2xl font-bold">Filmexa</div>
 
   <nav class="flex items-center gap-6 text-sm font-medium text-neutral-200">
-    <a routerLink="/home" class="hover:text-white transition-colors">Home</a>
-    <a routerLink="/movies" class="hover:text-white transition-colors">Movies</a>
-    <a routerLink="/my-list" class="hover:text-white transition-colors">My List</a>
+    <a routerLink="/home" class="hover:text-white transition-colors" i18n="@@header.home">Home</a>
+    <a routerLink="/movies" class="hover:text-white transition-colors" i18n="@@header.movies">Movies</a>
+    <a routerLink="/my-list" class="hover:text-white transition-colors" i18n="@@header.myList">My List</a>
   </nav>
 
   <div class="flex items-center gap-4">
     @if (authService.isLoggedIn()) {
-      <a routerLink="/profile" title="Profile" class="p-2 rounded hover:bg-neutral-800 transition-colors">
-        <img src="/assets/user-profile.svg" alt="Profile" class="h-5 w-5 brightness-0 invert" />
+      <a routerLink="/profile" title="Profile" i18n-title="@@header.profile" class="p-2 rounded hover:bg-neutral-800 transition-colors">
+        <img src="/assets/user-profile.svg" alt="Profile" i18n-alt="@@header.profile" class="h-5 w-5 brightness-0 invert" />
 
       </a>
 
@@ -29,15 +29,17 @@
         type="button"
         (click)="onLogout()"
         title="Logout"
+        i18n-title="@@header.logout"
         class="p-2 rounded hover:bg-neutral-800 transition-colors cursor-pointer"
       >
-        <img src="/assets/logout.svg" alt="Logout" class="h-5 w-5 brightness-0 invert" />
+        <img src="/assets/logout.svg" alt="Logout" i18n-alt="@@header.logout" class="h-5 w-5 brightness-0 invert" />
       </button>
     } @else {
       <button
         type="button"
         routerLink="/login"
         class="rounded px-5 py-2 text-sm font-semibold bg-red-600 hover:bg-red-500 transition-colors cursor-pointer"
+        i18n="@@header.login"
       >
         Login
       </button>
