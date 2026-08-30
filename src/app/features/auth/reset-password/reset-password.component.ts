@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { ErrorResponse } from '../../../shared/interfaces/ErrorResponse';
 
 @Component({
   selector: 'app-reset-password',
@@ -55,11 +56,9 @@ export class ResetPasswordComponent implements OnInit {
         this.submitted = true;
         this.router.navigate(['/login']);
       },
-      error: (err) => {
+      error: (err: ErrorResponse) => {
         this.isSubmitting = false;
-        this.errorMessage = typeof err?.error === 'string' && err.error
-          ? err.error
-          : 'Could not reset password. Check your code and try again.';
+        this.errorMessage = err.message ?? 'Could not reset password. Check your code and try again.';
       },
     });
   }
@@ -79,9 +78,9 @@ export class ResetPasswordComponent implements OnInit {
         this.isResending = false;
         this.resendMessage = 'A new code has been sent to your email.';
       },
-      error: (err) => {
+      error: (err: ErrorResponse) => {
         this.isResending = false;
-        this.errorMessage = err?.error?.message ?? 'Could not resend the code. Please try again.';
+        this.errorMessage = err.message ?? 'Could not resend the code. Please try again.';
       },
     });
   }

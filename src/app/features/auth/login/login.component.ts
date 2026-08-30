@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { ErrorResponse } from '../../../shared/interfaces/ErrorResponse';
 
 @Component({
   selector: 'app-login',
@@ -40,9 +41,9 @@ export class LoginComponent {
         this.isSubmitting = false;
         this.router.navigate(['/']);
       },
-      error: (err) => {
+      error: (err: ErrorResponse) => {
         this.isSubmitting = false;
-        this.errorMessage = err?.error?.message ?? 'Invalid username or password.';
+        this.errorMessage = err.message ?? 'Invalid username or password.';
       },
     });
   }

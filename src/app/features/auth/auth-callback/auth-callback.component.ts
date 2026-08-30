@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { ErrorResponse } from '../../../shared/interfaces/ErrorResponse';
 
 @Component({
   selector: 'app-auth-callback',
@@ -40,8 +41,8 @@ export class AuthCallbackComponent implements OnInit, OnDestroy {
 
     callback$.subscribe({
       next: () => this.router.navigate(['/']),
-      error: (err) => {
-        this.errorMessage = err?.error?.message ?? `${provider} login failed.`;
+      error: (err: ErrorResponse) => {
+        this.errorMessage = err.message ?? `${provider} login failed.`;
         setTimeout(() => this.router.navigate(['/login']), 2000);
       },
     });

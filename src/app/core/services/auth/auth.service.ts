@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, tap, catchError, of } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable, tap, catchError, of, throwError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { LoginRequest } from '../../interfaces/auth/LoginRequest';
 import { AuthResponse } from '../../interfaces/auth/AuthResponse';
@@ -8,6 +8,7 @@ import { RegisterRequest } from '../../interfaces/auth/RegisterRequest';
 import { ForgotPasswordRequest } from '../../interfaces/auth/ForgotPasswordRequest';
 import { ResetPasswordRequest } from '../../interfaces/auth/ResetPasswordRequest';
 import { VerifyEmailRequest } from '../../interfaces/auth/VerifyEmailRequest';
+import { ErrorResponse } from '../../../shared/interfaces/ErrorResponse';
 
 
 @Injectable({
@@ -29,6 +30,7 @@ export class AuthService {
   login(request: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, request, { withCredentials: true }).pipe(
       tap((response) => this.setSession(response)),
+      catchError(this.mapError),
     );
   }
 
@@ -66,28 +68,57 @@ export class AuthService {
     this.isLoggedIn.set(false);
   }
 
+  private mapError(error: HttpErrorResponse) {
+    let body = error.error;
+    if (typeof body === 'string') {
+      try {
+        body = JSON.parse(body);
+      } catch {
+        body = null;
+      }
+    }
+
+    const errorResponse: ErrorResponse = {
+      status: error.status,
+      message: body?.message ?? error.message,
+    };
+    return throwError(() => errorResponse);
+  }
+
   signup(request: RegisterRequest): Observable<string> {
-    return this.http.post(`${this.apiUrl}/register`, request, { responseType: 'text' });
+    return this.http.post(`${this.apiUrl}/register`, request, { responseType: 'text' }).pipe(
+      catchError(this.mapError),
+    );
   }
 
   verify(request: VerifyEmailRequest): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/verify`, request);
+    return this.http.post<void>(`${this.apiUrl}/verify`, request).pipe(
+      catchError(this.mapError),
+    );
   }
 
   resendVerification(request: ForgotPasswordRequest): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/resend-verification`, request);
+    return this.http.post<void>(`${this.apiUrl}/resend-verification`, request).pipe(
+      catchError(this.mapError),
+    );
   }
 
   forgotPassword(request: ForgotPasswordRequest): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/forgot-password`, request);
+    return this.http.post<void>(`${this.apiUrl}/forgot-password`, request).pipe(
+      catchError(this.mapError),
+    );
   }
 
   resendPasswordReset(request: ForgotPasswordRequest): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/resend-password-reset`, request);
+    return this.http.post<void>(`${this.apiUrl}/resend-password-reset`, request).pipe(
+      catchError(this.mapError),
+    );
   }
 
   resetPassword(request: ResetPasswordRequest): Observable<string> {
-    return this.http.post(`${this.apiUrl}/reset-password`, request, { responseType: 'text' });
+    return this.http.post(`${this.apiUrl}/reset-password`, request, { responseType: 'text' }).pipe(
+      catchError(this.mapError),
+    );
   }
 
   loginWithGoogle(): void {
@@ -104,6 +135,7 @@ export class AuthService {
       withCredentials: true,
     }).pipe(
       tap((response) => this.setSession(response)),
+      catchError(this.mapError),
     );
   }
 
@@ -113,6 +145,7 @@ export class AuthService {
       withCredentials: true,
     }).pipe(
       tap((response) => this.setSession(response)),
+      catchError(this.mapError),
     );
   }
 }

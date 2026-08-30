@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { ErrorResponse } from '../../../shared/interfaces/ErrorResponse';
 
 @Component({
   selector: 'app-signup',
@@ -43,11 +44,10 @@ export class SignupComponent {
         this.isSubmitting = false;
         this.router.navigate(['/verify-account'], { queryParams: { email: this.form.value.email } });
       },
-      error: (err) => {
+      error: (err: ErrorResponse) => {
+        console.error('Signup error:', err);
         this.isSubmitting = false;
-        this.errorMessage = typeof err?.error === 'string' && err.error
-          ? err.error
-          : 'Could not create account.';
+        this.errorMessage = err.message ?? 'Could not create account.';
       },
     });
   }
