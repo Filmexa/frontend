@@ -55,7 +55,7 @@ export class ProfileComponent implements OnInit {
     });
 
     this.emailForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
     });
 
     this.confirmEmailForm = this.fb.group({
@@ -135,7 +135,7 @@ export class ProfileComponent implements OnInit {
     this.emailMessage = '';
     this.isSubmittingEmail = true;
 
-    this.userService.changeEmail(this.emailForm.value).subscribe({
+    this.userService.changeEmail({ newEmail: this.emailForm.value.email }).subscribe({
       next: () => {
         this.isSubmittingEmail = false;
         this.emailChangeRequested = true;
