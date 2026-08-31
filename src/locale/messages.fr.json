@@ -94,6 +94,7 @@
     "header.movies": "Films",
     "header.myList": "Ma liste",
     "header.profile": "Profil",
+    "header.users": "Rechercher des utilisateurs",
     "header.logout": "Déconnexion",
     "header.login": " Connexion ",
 
@@ -126,6 +127,18 @@
     "toast.profile.passwordSetSuccess": "Mot de passe défini avec succès. Vous pouvez maintenant vous connecter avec votre nom d'utilisateur et votre mot de passe.",
     "toast.profile.passwordSetError": "Échec de la définition du mot de passe.",
     "toast.profile.pictureSuccess": "Photo de profil mise à jour.",
-    "toast.profile.pictureError": "Échec de la mise à jour de la photo de profil."
+    "toast.profile.pictureError": "Échec de la mise à jour de la photo de profil.",
+    "users.title": "Rechercher des utilisateurs",
+    "users.searchPlaceholder": "Rechercher par nom d'utilisateur",
+    "users.searchIconAlt": "Rechercher",
+    "users.loading": "Chargement des utilisateurs...",
+    "users.empty": "Aucun utilisateur trouvé.",
+    "users.previous": " Précédent ",
+    "users.pageOf": "Page {$INTERPOLATION} sur {$INTERPOLATION_1}",
+    "users.next": " Suivant ",
+    "users.close": "Fermer",
+    "users.loadingProfile": "Chargement du profil...",
+    "users.loadError": "Échec du chargement des utilisateurs.",
+    "users.profileLoadError": "Échec du chargement du profil de l'utilisateur."
   }
 }

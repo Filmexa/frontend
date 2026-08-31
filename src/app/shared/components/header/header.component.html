@@ -13,6 +13,10 @@
 
     <div class="flex items-center gap-2 sm:gap-4">
       @if (authService.isLoggedIn()) {
+        <a routerLink="/users" title="Search users" i18n-title="@@header.users" class="hidden sm:block p-2 rounded hover:bg-neutral-800 transition-colors">
+          <img src="/assets/search-icon.svg" alt="Search users" i18n-alt="@@header.users" class="h-5 w-5 brightness-0 invert" />
+        </a>
+
         <a routerLink="/profile" title="Profile" i18n-title="@@header.profile" class="hidden sm:block p-2 rounded hover:bg-neutral-800 transition-colors">
           <img src="/assets/user-profile.svg" alt="Profile" i18n-alt="@@header.profile" class="h-5 w-5 brightness-0 invert" />
         </a>
@@ -56,10 +60,7 @@
         class="md:hidden p-2 rounded hover:bg-neutral-800 transition-colors cursor-pointer"
       >
         @if (mobileMenuOpen()) {
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
-            <path d="M18 6 6 18" />
-            <path d="m6 6 12 12" />
-          </svg>
+          <img src="/assets/close-x-icon.svg" alt="Menu" i18n-alt="@@header.menu" class="h-6 w-6 brightness-0 invert" />
         } @else {
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
             <path d="M4 6h16" />
@@ -78,6 +79,7 @@
       <a routerLink="/my-list" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.myList">My List</a>
 
       @if (authService.isLoggedIn()) {
+        <a routerLink="/users" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.users">Search users</a>
         <a routerLink="/profile" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.profile">Profile</a>
         <button
           type="button"

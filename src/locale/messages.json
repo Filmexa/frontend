@@ -85,6 +85,7 @@
     "header.movies": "Movies",
     "header.myList": "My List",
     "header.profile": "Profile",
+    "header.users": "Search users",
     "header.logout": "Logout",
     "header.login": " Login ",
     "header.menu": "Menu",
@@ -116,6 +117,18 @@
     "toast.profile.passwordSetSuccess": "Password set successfully. You can now log in with your username and password.",
     "toast.profile.passwordSetError": "Failed to set password.",
     "toast.profile.pictureSuccess": "Profile picture updated.",
-    "toast.profile.pictureError": "Failed to update profile picture."
+    "toast.profile.pictureError": "Failed to update profile picture.",
+    "users.title": "Find users",
+    "users.searchPlaceholder": "Search by username",
+    "users.searchIconAlt": "Search",
+    "users.loading": "Loading users...",
+    "users.empty": "No users found.",
+    "users.previous": " Previous ",
+    "users.pageOf": "Page {$INTERPOLATION} of {$INTERPOLATION_1}",
+    "users.next": " Next ",
+    "users.close": "Close",
+    "users.loadingProfile": "Loading profile...",
+    "users.loadError": "Failed to load users.",
+    "users.profileLoadError": "Failed to load user profile."
   }
 }
