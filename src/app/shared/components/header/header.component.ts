@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { UserService } from '../../../core/services/user/user.service';
@@ -10,6 +10,8 @@ import { UserService } from '../../../core/services/user/user.service';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
+  protected mobileMenuOpen = signal(false);
+
   constructor(
     protected authService: AuthService,
     protected userService: UserService,
@@ -18,6 +20,14 @@ export class HeaderComponent {
     if (this.authService.isLoggedIn()) {
       this.userService.loadCurrentUser();
     }
+  }
+
+  toggleMobileMenu(): void {
+    this.mobileMenuOpen.update((open) => !open);
+  }
+
+  closeMobileMenu(): void {
+    this.mobileMenuOpen.set(false);
   }
 
   onLogout(): void {
