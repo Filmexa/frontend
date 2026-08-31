@@ -1,6 +1,9 @@
 <header class="bg-neutral-900 text-white">
   <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
-    <div class="text-xl sm:text-2xl font-bold">Filmexa</div>
+    <a routerLink="/home" class="flex items-center gap-0.5">
+      <img src="/assets/filmexaLogo.png" alt="Filmexa" i18n-alt="@@header.logoAlt" class="h-8 sm:h-10 w-auto" />
+      <span class="text-xl sm:text-2xl font-bold">Filmexa</span>
+    </a>
 
     <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-neutral-200">
       <a routerLink="/home" class="hover:text-white transition-colors" i18n="@@header.home">Home</a>
