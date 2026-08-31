@@ -8,6 +8,7 @@ import { RegisterRequest } from '../../interfaces/auth/RegisterRequest';
 import { ForgotPasswordRequest } from '../../interfaces/auth/ForgotPasswordRequest';
 import { ResetPasswordRequest } from '../../interfaces/auth/ResetPasswordRequest';
 import { VerifyEmailRequest } from '../../interfaces/auth/VerifyEmailRequest';
+import { SetPasswordRequest } from '../../interfaces/user/SetPasswordRequest';
 import { ErrorResponse } from '../../../shared/interfaces/ErrorResponse';
 
 
@@ -117,6 +118,16 @@ export class AuthService {
 
   resetPassword(request: ResetPasswordRequest): Observable<string> {
     return this.http.post(`${this.apiUrl}/reset-password`, request, { responseType: 'text' }).pipe(
+      catchError(this.mapError),
+    );
+  }
+
+  setPassword(request: SetPasswordRequest): Observable<string> {
+    const headers = this.accessToken
+      ? new HttpHeaders({ Authorization: `Bearer ${this.accessToken}` })
+      : undefined;
+
+    return this.http.put(`${environment.apiUrl}/users/set-password`, request, { headers, responseType: 'text' }).pipe(
       catchError(this.mapError),
     );
   }

@@ -16,6 +16,9 @@ export class SignupComponent {
   isSubmitting: boolean = false;
   showPassword: boolean = false;
 
+  readonly showPasswordLabel = $localize`:@@login.showPassword:Show password`;
+  readonly hidePasswordLabel = $localize`:@@login.hidePassword:Hide password`;
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -45,7 +48,6 @@ export class SignupComponent {
         this.router.navigate(['/verify-account'], { queryParams: { email: this.form.value.email } });
       },
       error: (err: ErrorResponse) => {
-        console.error('Signup error:', err);
         this.isSubmitting = false;
         this.errorMessage = err.message ?? 'Could not create account.';
       },

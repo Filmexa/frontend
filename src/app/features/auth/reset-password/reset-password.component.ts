@@ -17,6 +17,8 @@ export class ResetPasswordComponent implements OnInit {
   submitted: boolean = false;
   showPassword: boolean = false;
 
+  readonly showPasswordLabel = $localize`:@@login.showPassword:Show password`;
+  readonly hidePasswordLabel = $localize`:@@login.hidePassword:Hide password`;
 
   isResending: boolean = false;
   resendMessage = '';

@@ -1,23 +1,90 @@
-<header class="flex items-center justify-between px-8 py-4 bg-neutral-900 text-white">
-  <div class="text-2xl font-bold">Filmexa</div>
+<header class="bg-neutral-900 text-white">
+  <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
+    <div class="text-xl sm:text-2xl font-bold">Filmexa</div>
 
-  <nav class="flex items-center gap-4">
-    @if (authService.isLoggedIn()) {
+    <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-neutral-200">
+      <a routerLink="/home" class="hover:text-white transition-colors" i18n="@@header.home">Home</a>
+      <a routerLink="/movies" class="hover:text-white transition-colors" i18n="@@header.movies">Movies</a>
+      <a routerLink="/my-list" class="hover:text-white transition-colors" i18n="@@header.myList">My List</a>
+    </nav>
+
+    <div class="flex items-center gap-2 sm:gap-4">
+      @if (authService.isLoggedIn()) {
+        <a routerLink="/profile" title="Profile" i18n-title="@@header.profile" class="hidden sm:block p-2 rounded hover:bg-neutral-800 transition-colors">
+          <img src="/assets/user-profile.svg" alt="Profile" i18n-alt="@@header.profile" class="h-5 w-5 brightness-0 invert" />
+        </a>
+
+        <div class="flex items-center gap-2">
+          <div class="h-8 w-8 shrink-0 rounded-full bg-red-600 flex items-center justify-center text-sm font-semibold uppercase overflow-hidden">
+            @if (userService.avatarUrl()) {
+              <img [src]="userService.avatarUrl()" alt="Profile picture" class="h-full w-full object-cover" />
+            } @else {
+              {{ userService.profile()?.username?.charAt(0) }}
+            }
+          </div>
+          <span class="hidden sm:inline text-sm font-medium max-w-[8rem] truncate">{{ userService.profile()?.username }}</span>
+        </div>
+
+        <button
+          type="button"
+          (click)="onLogout()"
+          title="Logout"
+          i18n-title="@@header.logout"
+          class="hidden sm:block p-2 rounded hover:bg-neutral-800 transition-colors cursor-pointer"
+        >
+          <img src="/assets/logout.svg" alt="Logout" i18n-alt="@@header.logout" class="h-5 w-5 brightness-0 invert" />
+        </button>
+      } @else {
+        <button
+          type="button"
+          routerLink="/login"
+          class="rounded px-3 sm:px-5 py-2 text-sm font-semibold bg-red-600 hover:bg-red-500 transition-colors cursor-pointer"
+          i18n="@@header.login"
+        >
+          Login
+        </button>
+      }
+
       <button
         type="button"
-        (click)="onLogout()"
-        class="rounded px-5 py-2 text-sm font-semibold bg-red-600 hover:bg-red-500 transition-colors cursor-pointer"
+        (click)="toggleMobileMenu()"
+        title="Menu"
+        i18n-title="@@header.menu"
+        class="md:hidden p-2 rounded hover:bg-neutral-800 transition-colors cursor-pointer"
       >
-        Logout
+        @if (mobileMenuOpen()) {
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+          </svg>
+        } @else {
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+            <path d="M4 6h16" />
+            <path d="M4 12h16" />
+            <path d="M4 18h16" />
+          </svg>
+        }
       </button>
-    } @else {
-      <button
-        type="button"
-        routerLink="/login"
-        class="rounded px-5 py-2 text-sm font-semibold bg-red-600 hover:bg-red-500 transition-colors cursor-pointer"
-      >
-        Login
-      </button>
-    }
-  </nav>
+    </div>
+  </div>
+
+  @if (mobileMenuOpen()) {
+    <nav class="md:hidden flex flex-col gap-1 px-4 pb-4 text-sm font-medium text-neutral-200 border-t border-neutral-800">
+      <a routerLink="/home" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.home">Home</a>
+      <a routerLink="/movies" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.movies">Movies</a>
+      <a routerLink="/my-list" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.myList">My List</a>
+
+      @if (authService.isLoggedIn()) {
+        <a routerLink="/profile" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.profile">Profile</a>
+        <button
+          type="button"
+          (click)="onLogout(); closeMobileMenu()"
+          class="py-2 text-left hover:text-white transition-colors cursor-pointer"
+          i18n="@@header.logout"
+        >
+          Logout
+        </button>
+      }
+    </nav>
+  }
 </header>

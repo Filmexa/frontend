@@ -4,10 +4,10 @@
     [formGroup]="form"
     (ngSubmit)="onSubmit()"
   >
-    <h1 class="text-2xl font-bold mb-4 text-center">Verify your account</h1>
-    <p class="text-sm text-neutral-400 mb-2 text-center">Enter the code we emailed you to activate your account.</p>
+    <h1 class="text-2xl font-bold mb-4 text-center" i18n="@@verifyAccount.title">Verify your account</h1>
+    <p class="text-sm text-neutral-400 mb-2 text-center" i18n="@@verifyAccount.instructions">Enter the code we emailed you to activate your account.</p>
 
-    <label for="email" class="text-sm mt-2">Email</label>
+    <label for="email" class="text-sm mt-2" i18n="@@signup.email">Email</label>
     <input
       id="email"
       type="email"
@@ -16,10 +16,10 @@
       class="rounded border border-neutral-700 bg-neutral-800 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
     />
     @if (form.controls['email'].invalid && form.controls['email'].touched) {
-      <span class="text-red-400 text-xs">Enter a valid email address.</span>
+      <span class="text-red-400 text-xs" i18n="@@forgotPassword.emailError">Enter a valid email address.</span>
     }
 
-    <label for="code" class="text-sm mt-2">Verification code</label>
+    <label for="code" class="text-sm mt-2" i18n="@@resetPassword.code">Verification code</label>
     <input
       id="code"
       type="text"
@@ -28,7 +28,7 @@
       class="rounded border border-neutral-700 bg-neutral-800 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
     />
     @if (form.controls['code'].invalid && form.controls['code'].touched) {
-      <span class="text-red-400 text-xs">Enter the code you received by email.</span>
+      <span class="text-red-400 text-xs" i18n="@@resetPassword.codeError">Enter the code you received by email.</span>
     }
 
     @if (errorMessage) {
@@ -40,14 +40,18 @@
     }
 
     <p class="text-sm text-center mt-2">
-      Didn't receive a code?
+      <span i18n="@@resetPassword.noCode">Didn't receive a code?</span>
       <button
         type="button"
         (click)="onResendCode()"
         [disabled]="isResending"
         class="text-red-500 hover:underline disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
       >
-        {{ isResending ? 'Resending...' : 'Resend code' }}
+        @if (isResending) {
+          <span i18n="@@resetPassword.resending">Resending...</span>
+        } @else {
+          <span i18n="@@resetPassword.resend">Resend code</span>
+        }
       </button>
     </p>
 
@@ -56,10 +60,14 @@
       [disabled]="isSubmitting"
       class="mt-4 rounded bg-red-600 hover:bg-red-500 disabled:opacity-60 disabled:cursor-not-allowed py-2.5 font-semibold cursor-pointer transition-colors"
     >
-      {{ isSubmitting ? 'Verifying...' : 'Verify account' }}
+      @if (isSubmitting) {
+        <span i18n="@@verifyAccount.submitting">Verifying...</span>
+      } @else {
+        <span i18n="@@verifyAccount.submit">Verify account</span>
+      }
     </button>
 
-    <p class="mt-4 text-sm text-center">
+    <p class="mt-4 text-sm text-center" i18n="@@verifyAccount.loginPrompt">
       Already verified?
       <a routerLink="/login" class="text-red-500 hover:underline">Back to login</a>
     </p>

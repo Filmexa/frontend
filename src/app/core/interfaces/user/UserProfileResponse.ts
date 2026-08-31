@@ -3,5 +3,7 @@ export interface UserProfileResponse {
     username: string;
     firstName: string;
     lastName: string;
+    phoneNumber: string;
     avatarUrl: string;
+    preferredLanguage: string;
 }

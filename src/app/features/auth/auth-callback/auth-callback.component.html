@@ -6,8 +6,8 @@
         <div class="absolute inset-0 rounded-full border-4 border-transparent border-t-red-600 animate-spin"></div>
       </div>
       <div class="text-center">
-        <p class="text-lg font-semibold">Signing you in{{ dots }}</p>
-        <p class="text-sm text-neutral-400 mt-1">Hang tight, this only takes a second.</p>
+        <p class="text-lg font-semibold" i18n="@@authCallback.signingIn">Signing you in{{ dots }}</p>
+        <p class="text-sm text-neutral-400 mt-1" i18n="@@authCallback.hangTight">Hang tight, this only takes a second.</p>
       </div>
     } @else {
       <div class="h-16 w-16 rounded-full bg-red-600/10 flex items-center justify-center">
@@ -15,7 +15,7 @@
       </div>
       <div class="text-center">
         <p class="text-lg font-semibold text-red-400">{{ errorMessage }}</p>
-        <p class="text-sm text-neutral-400 mt-1">Redirecting you back to login...</p>
+        <p class="text-sm text-neutral-400 mt-1" i18n="@@authCallback.redirecting">Redirecting you back to login...</p>
       </div>
     }
   </div>
