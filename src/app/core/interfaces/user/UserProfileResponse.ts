@@ -7,4 +7,5 @@ export interface UserProfileResponse {
     phoneNumber: string;
     avatarUrl: string;
     preferredLanguage: string;
+    createdAt: Date;
 }

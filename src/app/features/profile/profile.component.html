@@ -1,33 +1,50 @@
-<div class="max-w-2xl mx-auto px-8 py-12 text-white">
+<div class="max-w-2xl mx-auto px-4 sm:px-8 py-12 text-white">
   @if (userService.profile(); as profile) {
-    <div class="flex items-center gap-6">
-      <div class="h-24 w-24 rounded-full bg-red-600 flex items-center justify-center text-3xl font-semibold uppercase overflow-hidden shrink-0">
-        @if (userService.avatarUrl()) {
-          <img [src]="userService.avatarUrl()" alt="Profile picture" i18n-alt="@@profile.avatar" class="h-full w-full object-cover" />
-        } @else {
-          {{ profile.username.charAt(0) }}
-        }
-      </div>
-
-      <div>
-        <h1 class="text-2xl font-bold">{{ profile.username }}</h1>
-        <p class="text-neutral-400">{{ profile.firstName }} {{ profile.lastName }}</p>
-
-        <label class="inline-block mt-3 text-sm font-medium text-red-500 hover:text-red-400 cursor-pointer">
-          @if (isUploadingAvatar) {
-            <span i18n="@@profile.uploadingAvatar">Uploading...</span>
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+      <div class="flex items-center gap-4 sm:gap-6">
+        <div class="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-red-600 flex items-center justify-center text-2xl sm:text-3xl font-semibold uppercase overflow-hidden shrink-0">
+          @if (userService.avatarUrl()) {
+            <img [src]="userService.avatarUrl()" alt="Profile picture" i18n-alt="@@profile.avatar" class="h-full w-full object-cover" />
           } @else {
-            <span i18n="@@profile.changeAvatar">Change profile picture</span>
+            {{ profile.username.charAt(0) }}
           }
-          <input type="file" accept="image/*" class="hidden" (change)="onAvatarSelected($event)" [disabled]="isUploadingAvatar" />
-        </label>
+        </div>
+
+        <div class="min-w-0">
+          <h1 class="text-xl sm:text-2xl font-bold truncate">{{ profile.username }}</h1>
+          <p class="text-neutral-400 truncate">{{ profile.firstName }} {{ profile.lastName }}</p>
+
+          <label class="inline-block mt-3 text-sm font-medium text-red-500 hover:text-red-400 cursor-pointer">
+            @if (isUploadingAvatar) {
+              <span i18n="@@profile.uploadingAvatar">Uploading...</span>
+            } @else {
+              <span i18n="@@profile.changeAvatar">Change profile picture</span>
+            }
+            <input type="file" accept="image/*" class="hidden" (change)="onAvatarSelected($event)" [disabled]="isUploadingAvatar" />
+          </label>
+        </div>
       </div>
+
+      <button
+        type="button"
+        (click)="openUserSearch()"
+        title="Search users"
+        i18n-title="@@profile.searchUsers"
+        class="self-start shrink-0 flex items-center gap-2 px-3 py-2 rounded hover:bg-neutral-800 transition-colors cursor-pointer text-sm font-medium"
+      >
+        <img src="/assets/search-icon.svg" alt="" class="h-5 w-5 brightness-0 invert" />
+        <span i18n="@@profile.searchUsers">Search users</span>
+      </button>
     </div>
 
     <dl class="mt-10 divide-y divide-neutral-800 border-t border-neutral-800">
       <div class="flex justify-between py-4">
         <dt class="text-neutral-400" i18n="@@login.username">Username</dt>
         <dd class="font-medium">{{ profile.username }}</dd>
+      </div>
+      <div class="flex justify-between py-4">
+        <dt class="text-neutral-400" i18n="@@profile.memberSince">Member since</dt>
+        <dd class="font-medium">{{ profile.createdAt | date: 'longDate' }}</dd>
       </div>
       <div class="flex justify-between py-4">
         <dt class="text-neutral-400" i18n="@@signup.email">Email</dt>
@@ -96,26 +113,28 @@
         Signed in with Google or Intra? Set a password to also log in with your username.
       </p>
       <form [formGroup]="passwordForm" (ngSubmit)="onSetPassword()" class="space-y-4">
-        <div class="relative">
+        <div>
           <label class="block text-sm text-neutral-400 mb-1" i18n="@@resetPassword.newPassword">New password</label>
-          <input
-            [type]="showPassword ? 'text' : 'password'"
-            formControlName="password"
-            autocomplete="new-password"
-            class="w-full rounded bg-neutral-800 px-3 py-2 pr-10 text-sm focus:outline-none focus:ring-1 focus:ring-red-600"
-          />
-          <button
-            type="button"
-            (click)="showPassword = !showPassword"
-            class="absolute right-3 top-9 -translate-y-1/2 text-neutral-400 hover:text-white"
-            [attr.aria-label]="showPassword ? hidePasswordLabel : showPasswordLabel"
-          >
-            @if (showPassword) {
-              <img src="assets/eye-slash.svg" alt="Hide password" i18n-alt="@@login.hidePassword" class="h-5 w-5" />
-            } @else {
-              <img src="assets/eye.svg" alt="Show password" i18n-alt="@@login.showPassword" class="h-5 w-5" />
-            }
-          </button>
+          <div class="relative">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              autocomplete="new-password"
+              class="w-full rounded bg-neutral-800 px-3 py-2 pr-10 text-sm focus:outline-none focus:ring-1 focus:ring-red-600"
+            />
+            <button
+              type="button"
+              (click)="showPassword = !showPassword"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white"
+              [attr.aria-label]="showPassword ? hidePasswordLabel : showPasswordLabel"
+            >
+              @if (showPassword) {
+                <img src="assets/eye-slash.svg" alt="Hide password" i18n-alt="@@login.hidePassword" class="h-5 w-5" />
+              } @else {
+                <img src="assets/eye.svg" alt="Show password" i18n-alt="@@login.showPassword" class="h-5 w-5" />
+              }
+            </button>
+          </div>
           @if (passwordForm.controls['password'].invalid && passwordForm.controls['password'].touched) {
             <span class="text-red-400 text-xs" i18n="@@login.passwordError">Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number, and a special character.</span>
           }
@@ -165,5 +184,82 @@
     </section>
   } @else {
     <p class="text-neutral-400" i18n="@@profile.loading">Loading profile...</p>
+  }
+
+  @if (showUserSearch()) {
+    <div class="fixed inset-0 bg-black/70 flex items-center justify-center px-4 z-50" (click)="closeUserSearch()">
+      <div class="bg-neutral-900 rounded-lg max-w-md w-full p-6 relative" (click)="$event.stopPropagation()">
+        <button
+          type="button"
+          (click)="closeUserSearch()"
+          title="Close"
+          i18n-title="@@users.close"
+          class="absolute top-3 right-3 p-1 rounded hover:bg-neutral-800 transition-colors cursor-pointer"
+        >
+          <img src="/assets/close-x-icon.svg" alt="Close" i18n-alt="@@users.close" class="h-6 w-6" />
+        </button>
+
+        <h2 class="text-lg font-bold mb-4" i18n="@@users.title">Find users</h2>
+
+        <div class="relative mb-4">
+          <img src="/assets/search-icon.svg" alt="Search" i18n-alt="@@users.searchIconAlt" class="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 opacity-60" />
+          <input
+            type="text"
+            [ngModel]="userSearchQuery()"
+            (ngModelChange)="userSearchQuery.set($event)"
+            placeholder="Search by username"
+            i18n-placeholder="@@users.searchPlaceholder"
+            class="w-full rounded bg-neutral-800 pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-red-600"
+          />
+        </div>
+
+        @if (isSearchingUsers) {
+          <p class="text-neutral-400 text-sm" i18n="@@users.loading">Loading users...</p>
+        } @else if (filteredUsers().length === 0) {
+          <p class="text-neutral-400 text-sm" i18n="@@users.empty">No users found.</p>
+        } @else {
+          <ul class="divide-y divide-neutral-800 border-t border-b border-neutral-800 max-h-80 overflow-y-auto">
+            @for (user of filteredUsers(); track user.id) {
+              <li>
+                <button
+                  type="button"
+                  (click)="onSelectSearchedUser(user.id)"
+                  class="flex items-center gap-3 w-full py-3 text-left hover:bg-neutral-800 transition-colors cursor-pointer"
+                >
+                  <div class="h-9 w-9 shrink-0 rounded-full bg-red-600 flex items-center justify-center text-sm font-semibold uppercase">
+                    {{ user.username.charAt(0) }}
+                  </div>
+                  <span class="font-medium">{{ user.username }}</span>
+                </button>
+              </li>
+            }
+          </ul>
+
+          @if (totalPages() > 1) {
+            <div class="flex items-center justify-between mt-4 text-sm text-neutral-400">
+              <button
+                type="button"
+                (click)="onPreviousPage()"
+                [disabled]="page() === 0"
+                class="rounded px-3 py-1.5 hover:bg-neutral-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                i18n="@@users.previous"
+              >
+                Previous
+              </button>
+              <span i18n="@@users.pageOf">Page {{ page() + 1 }} of {{ totalPages() }}</span>
+              <button
+                type="button"
+                (click)="onNextPage()"
+                [disabled]="page() + 1 >= totalPages()"
+                class="rounded px-3 py-1.5 hover:bg-neutral-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                i18n="@@users.next"
+              >
+                Next
+              </button>
+            </div>
+          }
+        }
+      </div>
+    </div>
   }
 </div>
