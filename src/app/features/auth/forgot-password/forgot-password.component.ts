@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { ErrorResponse } from '../../../shared/interfaces/ErrorResponse';
 
 @Component({
   selector: 'app-forgot-password',
@@ -35,8 +36,14 @@ export class ForgotPasswordComponent {
     this.isSubmitting = true;
 
     this.authService.forgotPassword(this.form.value).subscribe({
-      next: () => this.goToResetPassword(),
-      error: () => this.goToResetPassword(),
+      next: () => {
+        this.isSubmitting = false;
+        this.goToResetPassword();
+      },
+      error: (err: ErrorResponse) => {
+        this.isSubmitting = false;
+        this.errorMessage = err.message ?? 'Could not send reset password email.';
+      },
     });
   }
 
