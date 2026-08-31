@@ -65,6 +65,8 @@
     "profile.avatar": "Photo de profil",
     "profile.uploadingAvatar": "Envoi en cours...",
     "profile.changeAvatar": "Changer la photo de profil",
+    "profile.searchUsers": "Rechercher des utilisateurs",
+    "profile.memberSince": "Membre depuis",
     "profile.editTitle": "Modifier le profil",
     "profile.phoneNumber": "Numéro de téléphone",
     "profile.saving": "Enregistrement...",
@@ -94,7 +96,7 @@
     "header.movies": "Films",
     "header.myList": "Ma liste",
     "header.profile": "Profil",
-    "header.users": "Rechercher des utilisateurs",
+    "header.searchMovies": "Rechercher des films",
     "header.logout": "Déconnexion",
     "header.login": " Connexion ",
 

@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, computed, signal } from '@angular/core';
+import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user/user.service';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { LanguageService } from '../../core/services/language/language.service';
 import { ErrorResponse } from '../../shared/interfaces/ErrorResponse';
 import { ToastService } from '../../shared/services/toast/toast.service';
-
+import { UserInfosSimpleResponse } from '../../core/interfaces/user/UserInfosSimpleResponse';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-profile',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
@@ -32,12 +34,30 @@ export class ProfileComponent implements OnInit {
 
   emailChangeRequested = false;
 
+  showUserSearch = signal(false);
+  userSearchQuery = signal('');
+  searchedUsers = signal<UserInfosSimpleResponse[]>([]);
+  isSearchingUsers = false;
+
+  page = signal(0);
+  totalPages = signal(0);
+  readonly pageSize = 20;
+
+  filteredUsers = computed(() => {
+    const query = this.userSearchQuery().trim().toLowerCase();
+    if (!query) {
+      return this.searchedUsers();
+    }
+    return this.searchedUsers().filter((user) => user.username.toLowerCase().includes(query));
+  });
+
   constructor(
     protected userService: UserService,
     private authService: AuthService,
     private languageService: LanguageService,
     private fb: FormBuilder,
     private toastService: ToastService,
+    private router: Router,
   ) {
     this.profileForm = this.fb.group({
       firstName: ['', Validators.required],
@@ -205,5 +225,53 @@ export class ProfileComponent implements OnInit {
     });
 
     input.value = '';
+  }
+
+  openUserSearch(): void {
+    this.showUserSearch.set(true);
+    this.page.set(0);
+    this.loadUsers();
+  }
+
+  closeUserSearch(): void {
+    this.showUserSearch.set(false);
+    this.userSearchQuery.set('');
+    this.searchedUsers.set([]);
+  }
+
+  loadUsers(): void {
+    this.isSearchingUsers = true;
+    this.userService.getAllProfiles(this.page(), this.pageSize).subscribe({
+      next: (result) => {
+        this.isSearchingUsers = false;
+        this.searchedUsers.set(result.content);
+        this.totalPages.set(result.totalPages);
+      },
+      error: (err: ErrorResponse) => {
+        this.isSearchingUsers = false;
+        this.toastService.error(err.message ?? $localize`:@@users.loadError:Failed to load users.`);
+      },
+    });
+  }
+
+  onPreviousPage(): void {
+    if (this.page() === 0) {
+      return;
+    }
+    this.page.update((page) => page - 1);
+    this.loadUsers();
+  }
+
+  onNextPage(): void {
+    if (this.page() + 1 >= this.totalPages()) {
+      return;
+    }
+    this.page.update((page) => page + 1);
+    this.loadUsers();
+  }
+
+  onSelectSearchedUser(userId: string): void {
+    this.closeUserSearch();
+    this.router.navigate(['/users', userId]);
   }
 }

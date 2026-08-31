@@ -65,6 +65,8 @@
     "profile.avatar": "صورة الملف الشخصي",
     "profile.uploadingAvatar": "جارٍ الرفع...",
     "profile.changeAvatar": "تغيير صورة الملف الشخصي",
+    "profile.searchUsers": "البحث عن المستخدمين",
+    "profile.memberSince": "عضو منذ",
     "profile.editTitle": "تعديل الملف الشخصي",
     "profile.phoneNumber": "رقم الهاتف",
     "profile.saving": "جارٍ الحفظ...",
@@ -94,7 +96,7 @@
     "header.movies": "الأفلام",
     "header.myList": "قائمتي",
     "header.profile": "الملف الشخصي",
-    "header.users": "البحث عن المستخدمين",
+    "header.searchMovies": "البحث عن الأفلام",
     "header.logout": "تسجيل الخروج",
     "header.login": " تسجيل الدخول ",
 
