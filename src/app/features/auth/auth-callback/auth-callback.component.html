@@ -1,6 +1,6 @@
 <div class="flex items-center justify-center min-h-[80vh] p-4">
   <div class="flex flex-col items-center gap-6 text-white">
-    @if (!errorMessage) {
+    @if (!hasError) {
       <div class="relative h-16 w-16">
         <div class="absolute inset-0 rounded-full border-4 border-neutral-800"></div>
         <div class="absolute inset-0 rounded-full border-4 border-transparent border-t-red-600 animate-spin"></div>
@@ -14,7 +14,7 @@
         <span class="text-3xl leading-none">×</span>
       </div>
       <div class="text-center">
-        <p class="text-lg font-semibold text-red-400">{{ errorMessage }}</p>
+        <p class="text-lg font-semibold text-red-400" i18n="@@authCallback.loginFailed">Login failed</p>
         <p class="text-sm text-neutral-400 mt-1" i18n="@@authCallback.redirecting">Redirecting you back to login...</p>
       </div>
     }

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { UserService } from '../../../core/services/user/user.service';
 import { ErrorResponse } from '../../../shared/interfaces/ErrorResponse';
+import { ToastService } from '../../../shared/services/toast/toast.service';
 
 @Component({
   selector: 'app-auth-callback',
@@ -11,7 +12,7 @@ import { ErrorResponse } from '../../../shared/interfaces/ErrorResponse';
   styleUrl: './auth-callback.component.css',
 })
 export class AuthCallbackComponent implements OnInit, OnDestroy {
-  errorMessage = '';
+  hasError = false;
   dots = '';
 
   private dotsInterval?: ReturnType<typeof setInterval>;
@@ -21,6 +22,7 @@ export class AuthCallbackComponent implements OnInit, OnDestroy {
     private router: Router,
     private authService: AuthService,
     private userService: UserService,
+    private toastService: ToastService,
   ) { }
 
   ngOnInit(): void {
@@ -32,7 +34,8 @@ export class AuthCallbackComponent implements OnInit, OnDestroy {
     const provider = this.route.snapshot.data['provider'] as 'google' | 'intra';
 
     if (!code || !state) {
-      this.errorMessage = 'Missing authentication data.';
+      this.hasError = true;
+      this.toastService.error('Missing authentication data.');
       setTimeout(() => this.router.navigate(['/login']), 2000);
       return;
     }
@@ -44,10 +47,12 @@ export class AuthCallbackComponent implements OnInit, OnDestroy {
     callback$.subscribe({
       next: () => {
         this.userService.loadCurrentUser();
+        this.toastService.success('Logged in successfully.');
         this.router.navigate(['/']);
       },
       error: (err: ErrorResponse) => {
-        this.errorMessage = err.message ?? `${provider} login failed.`;
+        this.hasError = true;
+        this.toastService.error(err.message ?? `${provider} login failed.`);
         setTimeout(() => this.router.navigate(['/login']), 2000);
       },
     });

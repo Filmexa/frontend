@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { UserService } from '../../../core/services/user/user.service';
 import { ErrorResponse } from '../../../shared/interfaces/ErrorResponse';
+import { ToastService } from '../../../shared/services/toast/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,6 @@ import { ErrorResponse } from '../../../shared/interfaces/ErrorResponse';
 })
 export class LoginComponent {
   form: FormGroup;
-  errorMessage = '';
   isSubmitting = false;
   showPassword: boolean = false;
 
@@ -25,6 +25,7 @@ export class LoginComponent {
     private authService: AuthService,
     private userService: UserService,
     private router: Router,
+    private toastService: ToastService,
   ) {
     this.form = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
@@ -38,18 +39,18 @@ export class LoginComponent {
       return;
     }
 
-    this.errorMessage = '';
     this.isSubmitting = true;
 
     this.authService.login(this.form.value).subscribe({
       next: () => {
         this.isSubmitting = false;
         this.userService.loadCurrentUser();
+        this.toastService.success('Logged in successfully.');
         this.router.navigate(['/']);
       },
       error: (err: ErrorResponse) => {
         this.isSubmitting = false;
-        this.errorMessage = err.message ?? 'Invalid username or password.';
+        this.toastService.error(err.message ?? 'Invalid username or password.');
       },
     });
   }

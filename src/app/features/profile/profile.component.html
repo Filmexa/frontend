@@ -21,9 +21,6 @@
           }
           <input type="file" accept="image/*" class="hidden" (change)="onAvatarSelected($event)" [disabled]="isUploadingAvatar" />
         </label>
-        @if (avatarMessage) {
-          <p class="text-sm text-neutral-400 mt-1">{{ avatarMessage }}</p>
-        }
       </div>
     </div>
 
@@ -68,9 +65,6 @@
             <span i18n="@@profile.saveChanges">Save changes</span>
           }
         </button>
-        @if (profileMessage) {
-          <p class="text-sm text-neutral-400">{{ profileMessage }}</p>
-        }
       </form>
     </section>
 
@@ -93,9 +87,6 @@
             <span i18n="@@profile.saveLanguage">Save language</span>
           }
         </button>
-        @if (languageMessage) {
-          <p class="text-sm text-neutral-400">{{ languageMessage }}</p>
-        }
       </form>
     </section>
 
@@ -136,9 +127,6 @@
             <span i18n="@@profile.setPassword">Set password</span>
           }
         </button>
-        @if (passwordMessage) {
-          <p class="text-sm text-neutral-400">{{ passwordMessage }}</p>
-        }
       </form>
     </section>
 
@@ -158,9 +146,6 @@
               <span i18n="@@profile.sendCode">Send confirmation code</span>
             }
           </button>
-          @if (emailMessage) {
-            <p class="text-sm text-neutral-400">{{ emailMessage }}</p>
-          }
         </form>
       } @else {
         <form [formGroup]="confirmEmailForm" (ngSubmit)="onConfirmEmailChange()" class="space-y-4">
@@ -175,9 +160,6 @@
               <span i18n="@@profile.confirmEmail">Confirm email change</span>
             }
           </button>
-          @if (confirmEmailMessage) {
-            <p class="text-sm text-neutral-400">{{ confirmEmailMessage }}</p>
-          }
         </form>
       }
     </section>

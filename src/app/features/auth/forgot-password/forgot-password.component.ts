@@ -3,6 +3,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { ErrorResponse } from '../../../shared/interfaces/ErrorResponse';
+import { ToastService } from '../../../shared/services/toast/toast.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -12,7 +13,6 @@ import { ErrorResponse } from '../../../shared/interfaces/ErrorResponse';
 })
 export class ForgotPasswordComponent {
   form: FormGroup;
-  errorMessage = '';
   isSubmitting = false;
   submitted = false;
 
@@ -20,6 +20,7 @@ export class ForgotPasswordComponent {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
+    private toastService: ToastService,
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
@@ -32,17 +33,17 @@ export class ForgotPasswordComponent {
       return;
     }
 
-    this.errorMessage = '';
     this.isSubmitting = true;
 
     this.authService.forgotPassword(this.form.value).subscribe({
       next: () => {
         this.isSubmitting = false;
         this.goToResetPassword();
+        this.toastService.success('Reset password email sent successfully.');
       },
       error: (err: ErrorResponse) => {
         this.isSubmitting = false;
-        this.errorMessage = err.message ?? 'Could not send reset password email.';
+        this.toastService.error(err.message ?? 'Could not send reset password email.');
       },
     });
   }

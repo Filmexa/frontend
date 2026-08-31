@@ -31,14 +31,6 @@
       <span class="text-red-400 text-xs" i18n="@@resetPassword.codeError">Enter the code you received by email.</span>
     }
 
-    @if (errorMessage) {
-      <p class="text-red-400 text-sm mt-2">{{ errorMessage }}</p>
-    }
-
-    @if (resendMessage) {
-      <p class="text-green-400 text-sm mt-2">{{ resendMessage }}</p>
-    }
-
     <p class="text-sm text-center mt-2">
       <span i18n="@@resetPassword.noCode">Didn't receive a code?</span>
       <button
