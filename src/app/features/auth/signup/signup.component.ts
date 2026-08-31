@@ -45,12 +45,12 @@ export class SignupComponent {
     this.authService.signup(this.form.value).subscribe({
       next: () => {
         this.isSubmitting = false;
-        this.toastService.success('Account created successfully. Please verify your email before logging in.');
+        this.toastService.success($localize`:@@toast.signup.success:Account created successfully. Please verify your email before logging in.`);
         this.router.navigate(['/verify-account'], { queryParams: { email: this.form.value.email } });
       },
       error: (err: ErrorResponse) => {
         this.isSubmitting = false;
-        this.toastService.error(err.message ?? 'Could not create account.');
+        this.toastService.error(err.message ?? $localize`:@@toast.signup.error:Could not create account.`);
       },
     });
   }

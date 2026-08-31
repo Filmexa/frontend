@@ -45,12 +45,12 @@ export class LoginComponent {
       next: () => {
         this.isSubmitting = false;
         this.userService.loadCurrentUser();
-        this.toastService.success('Logged in successfully.');
+        this.toastService.success($localize`:@@toast.login.success:Logged in successfully.`);
         this.router.navigate(['/']);
       },
       error: (err: ErrorResponse) => {
         this.isSubmitting = false;
-        this.toastService.error(err.message ?? 'Invalid username or password.');
+        this.toastService.error(err.message ?? $localize`:@@toast.login.error:Invalid username or password.`);
       },
     });
   }

@@ -99,6 +99,33 @@
 
     "notFound.title": "Scène introuvable",
     "notFound.description": " On dirait que cette page s'est perdue en chemin vers la salle de projection. Revenons au film principal. ",
-    "notFound.backHome": " Retour à l'accueil"
+    "notFound.backHome": " Retour à l'accueil",
+
+    "toast.login.success": "Connexion réussie.",
+    "toast.login.error": "Nom d'utilisateur ou mot de passe invalide.",
+    "toast.signup.success": "Compte créé avec succès. Veuillez vérifier votre e-mail avant de vous connecter.",
+    "toast.signup.error": "Impossible de créer le compte.",
+    "toast.verifyAccount.success": "Compte vérifié avec succès. Vous pouvez maintenant vous connecter.",
+    "toast.verifyAccount.error": "Impossible de vérifier votre compte. Vérifiez votre code et réessayez.",
+    "toast.resendCode.success": "Un nouveau code a été envoyé à votre e-mail.",
+    "toast.resendCode.error": "Impossible de renvoyer le code. Veuillez réessayer.",
+    "toast.forgotPassword.success": "L'e-mail de réinitialisation du mot de passe a été envoyé avec succès.",
+    "toast.forgotPassword.error": "Impossible d'envoyer l'e-mail de réinitialisation du mot de passe.",
+    "toast.authCallback.missingData": "Données d'authentification manquantes.",
+    "toast.authCallback.error": "Échec de la connexion via {$INTERPOLATION}.",
+    "toast.resetPassword.success": "Mot de passe réinitialisé avec succès. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
+    "toast.resetPassword.error": "Impossible de réinitialiser le mot de passe. Vérifiez votre code et réessayez.",
+    "toast.profile.updateSuccess": "Profil mis à jour avec succès.",
+    "toast.profile.updateError": "Échec de la mise à jour du profil.",
+    "toast.profile.languageSuccess": "Langue préférée mise à jour.",
+    "toast.profile.languageError": "Échec de la mise à jour de la langue préférée.",
+    "toast.profile.emailChangeRequested": "Code de confirmation envoyé à votre nouvel e-mail.",
+    "toast.profile.emailChangeRequestError": "Échec de la demande de changement d'e-mail.",
+    "toast.profile.emailChangeSuccess": "E-mail mis à jour avec succès.",
+    "toast.profile.emailChangeError": "Échec de la confirmation du changement d'e-mail.",
+    "toast.profile.passwordSetSuccess": "Mot de passe défini avec succès. Vous pouvez maintenant vous connecter avec votre nom d'utilisateur et votre mot de passe.",
+    "toast.profile.passwordSetError": "Échec de la définition du mot de passe.",
+    "toast.profile.pictureSuccess": "Photo de profil mise à jour.",
+    "toast.profile.pictureError": "Échec de la mise à jour de la photo de profil."
   }
 }

@@ -39,11 +39,11 @@ export class ForgotPasswordComponent {
       next: () => {
         this.isSubmitting = false;
         this.goToResetPassword();
-        this.toastService.success('Reset password email sent successfully.');
+        this.toastService.success($localize`:@@toast.forgotPassword.success:Reset password email sent successfully.`);
       },
       error: (err: ErrorResponse) => {
         this.isSubmitting = false;
-        this.toastService.error(err.message ?? 'Could not send reset password email.');
+        this.toastService.error(err.message ?? $localize`:@@toast.forgotPassword.error:Could not send reset password email.`);
       },
     });
   }

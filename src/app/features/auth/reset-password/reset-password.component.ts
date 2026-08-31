@@ -55,12 +55,12 @@ export class ResetPasswordComponent implements OnInit {
       next: () => {
         this.isSubmitting = false;
         this.submitted = true;
-        this.toastService.success('Password reset successfully. You can now log in with your new password.');
+        this.toastService.success($localize`:@@toast.resetPassword.success:Password reset successfully. You can now log in with your new password.`);
         this.router.navigate(['/login']);
       },
       error: (err: ErrorResponse) => {
         this.isSubmitting = false;
-        this.toastService.error(err.message ?? 'Could not reset password. Check your code and try again.');
+        this.toastService.error(err.message ?? $localize`:@@toast.resetPassword.error:Could not reset password. Check your code and try again.`);
       },
     });
   }
@@ -77,11 +77,11 @@ export class ResetPasswordComponent implements OnInit {
     this.authService.resendPasswordReset({ email }).subscribe({
       next: () => {
         this.isResending = false;
-        this.toastService.success('A new code has been sent to your email.');
+        this.toastService.success($localize`:@@toast.resendCode.success:A new code has been sent to your email.`);
       },
       error: (err: ErrorResponse) => {
         this.isResending = false;
-        this.toastService.error(err.message ?? 'Could not resend the code. Please try again.');
+        this.toastService.error(err.message ?? $localize`:@@toast.resendCode.error:Could not resend the code. Please try again.`);
       },
     });
   }

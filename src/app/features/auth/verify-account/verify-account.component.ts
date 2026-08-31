@@ -48,12 +48,12 @@ export class VerifyAccountComponent implements OnInit {
     this.authService.verify(this.form.value).subscribe({
       next: () => {
         this.isSubmitting = false;
-        this.toastService.success('Account verified successfully. You can now log in.');
+        this.toastService.success($localize`:@@toast.verifyAccount.success:Account verified successfully. You can now log in.`);
         this.router.navigate(['/login']);
       },
       error: (err: ErrorResponse) => {
         this.isSubmitting = false;
-        this.toastService.error(err.message ?? 'Could not verify your account. Check your code and try again.');
+        this.toastService.error(err.message ?? $localize`:@@toast.verifyAccount.error:Could not verify your account. Check your code and try again.`);
       },
     });
   }
@@ -70,11 +70,11 @@ export class VerifyAccountComponent implements OnInit {
     this.authService.resendVerification({ email }).subscribe({
       next: () => {
         this.isResending = false;
-        this.toastService.success('A new code has been sent to your email.');
+        this.toastService.success($localize`:@@toast.resendCode.success:A new code has been sent to your email.`);
       },
       error: (err: ErrorResponse) => {
         this.isResending = false;
-        this.toastService.error(err.message ?? 'Could not resend the code. Please try again.');
+        this.toastService.error(err.message ?? $localize`:@@toast.resendCode.error:Could not resend the code. Please try again.`);
       },
     });
   }

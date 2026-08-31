@@ -87,11 +87,11 @@ export class ProfileComponent implements OnInit {
     this.userService.updateProfile(this.profileForm.value).subscribe({
       next: () => {
         this.isSubmittingProfile = false;
-        this.toastService.success('Profile updated successfully.');
+        this.toastService.success($localize`:@@toast.profile.updateSuccess:Profile updated successfully.`);
       },
       error: (err: ErrorResponse) => {
         this.isSubmittingProfile = false;
-        this.toastService.error(err.message ?? 'Failed to update profile.');
+        this.toastService.error(err.message ?? $localize`:@@toast.profile.updateError:Failed to update profile.`);
       },
     });
   }
@@ -109,12 +109,12 @@ export class ProfileComponent implements OnInit {
     this.userService.changePreferredLanguage(this.languageForm.value).subscribe({
       next: () => {
         this.isSubmittingLanguage = false;
-        this.toastService.success('Preferred language updated.');
+        this.toastService.success($localize`:@@toast.profile.languageSuccess:Preferred language updated.`);
         this.languageService.redirectToPreferredLanguage(preferredLanguage);
       },
       error: (err: ErrorResponse) => {
         this.isSubmittingLanguage = false;
-        this.toastService.error(err.message ?? 'Failed to update preferred language.');
+        this.toastService.error(err.message ?? $localize`:@@toast.profile.languageError:Failed to update preferred language.`);
       },
     });
   }
@@ -131,11 +131,11 @@ export class ProfileComponent implements OnInit {
       next: () => {
         this.isSubmittingEmail = false;
         this.emailChangeRequested = true;
-        this.toastService.success('Confirmation code sent to your new email.');
+        this.toastService.success($localize`:@@toast.profile.emailChangeRequested:Confirmation code sent to your new email.`);
       },
       error: (err: ErrorResponse) => {
         this.isSubmittingEmail = false;
-        this.toastService.error(err.message ?? 'Failed to request email change.');
+        this.toastService.error(err.message ?? $localize`:@@toast.profile.emailChangeRequestError:Failed to request email change.`);
       },
     });
   }
@@ -154,11 +154,11 @@ export class ProfileComponent implements OnInit {
         this.emailChangeRequested = false;
         this.emailForm.reset();
         this.confirmEmailForm.reset();
-        this.toastService.success('Email updated successfully.');
+        this.toastService.success($localize`:@@toast.profile.emailChangeSuccess:Email updated successfully.`);
       },
       error: (err: ErrorResponse) => {
         this.isSubmittingConfirmEmail = false;
-        this.toastService.error(err.message ?? 'Failed to confirm email change.');
+        this.toastService.error(err.message ?? $localize`:@@toast.profile.emailChangeError:Failed to confirm email change.`);
       },
     });
   }
@@ -175,11 +175,11 @@ export class ProfileComponent implements OnInit {
       next: () => {
         this.isSubmittingPassword = false;
         this.passwordForm.reset();
-        this.toastService.success('Password set successfully. You can now log in with your username and password.');
+        this.toastService.success($localize`:@@toast.profile.passwordSetSuccess:Password set successfully. You can now log in with your username and password.`);
       },
       error: (err: ErrorResponse) => {
         this.isSubmittingPassword = false;
-        this.toastService.error(err.message ?? 'Failed to set password.');
+        this.toastService.error(err.message ?? $localize`:@@toast.profile.passwordSetError:Failed to set password.`);
       },
     });
   }
@@ -196,11 +196,11 @@ export class ProfileComponent implements OnInit {
     this.userService.updateAvatar(file).subscribe({
       next: () => {
         this.isUploadingAvatar = false;
-        this.toastService.success('Profile picture updated.');
+        this.toastService.success($localize`:@@toast.profile.pictureSuccess:Profile picture updated.`);
       },
       error: (err: ErrorResponse) => {
         this.isUploadingAvatar = false;
-        this.toastService.error(err.message ?? 'Failed to update profile picture.');
+        this.toastService.error(err.message ?? $localize`:@@toast.profile.pictureError:Failed to update profile picture.`);
       },
     });
 

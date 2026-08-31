@@ -99,6 +99,33 @@
 
     "notFound.title": "المشهد غير موجود",
     "notFound.description": " يبدو أن هذه الصفحة قد ضلّت طريقها إلى قاعة العرض. لنعد بك إلى الصفحة الرئيسية. ",
-    "notFound.backHome": " العودة إلى الرئيسية"
+    "notFound.backHome": " العودة إلى الرئيسية",
+
+    "toast.login.success": "تم تسجيل الدخول بنجاح.",
+    "toast.login.error": "اسم المستخدم أو كلمة المرور غير صحيحة.",
+    "toast.signup.success": "تم إنشاء الحساب بنجاح. يرجى تفعيل بريدك الإلكتروني قبل تسجيل الدخول.",
+    "toast.signup.error": "تعذر إنشاء الحساب.",
+    "toast.verifyAccount.success": "تم تفعيل الحساب بنجاح. يمكنك الآن تسجيل الدخول.",
+    "toast.verifyAccount.error": "تعذر تفعيل حسابك. تحقق من الرمز وحاول مرة أخرى.",
+    "toast.resendCode.success": "تم إرسال رمز جديد إلى بريدك الإلكتروني.",
+    "toast.resendCode.error": "تعذر إعادة إرسال الرمز. يرجى المحاولة مرة أخرى.",
+    "toast.forgotPassword.success": "تم إرسال بريد إعادة تعيين كلمة المرور بنجاح.",
+    "toast.forgotPassword.error": "تعذر إرسال بريد إعادة تعيين كلمة المرور.",
+    "toast.authCallback.missingData": "بيانات المصادقة مفقودة.",
+    "toast.authCallback.error": "فشل تسجيل الدخول عبر {$INTERPOLATION}.",
+    "toast.resetPassword.success": "تم إعادة تعيين كلمة المرور بنجاح. يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة.",
+    "toast.resetPassword.error": "تعذر إعادة تعيين كلمة المرور. تحقق من الرمز وحاول مرة أخرى.",
+    "toast.profile.updateSuccess": "تم تحديث الملف الشخصي بنجاح.",
+    "toast.profile.updateError": "تعذر تحديث الملف الشخصي.",
+    "toast.profile.languageSuccess": "تم تحديث اللغة المفضلة.",
+    "toast.profile.languageError": "تعذر تحديث اللغة المفضلة.",
+    "toast.profile.emailChangeRequested": "تم إرسال رمز التأكيد إلى بريدك الإلكتروني الجديد.",
+    "toast.profile.emailChangeRequestError": "تعذر طلب تغيير البريد الإلكتروني.",
+    "toast.profile.emailChangeSuccess": "تم تحديث البريد الإلكتروني بنجاح.",
+    "toast.profile.emailChangeError": "تعذر تأكيد تغيير البريد الإلكتروني.",
+    "toast.profile.passwordSetSuccess": "تم تعيين كلمة المرور بنجاح. يمكنك الآن تسجيل الدخول باسم المستخدم وكلمة المرور.",
+    "toast.profile.passwordSetError": "تعذر تعيين كلمة المرور.",
+    "toast.profile.pictureSuccess": "تم تحديث صورة الملف الشخصي.",
+    "toast.profile.pictureError": "تعذر تحديث صورة الملف الشخصي."
   }
 }

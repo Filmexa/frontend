@@ -35,7 +35,7 @@ export class AuthCallbackComponent implements OnInit, OnDestroy {
 
     if (!code || !state) {
       this.hasError = true;
-      this.toastService.error('Missing authentication data.');
+      this.toastService.error($localize`:@@toast.authCallback.missingData:Missing authentication data.`);
       setTimeout(() => this.router.navigate(['/login']), 2000);
       return;
     }
@@ -47,12 +47,12 @@ export class AuthCallbackComponent implements OnInit, OnDestroy {
     callback$.subscribe({
       next: () => {
         this.userService.loadCurrentUser();
-        this.toastService.success('Logged in successfully.');
+        this.toastService.success($localize`:@@toast.login.success:Logged in successfully.`);
         this.router.navigate(['/']);
       },
       error: (err: ErrorResponse) => {
         this.hasError = true;
-        this.toastService.error(err.message ?? `${provider} login failed.`);
+        this.toastService.error(err.message ?? $localize`:@@toast.authCallback.error:${provider}:INTERPOLATION: login failed.`);
         setTimeout(() => this.router.navigate(['/login']), 2000);
       },
     });
