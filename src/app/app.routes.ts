@@ -7,12 +7,15 @@ import { ResetPasswordComponent } from './features/auth/reset-password/reset-pas
 import { VerifyAccountComponent } from './features/auth/verify-account/verify-account.component';
 import { AuthCallbackComponent } from './features/auth/auth-callback/auth-callback.component';
 import { ProfileComponent } from './features/profile/profile.component';
+import { UsersComponent } from './features/users/users.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
-  { path: 'profile', component: ProfileComponent },
+  { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
+  { path: 'users', component: UsersComponent, canActivate: [authGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },

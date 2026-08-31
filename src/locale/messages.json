@@ -1,20 +1,17 @@
 {
   "locale": "en-US",
   "translations": {
-
     "authCallback.signingIn": "Signing you in{$INTERPOLATION}",
     "authCallback.hangTight": "Hang tight, this only takes a second.",
     "authCallback.redirecting": "Redirecting you back to login...",
-
     "forgotPassword.title": "Forgot your password?",
     "forgotPassword.instructions": "Enter your account's email address and we'll send you a code to reset your password.",
-
+    "signup.email": "Email",
     "forgotPassword.emailError": "Enter a valid email address.",
     "forgotPassword.submitting": "Sending...",
     "forgotPassword.submit": "Send reset code",
     "forgotPassword.submitted": "If an account exists for that email, we've sent a code to reset your password.",
     "forgotPassword.loginPrompt": " Remembered your password? {$START_LINK}Back to login{$CLOSE_LINK}",
-
     "login.title": "Sign in to Filmexa",
     "login.username": "Username",
     "login.usernameError": "Enter a valid username.",
@@ -29,7 +26,6 @@
     "login.withGoogle": "Login with Google",
     "login.withIntra": "Login with Intra",
     "login.signupPrompt": " New to Filmexa? {$START_LINK}Create an account{$CLOSE_LINK}",
-
     "resetPassword.title": "Reset your password",
     "resetPassword.instructions": "Enter the code we emailed you along with your new password.",
     "resetPassword.code": "Verification code",
@@ -40,9 +36,7 @@
     "resetPassword.resend": "Resend code",
     "resetPassword.submitting": "Resetting...",
     "resetPassword.submit": "Reset password",
-
     "signup.title": "Sign Up",
-    "signup.email": "Email",
     "signup.withGoogle": "Sign up with Google",
     "signup.withIntra": "Sign up with Intra",
     "signup.usernameError": "Username must be at least 3 characters.",
@@ -54,15 +48,12 @@
     "signup.submitting": "Creating account...",
     "signup.submit": "Sign Up",
     "signup.loginPrompt": " Already have an account? {$START_LINK}Sign in{$CLOSE_LINK}",
-
     "verifyAccount.title": "Verify your account",
     "verifyAccount.instructions": "Enter the code we emailed you to activate your account.",
     "verifyAccount.submitting": "Verifying...",
     "verifyAccount.submit": "Verify account",
     "verifyAccount.loginPrompt": " Already verified? {$START_LINK}Back to login{$CLOSE_LINK}",
-
     "home.title": "Home Page",
-
     "profile.avatar": "Profile picture",
     "profile.uploadingAvatar": "Uploading...",
     "profile.changeAvatar": "Change profile picture",
@@ -88,18 +79,56 @@
     "profile.confirming": "Confirming...",
     "profile.confirmEmail": "Confirm email change",
     "profile.loading": "Loading profile...",
-
     "footer.copyright": "© {$INTERPOLATION} Filmexa. All rights reserved.",
-
+    "header.logoAlt": "Filmexa",
     "header.home": "Home",
     "header.movies": "Movies",
     "header.myList": "My List",
     "header.profile": "Profile",
+    "header.users": "Search users",
     "header.logout": "Logout",
     "header.login": " Login ",
-
+    "header.menu": "Menu",
     "notFound.title": "Scene Not Found",
     "notFound.description": " Looks like this page got lost on its way to the screening room. Let's get you back to the main feature. ",
-    "notFound.backHome": " Back to home "
+    "notFound.backHome": " Back to home ",
+    "toast.login.success": "Logged in successfully.",
+    "toast.login.error": "Invalid username or password.",
+    "toast.signup.success": "Account created successfully. Please verify your email before logging in.",
+    "toast.signup.error": "Could not create account.",
+    "toast.verifyAccount.success": "Account verified successfully. You can now log in.",
+    "toast.verifyAccount.error": "Could not verify your account. Check your code and try again.",
+    "toast.resendCode.success": "A new code has been sent to your email.",
+    "toast.resendCode.error": "Could not resend the code. Please try again.",
+    "toast.forgotPassword.success": "Reset password email sent successfully.",
+    "toast.forgotPassword.error": "Could not send reset password email.",
+    "toast.authCallback.missingData": "Missing authentication data.",
+    "toast.authCallback.error": "{$INTERPOLATION} login failed.",
+    "toast.resetPassword.success": "Password reset successfully. You can now log in with your new password.",
+    "toast.resetPassword.error": "Could not reset password. Check your code and try again.",
+    "toast.profile.updateSuccess": "Profile updated successfully.",
+    "toast.profile.updateError": "Failed to update profile.",
+    "toast.profile.languageSuccess": "Preferred language updated.",
+    "toast.profile.languageError": "Failed to update preferred language.",
+    "toast.profile.emailChangeRequested": "Confirmation code sent to your new email.",
+    "toast.profile.emailChangeRequestError": "Failed to request email change.",
+    "toast.profile.emailChangeSuccess": "Email updated successfully.",
+    "toast.profile.emailChangeError": "Failed to confirm email change.",
+    "toast.profile.passwordSetSuccess": "Password set successfully. You can now log in with your username and password.",
+    "toast.profile.passwordSetError": "Failed to set password.",
+    "toast.profile.pictureSuccess": "Profile picture updated.",
+    "toast.profile.pictureError": "Failed to update profile picture.",
+    "users.title": "Find users",
+    "users.searchPlaceholder": "Search by username",
+    "users.searchIconAlt": "Search",
+    "users.loading": "Loading users...",
+    "users.empty": "No users found.",
+    "users.previous": " Previous ",
+    "users.pageOf": "Page {$INTERPOLATION} of {$INTERPOLATION_1}",
+    "users.next": " Next ",
+    "users.close": "Close",
+    "users.loadingProfile": "Loading profile...",
+    "users.loadError": "Failed to load users.",
+    "users.profileLoadError": "Failed to load user profile."
   }
 }

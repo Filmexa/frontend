@@ -8,6 +8,9 @@ import { ChangePreferredLanguageRequest } from '../../interfaces/user/ChangePref
 import { ChangeEmailRequest } from '../../interfaces/user/ChangeEmailRequest';
 import { ConfirmEmailChangeRequest } from '../../interfaces/user/ConfirmEmailChangeRequest';
 import { ErrorResponse } from '../../../shared/interfaces/ErrorResponse';
+import { Page } from '../../../shared/interfaces/Page';
+import { UserInfosResponse } from '../../interfaces/user/UserInfosResponse';
+import { UserInfosSimpleResponse } from '../../interfaces/user/UserInfosSimpleResponse';
 import { AuthService } from '../auth/auth.service';
 
 @Injectable({
@@ -27,6 +30,27 @@ export class UserService {
   loadCurrentUser(): void {
     this.getProfile().subscribe();
     this.getAvatar().subscribe();
+  }
+
+  getAllProfiles(page: number = 0, size: number = 20): Observable<Page<UserInfosSimpleResponse>> {
+    return this.http.get<Page<UserInfosSimpleResponse>>(`${this.apiUrl}/`, {
+      headers: this.authHeaders(),
+      params: { page, size },
+    }).pipe(
+      catchError(this.mapError),
+    );
+  }
+
+  getUserProfile(userId: string): Observable<UserInfosResponse> {
+    return this.http.get<UserInfosResponse>(`${this.apiUrl}/${userId}`, { headers: this.authHeaders() }).pipe(
+      catchError(this.mapError),
+    );
+  }
+
+  getUserAvatar(userId: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/${userId}/avatar`, { headers: this.authHeaders(), responseType: 'blob' }).pipe(
+      catchError(() => of(new Blob())),
+    );
   }
 
   getProfile(): Observable<UserProfileResponse> {

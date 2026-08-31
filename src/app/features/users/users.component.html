@@ -1,0 +1,96 @@
+<div class="max-w-3xl mx-auto px-8 py-12 text-white">
+  <h1 class="text-2xl font-bold mb-6" i18n="@@users.title">Find users</h1>
+
+  <div class="relative mb-8">
+    <img src="/assets/search-icon.svg" alt="Search" i18n-alt="@@users.searchIconAlt" class="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 opacity-60" />
+    <input
+      type="text"
+      [ngModel]="searchQuery()"
+      (ngModelChange)="searchQuery.set($event)"
+      placeholder="Search by username"
+      i18n-placeholder="@@users.searchPlaceholder"
+      class="w-full rounded bg-neutral-800 pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-red-600"
+    />
+  </div>
+
+  @if (isLoading) {
+    <p class="text-neutral-400" i18n="@@users.loading">Loading users...</p>
+  } @else if (filteredUsers().length === 0) {
+    <p class="text-neutral-400" i18n="@@users.empty">No users found.</p>
+  } @else {
+    <ul class="divide-y divide-neutral-800 border-t border-b border-neutral-800">
+      @for (user of filteredUsers(); track user.id) {
+        <li>
+          <button
+            type="button"
+            (click)="onSelectUser(user.id)"
+            class="flex items-center gap-3 w-full py-3 text-left hover:bg-neutral-900 transition-colors cursor-pointer"
+          >
+            <div class="h-9 w-9 shrink-0 rounded-full bg-red-600 flex items-center justify-center text-sm font-semibold uppercase">
+              {{ user.username.charAt(0) }}
+            </div>
+            <span class="font-medium">{{ user.username }}</span>
+          </button>
+        </li>
+      }
+    </ul>
+
+    @if (totalPages() > 1) {
+      <div class="flex items-center justify-between mt-6 text-sm text-neutral-400">
+        <button
+          type="button"
+          (click)="onPreviousPage()"
+          [disabled]="page() === 0"
+          class="rounded px-3 py-1.5 hover:bg-neutral-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+          i18n="@@users.previous"
+        >
+          Previous
+        </button>
+        <span i18n="@@users.pageOf">Page {{ page() + 1 }} of {{ totalPages() }}</span>
+        <button
+          type="button"
+          (click)="onNextPage()"
+          [disabled]="page() + 1 >= totalPages()"
+          class="rounded px-3 py-1.5 hover:bg-neutral-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+          i18n="@@users.next"
+        >
+          Next
+        </button>
+      </div>
+    }
+  }
+
+  @if (selectedUser(); as profile) {
+    <div class="fixed inset-0 bg-black/70 flex items-center justify-center px-4 z-50" (click)="closeProfile()">
+      <div class="bg-neutral-900 rounded-lg max-w-sm w-full p-6 relative" (click)="$event.stopPropagation()">
+        <button
+          type="button"
+          (click)="closeProfile()"
+          title="Close"
+          i18n-title="@@users.close"
+          class="absolute top-3 right-3 p-1 rounded hover:bg-neutral-800 transition-colors cursor-pointer"
+        >
+          <img src="/assets/close-x-icon.svg" alt="Close" i18n-alt="@@users.close" class="h-6 w-6" />
+        </button>
+
+        <div class="flex items-center gap-4">
+          <div class="h-16 w-16 shrink-0 rounded-full bg-red-600 flex items-center justify-center text-2xl font-semibold uppercase overflow-hidden">
+            @if (selectedUserAvatarUrl()) {
+              <img [src]="selectedUserAvatarUrl()" alt="Profile picture" i18n-alt="@@profile.avatar" class="h-full w-full object-cover" />
+            } @else {
+              {{ profile.username.charAt(0) }}
+            }
+          </div>
+          <div>
+            <h2 class="text-lg font-bold">{{ profile.username }}</h2>
+            <p class="text-neutral-400 text-sm">{{ profile.firstName }} {{ profile.lastName }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  } @else if (isLoadingProfile) {
+    <div class="fixed inset-0 bg-black/70 flex items-center justify-center px-4 z-50">
+      <p class="text-neutral-400" i18n="@@users.loadingProfile">Loading profile...</p>
+    </div>
+  }
+</div>

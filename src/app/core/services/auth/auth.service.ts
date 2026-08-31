@@ -127,7 +127,7 @@ export class AuthService {
       ? new HttpHeaders({ Authorization: `Bearer ${this.accessToken}` })
       : undefined;
 
-    return this.http.put(`${environment.apiUrl}/users/set-password`, request, { headers, responseType: 'text' }).pipe(
+    return this.http.put(`${this.apiUrl}/set-password`, request, { headers, responseType: 'text' }).pipe(
       catchError(this.mapError),
     );
   }
