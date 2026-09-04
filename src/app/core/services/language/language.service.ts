@@ -1,6 +1,7 @@
 import { Inject, Injectable, LOCALE_ID } from '@angular/core';
+import { LOCALE_STORAGE_KEY, SupportedLocale, buildLocalizedPath } from '../../utils/locale.util';
 
-const PREFERRED_LANGUAGE_TO_LOCALE: Record<string, string> = {
+const PREFERRED_LANGUAGE_TO_LOCALE: Record<string, SupportedLocale> = {
   ENGLISH: 'en',
   FRENCH: 'fr',
   ARABIC: 'ar',
@@ -18,16 +19,20 @@ export class LanguageService {
 
   redirectToPreferredLanguage(preferredLanguage: string | undefined | null): void {
     const targetLocale = preferredLanguage ? PREFERRED_LANGUAGE_TO_LOCALE[preferredLanguage] : undefined;
-    if (!targetLocale || targetLocale === this.currentLocale) {
+    if (!targetLocale) {
       return;
     }
 
-    window.location.href = this.buildLocalizedUrl(targetLocale);
-  }
+    try {
+      localStorage.setItem(LOCALE_STORAGE_KEY, targetLocale);
+    } catch {
 
-  private buildLocalizedUrl(targetLocale: string): string {
-    const pathWithoutLocale = window.location.pathname.replace(/^\/(fr|ar)(\/|$)/, '/');
-    const prefix = targetLocale === 'en' ? '' : `/${targetLocale}`;
-    return `${prefix}${pathWithoutLocale}${window.location.search}`;
+    }
+
+    if (targetLocale === this.currentLocale) {
+      return;
+    }
+
+    window.location.href = buildLocalizedPath(window.location.pathname, window.location.search, targetLocale);
   }
 }
