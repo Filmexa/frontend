@@ -12,6 +12,7 @@ import { Page } from '../../../shared/interfaces/Page';
 import { UserInfosResponse } from '../../interfaces/user/UserInfosResponse';
 import { UserInfosSimpleResponse } from '../../interfaces/user/UserInfosSimpleResponse';
 import { AuthService } from '../auth/auth.service';
+import { LanguageService } from '../language/language.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,7 @@ export class UserService {
   constructor(
     private http: HttpClient,
     private authService: AuthService,
+    private languageService: LanguageService,
   ) { }
 
   loadCurrentUser(): void {
@@ -55,7 +57,10 @@ export class UserService {
 
   getProfile(): Observable<UserProfileResponse> {
     return this.http.get<UserProfileResponse>(`${this.apiUrl}/me/profile`, { headers: this.authHeaders() }).pipe(
-      tap((profile) => this.profile.set(profile)),
+      tap((profile) => {
+        this.profile.set(profile);
+        this.languageService.redirectToPreferredLanguage(profile.preferredLanguage);
+      }),
       catchError(this.mapError),
     );
   }
