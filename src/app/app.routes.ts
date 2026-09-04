@@ -10,17 +10,18 @@ import { ProfileComponent } from './features/profile/profile.component';
 import { UsersComponent } from './features/users/users.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 import { authGuard } from './core/guards/auth.guard';
+import { guestGuard } from './core/guards/guest.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
   { path: 'users/:id', component: UsersComponent, canActivate: [authGuard] },
-  { path: 'login', component: LoginComponent },
-  { path: 'signup', component: SignupComponent },
-  { path: 'forgot-password', component: ForgotPasswordComponent },
-  { path: 'reset-password', component: ResetPasswordComponent },
-  { path: 'verify-account', component: VerifyAccountComponent },
+  { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
+  { path: 'signup', component: SignupComponent, canActivate: [guestGuard] },
+  { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [guestGuard] },
+  { path: 'reset-password', component: ResetPasswordComponent, canActivate: [guestGuard] },
+  { path: 'verify-account', component: VerifyAccountComponent, canActivate: [guestGuard] },
   { path: 'auth/google/callback', component: AuthCallbackComponent, data: { provider: 'google' } },
   { path: 'auth/42/callback', component: AuthCallbackComponent, data: { provider: 'intra' } },
   { path: '**', component: NotFoundComponent },
