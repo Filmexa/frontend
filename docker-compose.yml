@@ -1,0 +1,14 @@
+services:
+  front-end:
+    image: mbaanni/filmexa-frontend:latest
+    container-name: filmexa-frontend
+    restart: always
+    ports:
+      80:80
+    networks:
+      - filmexa-net
+
+networks:
+  shared-network:
+    external: true
+    name: filmexa-net
