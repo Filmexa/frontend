@@ -60,7 +60,7 @@ jobs:
           chmod 600 ssh_key.pem
 
           scp -o StrictHostKeyChecking=no -i ssh_key.pem \
-            docker-compose.yml ${{ secrets.ORACLE_INSTANCE_USER }}@${{ secrets.ORACLE_INSTANCE_HOST }}:/home/${{ secrets.ORACLE_INSTANCE_USER }}/front-end/
+            docker-compose.yml ${{ secrets.ORACLE_INSTANCE_USER }}@${{ secrets.ORACLE_INSTANCE_HOST }}:/home/${{ secrets.ORACLE_INSTANCE_USER }}/frontend/
           
           rm ssh_key.pem
       - name: Deploy application
