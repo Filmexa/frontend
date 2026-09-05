@@ -71,6 +71,6 @@ jobs:
           key: ${{ secrets.ORACLE_INSTANCE_KEY }}
           
           script: |
-            cd /home/ubuntu/front-end/
+            cd /home/ubuntu/frontend/
             docker compose pull
             docker compose up -d --remove-orphans
