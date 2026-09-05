@@ -37,8 +37,11 @@ jobs:
             docker login -u ${{ secrets.DOCKERUSER }} -p ${{ secrets.DOCKERPASSWORD }}
       - name: build image
         run : docker build -t ${{ secrets.DOCKERUSER }}/filmexa-frontend:latest \
-            -t ${{ secrets.DOCKERUSER }}/filmexa-frontend:${{ github.sha }} \
-            --push .
+            -t ${{ secrets.DOCKERUSER }}/filmexa-frontend:${{ github.sha }} .
+      - name: push image
+        run: |
+            docker push ${{ secrets.DOCKERUSER }}/filmexa-frontend:latest
+            docker push ${{ secrets.DOCKERUSER }}/filmexa-frontend:${{ github.sha }}
   deploy-code:
     name: deploy to server
     needs: test
