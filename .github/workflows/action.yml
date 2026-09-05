@@ -1,0 +1,73 @@
+name: Filmexa action
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+    workflow_dispatch:
+  
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build -- --configuration production
+      - name: Log in to Docker Hub
+        run: |
+            docker login -u ${{ secrets.DOCKERUSER }} -p ${{ secrets.DOCKERPASSWORD }}
+      - name: build image
+        run : docker build -t ${{ secrets.DOCKERUSER }}/filmexa-frontend:latest \
+            -t ${{ secrets.DOCKERUSER }}/filmexa-frontend:${{ github.sha }} \
+            --push .
+  deploy-code:
+    name: deploy to server
+    needs: test
+
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Copy docker-compose.yml to server
+        run: |
+          echo "${{ secrets.ORACLE_INSTANCE_KEY }}" > ssh_key.pem
+          chmod 600 ssh_key.pem
+
+          scp -o StrictHostKeyChecking=no -i ssh_key.pem \
+            docker-compose.yml ${{ secrets.ORACLE_INSTANCE_USER }}@${{ secrets.ORACLE_INSTANCE_HOST }}:/home/${{ secrets.ORACLE_INSTANCE_USER }}/
+          
+          rm ssh_key.pem
+            - name: Deploy application
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.ORACLE_INSTANCE_HOST }}
+          username: ${{ secrets.ORACLE_INSTANCE_USER }}
+          key: ${{ secrets.ORACLE_INSTANCE_KEY }}
+          
+          script: |
+            cd /home/ubuntu/
+            docker compose pull
+            docker compose up -d --remove-orphans
