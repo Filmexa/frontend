@@ -38,6 +38,7 @@ jobs:
       - name: build image
         run : |
             docker buildx build \
+            --platform linux/amd64 \
             -t ${{ secrets.DOCKERUSER }}/filmexa-frontend:latest \
             -t ${{ secrets.DOCKERUSER }}/filmexa-frontend:${{ github.sha }} \
             --push .
