@@ -60,7 +60,7 @@ jobs:
           chmod 600 ssh_key.pem
 
           scp -o StrictHostKeyChecking=no -i ssh_key.pem \
-            docker-compose.yml ${{ secrets.ORACLE_INSTANCE_USER }}@${{ secrets.ORACLE_INSTANCE_HOST }}:/home/${{ secrets.ORACLE_INSTANCE_USER }}/
+            docker-compose.yml ${{ secrets.ORACLE_INSTANCE_USER }}@${{ secrets.ORACLE_INSTANCE_HOST }}:/home/${{ secrets.ORACLE_INSTANCE_USER }}/front-end/
           
           rm ssh_key.pem
       - name: Deploy application
@@ -71,6 +71,6 @@ jobs:
           key: ${{ secrets.ORACLE_INSTANCE_KEY }}
           
           script: |
-            cd /home/ubuntu/
+            cd /home/ubuntu/front-end/
             docker compose pull
             docker compose up -d --remove-orphans
