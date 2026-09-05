@@ -60,7 +60,7 @@ jobs:
             docker-compose.yml ${{ secrets.ORACLE_INSTANCE_USER }}@${{ secrets.ORACLE_INSTANCE_HOST }}:/home/${{ secrets.ORACLE_INSTANCE_USER }}/
           
           rm ssh_key.pem
-            - name: Deploy application
+      - name: Deploy application
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.ORACLE_INSTANCE_HOST }}
