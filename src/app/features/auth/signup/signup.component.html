@@ -8,6 +8,15 @@
 
     <button
       type="button"
+      (click)="signupWithIntra()"
+      class="flex items-center justify-center gap-2 rounded bg-neutral-800 hover:bg-neutral-700 py-2.5 font-semibold cursor-pointer transition-colors"
+    >
+      <img src="assets/intra-logo.svg" alt="Intra logo" class="w-5 h-5" />
+      <span i18n="@@signup.withIntra">Sign up with Intra</span>
+    </button>
+
+    <button
+      type="button"
       (click)="signupWithGoogle()"
       class="flex items-center justify-center gap-2 rounded bg-neutral-800 hover:bg-neutral-700 py-2.5 font-semibold cursor-pointer transition-colors"
     >
@@ -17,11 +26,11 @@
 
     <button
       type="button"
-      (click)="signupWithIntra()"
+      (click)="signupWithFacebook()"
       class="flex items-center justify-center gap-2 rounded bg-neutral-800 hover:bg-neutral-700 py-2.5 font-semibold cursor-pointer transition-colors"
     >
-      <img src="assets/intra-logo.svg" alt="Intra logo" class="w-5 h-5" />
-      <span i18n="@@signup.withIntra">Sign up with Intra</span>
+      <img src="assets/facebook-logo.svg" alt="Facebook logo" class="w-5 h-5" />
+      <span i18n="@@signup.withFacebook">Sign up with Facebook</span>
     </button>
 
     <div class="flex items-center my-4">

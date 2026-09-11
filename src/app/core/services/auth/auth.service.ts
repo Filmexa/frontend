@@ -140,6 +140,10 @@ export class AuthService {
     window.location.href = `${this.apiUrl}/42`;
   }
 
+  loginWithFacebook(): void {
+    window.location.href = `${this.apiUrl}/facebook`;
+  }
+
   handleGoogleCallback(code: string, state: string): Observable<AuthResponse> {
     return this.http.get<AuthResponse>(`${this.apiUrl}/google/callback`, {
       params: { code, state },
@@ -159,4 +163,15 @@ export class AuthService {
       catchError(this.mapError),
     );
   }
+
+  handleFacebookCallback(code: string, state: string): Observable<AuthResponse> {
+    return this.http.get<AuthResponse>(`${this.apiUrl}/facebook/callback`, {
+      params: { code, state },
+      withCredentials: true,
+    }).pipe(
+      tap((response) => this.setSession(response)),
+      catchError(this.mapError),
+    );
+  }
+
 }
