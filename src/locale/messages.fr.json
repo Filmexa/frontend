@@ -27,6 +27,7 @@
     "login.or": "ou",
     "login.withGoogle": "Se connecter avec Google",
     "login.withIntra": "Se connecter avec Intra",
+    "login.withFacebook": "Se connecter avec Facebook",
     "login.signupPrompt": " Nouveau sur Filmexa ? {$START_LINK}Créer un compte{$CLOSE_LINK}",
 
     "resetPassword.title": "Réinitialiser votre mot de passe",
@@ -44,6 +45,7 @@
     "signup.email": "E-mail",
     "signup.withGoogle": "S'inscrire avec Google",
     "signup.withIntra": "S'inscrire avec Intra",
+    "signup.withFacebook": "S'inscrire avec Facebook",
     "signup.usernameError": "Le nom d'utilisateur doit contenir au moins 3 caractères.",
     "signup.firstName": "Prénom",
     "signup.lastName": "Nom de famille",

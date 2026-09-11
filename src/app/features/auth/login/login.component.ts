@@ -63,4 +63,8 @@ export class LoginComponent {
     this.authService.loginWithIntra();
   }
 
+  loginWithFacebook(): void {
+    this.authService.loginWithFacebook();
+  }
+
 }

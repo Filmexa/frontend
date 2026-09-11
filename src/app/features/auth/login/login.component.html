@@ -71,6 +71,15 @@
 
     <button
       type="button"
+      (click)="loginWithIntra()"
+      class="flex items-center justify-center gap-2 rounded bg-neutral-800 hover:bg-neutral-700 py-2.5 font-semibold cursor-pointer transition-colors"
+    >
+      <img src="assets/intra-logo.svg" alt="Intra logo" class="w-5 h-5" />
+      <span i18n="@@login.withIntra">Login with Intra</span>
+    </button>
+
+    <button
+      type="button"
       (click)="loginWithGoogle()"
       class="flex items-center justify-center gap-2 rounded bg-neutral-800 hover:bg-neutral-700 py-2.5 font-semibold cursor-pointer transition-colors"
     >
@@ -80,11 +89,11 @@
 
     <button
       type="button"
-      (click)="loginWithIntra()"
+      (click)="loginWithFacebook()"
       class="flex items-center justify-center gap-2 rounded bg-neutral-800 hover:bg-neutral-700 py-2.5 font-semibold cursor-pointer transition-colors"
     >
-      <img src="assets/intra-logo.svg" alt="Intra logo" class="w-5 h-5" />
-      <span i18n="@@login.withIntra">Login with Intra</span>
+      <img src="assets/facebook-logo.svg" alt="Facebook logo" class="w-5 h-5" />
+      <span i18n="@@login.withFacebook">Login with Facebook</span>
     </button>
 
     <p class="mt-4 text-sm text-center" i18n="@@login.signupPrompt">

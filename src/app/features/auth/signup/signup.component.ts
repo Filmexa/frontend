@@ -62,4 +62,8 @@ export class SignupComponent {
   signupWithIntra(): void {
     this.authService.loginWithIntra();
   }
+
+  signupWithFacebook(): void {
+    this.authService.loginWithFacebook();
+  }
 }

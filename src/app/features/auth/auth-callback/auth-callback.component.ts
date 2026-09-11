@@ -31,7 +31,7 @@ export class AuthCallbackComponent implements OnInit, OnDestroy {
     }, 400);
 
     const { code, state } = this.route.snapshot.queryParams;
-    const provider = this.route.snapshot.data['provider'] as 'google' | 'intra';
+    const provider = this.route.snapshot.data['provider'] as 'google' | '42' | 'facebook';
 
     if (!code || !state) {
       this.hasError = true;
@@ -42,7 +42,9 @@ export class AuthCallbackComponent implements OnInit, OnDestroy {
 
     const callback$ = provider === 'google'
       ? this.authService.handleGoogleCallback(code, state)
-      : this.authService.handleIntraCallback(code, state);
+      : provider === '42'
+        ? this.authService.handleIntraCallback(code, state)
+        : this.authService.handleFacebookCallback(code, state);
 
     callback$.subscribe({
       next: () => {

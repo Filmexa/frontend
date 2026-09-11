@@ -22,6 +22,7 @@ export const routes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [guestGuard] },
   { path: 'reset-password', component: ResetPasswordComponent, canActivate: [guestGuard] },
   { path: 'verify-account', component: VerifyAccountComponent, canActivate: [guestGuard] },
+  { path: 'auth/facebook/callback', component: AuthCallbackComponent, data: { provider: 'facebook' } },
   { path: 'auth/google/callback', component: AuthCallbackComponent, data: { provider: 'google' } },
   { path: 'auth/42/callback', component: AuthCallbackComponent, data: { provider: 'intra' } },
   { path: '**', component: NotFoundComponent },
