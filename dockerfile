@@ -1,5 +1,5 @@
 FROM nginx:trixie
-RUN apt update && apt install python3-certbot-nginx
+RUN apt update && apt install -y python3-certbot-nginx && rm -rf /var/lib/apt/lists/*
 RUN certbot --nginx -d filmexa.duckdns.org --email example@gmail.com --agree-tos --no-eff-email
 RUN rm -rf /usr/share/nginx/html/*
 COPY dist/filmexa/browser/ /usr/share/nginx/html/
