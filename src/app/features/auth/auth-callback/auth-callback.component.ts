@@ -40,11 +40,23 @@ export class AuthCallbackComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const callback$ = provider === 'google'
-      ? this.authService.handleGoogleCallback(code, state)
-      : provider === '42'
-        ? this.authService.handleIntraCallback(code, state)
-        : this.authService.handleFacebookCallback(code, state);
+    let callback$: ReturnType<typeof this.authService.handleGoogleCallback>;
+    switch (provider) {
+      case 'google':
+        callback$ = this.authService.handleGoogleCallback(code, state);
+        break;
+      case '42':
+        callback$ = this.authService.handleIntraCallback(code, state);
+        break;
+      case 'facebook':
+        callback$ = this.authService.handleFacebookCallback(code, state);
+        break;
+      default:
+        this.hasError = true;
+        this.toastService.error($localize`:@@toast.authCallback.missingData:Missing authentication data.`);
+        setTimeout(() => this.router.navigate(['/login']), 2000);
+        return;
+    }
 
     callback$.subscribe({
       next: () => {
