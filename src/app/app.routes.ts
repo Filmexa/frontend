@@ -24,6 +24,6 @@ export const routes: Routes = [
   { path: 'verify-account', component: VerifyAccountComponent, canActivate: [guestGuard] },
   { path: 'auth/facebook/callback', component: AuthCallbackComponent, data: { provider: 'facebook' } },
   { path: 'auth/google/callback', component: AuthCallbackComponent, data: { provider: 'google' } },
-  { path: 'auth/42/callback', component: AuthCallbackComponent, data: { provider: 'intra' } },
+  { path: 'auth/42/callback', component: AuthCallbackComponent, data: { provider: '42' } },
   { path: '**', component: NotFoundComponent },
 ];
