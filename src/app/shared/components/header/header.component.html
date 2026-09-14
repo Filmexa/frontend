@@ -1,27 +1,59 @@
 <header class="fixed top-0 inset-x-0 z-50 bg-neutral-900/80 backdrop-blur-md text-white">
   <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
-    <a routerLink="/home" class="flex items-center gap-0.5">
-      <img src="/assets/filmexaLogo.png" alt="Filmexa" i18n-alt="@@header.logoAlt" class="h-8 sm:h-10 w-auto" />
-      <span class="text-xl sm:text-2xl font-bold">Filmexa</span>
-    </a>
+    <div class="flex items-center gap-6 lg:gap-10">
+      <a routerLink="/home" class="flex items-center gap-0.5">
+        <img src="/assets/filmexaLogo.png" alt="Filmexa" i18n-alt="@@header.logoAlt" class="h-8 sm:h-10 w-auto" />
+        <span class="text-xl sm:text-2xl font-bold">Filmexa</span>
+      </a>
 
-    <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-neutral-200">
-      <a routerLink="/home" class="hover:text-white transition-colors" i18n="@@header.home">Home</a>
-      <a routerLink="/movies" class="hover:text-white transition-colors" i18n="@@header.movies">Movies</a>
-      <a routerLink="/my-list" class="hover:text-white transition-colors" i18n="@@header.myList">My List</a>
-    </nav>
+      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-neutral-200">
+        <a routerLink="/home" class="hover:text-white transition-colors" i18n="@@header.home">Home</a>
+
+        <div class="relative">
+          <button
+            type="button"
+            (click)="toggleBrowse()"
+            class="flex items-center gap-1 hover:text-white transition-colors cursor-pointer"
+          >
+            <span i18n="@@header.browse">Browse</span>
+            <svg class="w-4 h-4 transition-transform" [class.rotate-180]="browseOpen()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+
+          @if (browseOpen()) {
+            <div class="absolute top-full left-0 mt-2 w-56 max-h-96 overflow-y-auto rounded-lg bg-neutral-900 shadow-2xl ring-1 ring-white/10 py-2 z-50">
+              @for (category of categories; track category) {
+                <a
+                  [routerLink]="['/movies', category]"
+                  (click)="closeBrowse()"
+                  class="block px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-800 hover:text-white transition-colors"
+                >
+                  {{ category }}
+                </a>
+              }
+            </div>
+          }
+        </div>
+
+        @if (authService.isLoggedIn()) {
+          <a routerLink="/my-list" class="hover:text-white transition-colors" i18n="@@header.myList">My List</a>
+        }
+      </nav>
+    </div>
 
     <div class="flex items-center gap-2 sm:gap-4">
+      <a routerLink="/search" title="Search movies" i18n-title="@@header.searchMovies" class="hidden sm:block p-2 rounded hover:bg-neutral-800 transition-colors">
+        <img src="/assets/search-icon.svg" alt="Search movies" i18n-alt="@@header.searchMovies" class="h-5 w-5 brightness-0 invert" />
+      </a>
+
       @if (authService.isLoggedIn()) {
-        <button type="button" title="Search movies" i18n-title="@@header.searchMovies" class="hidden sm:block p-2 rounded hover:bg-neutral-800 transition-colors cursor-pointer">
-          <img src="/assets/search-icon.svg" alt="Search movies" i18n-alt="@@header.searchMovies" class="h-5 w-5 brightness-0 invert" />
-        </button>
-
-        <a routerLink="/profile" title="Profile" i18n-title="@@header.profile" class="hidden sm:block p-2 rounded hover:bg-neutral-800 transition-colors">
-          <img src="/assets/user-profile.svg" alt="Profile" i18n-alt="@@header.profile" class="h-5 w-5 brightness-0 invert" />
-        </a>
-
-        <div class="flex items-center gap-2">
+        <a
+          routerLink="/profile"
+          title="Profile"
+          i18n-title="@@header.profile"
+          class="flex items-center gap-2 p-1 pr-2 rounded hover:bg-neutral-800 transition-colors"
+        >
           <div class="h-8 w-8 shrink-0 rounded-full bg-red-600 flex items-center justify-center text-sm font-semibold uppercase overflow-hidden">
             @if (userService.avatarUrl()) {
               <img [src]="userService.avatarUrl()" alt="Profile picture" class="h-full w-full object-cover" />
@@ -30,7 +62,7 @@
             }
           </div>
           <span class="hidden sm:inline text-sm font-medium max-w-[8rem] truncate">{{ userService.profile()?.username }}</span>
-        </div>
+        </a>
 
         <button
           type="button"
@@ -75,11 +107,36 @@
   @if (mobileMenuOpen()) {
     <nav class="md:hidden flex flex-col gap-1 px-4 pb-4 text-sm font-medium text-neutral-200 border-t border-neutral-800">
       <a routerLink="/home" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.home">Home</a>
-      <a routerLink="/movies" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.movies">Movies</a>
-      <a routerLink="/my-list" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.myList">My List</a>
+
+      <button
+        type="button"
+        (click)="toggleBrowse()"
+        class="flex items-center justify-between py-2 text-left hover:text-white transition-colors cursor-pointer"
+      >
+        <span i18n="@@header.browse">Browse</span>
+        <svg class="w-4 h-4 transition-transform" [class.rotate-180]="browseOpen()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+
+      @if (browseOpen()) {
+        <div class="flex flex-col gap-1 pl-4 pb-1 max-h-64 overflow-y-auto">
+          @for (category of categories; track category) {
+            <a
+              [routerLink]="['/movies', category]"
+              (click)="closeMobileMenu()"
+              class="py-1.5 text-neutral-300 hover:text-white transition-colors"
+            >
+              {{ category }}
+            </a>
+          }
+        </div>
+      }
+
+      <a routerLink="/search" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.searchMovies">Search movies</a>
 
       @if (authService.isLoggedIn()) {
-        <button type="button" (click)="closeMobileMenu()" class="py-2 text-left hover:text-white transition-colors cursor-pointer" i18n="@@header.searchMovies">Search movies</button>
+        <a routerLink="/my-list" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.myList">My List</a>
         <a routerLink="/profile" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.profile">Profile</a>
       }
     </nav>

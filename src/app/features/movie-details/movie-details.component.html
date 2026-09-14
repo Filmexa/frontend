@@ -1,0 +1,90 @@
+@if (movie) {
+  <div class="min-h-screen text-white">
+    <section class="relative w-full h-[60vh] min-h-[380px] overflow-hidden bg-neutral-950">
+      <div class="absolute inset-0 bg-cover bg-center" [style.background-image]="'url(' + movie.backdrop + ')'"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/50 to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-neutral-950/90 via-neutral-950/10 to-transparent"></div>
+
+      <button
+        type="button"
+        (click)="goBack()"
+        class="absolute top-20 left-4 sm:left-8 lg:left-12 z-20 flex items-center gap-2 text-neutral-200 hover:text-white transition-colors cursor-pointer"
+      >
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+        <span i18n="@@movieDetails.back">Back</span>
+      </button>
+
+      <div class="relative z-10 h-full flex flex-col justify-end gap-3 px-4 sm:px-8 lg:px-12 pb-10 max-w-2xl">
+        <span
+          class="w-fit text-[10px] font-bold uppercase tracking-wide bg-red-600 text-white px-1.5 py-0.5 rounded"
+        >
+          {{ movie.type === 'tv' ? 'TV' : 'Movie' }}
+        </span>
+
+        <h1 class="text-3xl sm:text-5xl font-extrabold uppercase tracking-tight drop-shadow-lg">
+          {{ movie.title }}
+        </h1>
+
+        <div class="flex items-center gap-3 text-sm sm:text-base text-neutral-300">
+          <span class="text-green-500 font-semibold">{{ movie.rating }}% <span i18n="@@movieDetails.match">match</span></span>
+          <span>{{ movie.year }}</span>
+          <span>{{ movie.duration }}</span>
+          <span class="hidden sm:inline">{{ movie.genres.join(' • ') }}</span>
+        </div>
+
+        <p class="text-sm sm:text-base text-neutral-200 max-w-xl drop-shadow">
+          {{ movie.description }}
+        </p>
+
+        <div class="flex items-center gap-3 pt-2">
+          <button
+            type="button"
+            (click)="play()"
+            class="flex items-center gap-2 bg-white text-black font-semibold px-5 py-2.5 rounded hover:bg-neutral-200 transition-colors cursor-pointer"
+          >
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+            <span i18n="@@movieDetails.play">Play</span>
+          </button>
+
+          @if (authService.isLoggedIn()) {
+            <button
+              type="button"
+              (click)="toggleMyList()"
+              class="flex items-center gap-2 bg-neutral-700/70 text-white font-semibold px-5 py-2.5 rounded hover:bg-neutral-600/70 transition-colors cursor-pointer backdrop-blur-sm"
+            >
+              @if (myListService.isInList(movie.id)) {
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                <span i18n="@@movieDetails.inMyList">In My List</span>
+              } @else {
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14" stroke-linecap="round" /></svg>
+                <span i18n="@@movieDetails.addToMyList">My List</span>
+              }
+            </button>
+          }
+        </div>
+      </div>
+    </section>
+
+    @if (isPlaying()) {
+      <section class="px-4 sm:px-8 lg:px-12 py-6">
+        <div class="relative w-full aspect-video rounded overflow-hidden bg-black flex items-center justify-center">
+          <div class="absolute inset-0 bg-cover bg-center opacity-40" [style.background-image]="'url(' + movie.backdrop + ')'"></div>
+          <div class="relative z-10 flex flex-col items-center gap-3 text-center px-4">
+            <svg class="w-14 h-14 text-white/90" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+            <p class="text-neutral-200 font-medium" i18n="@@movieDetails.demoPlayback">Now playing "{{ movie.title }}" (demo playback — no real video source)</p>
+          </div>
+        </div>
+      </section>
+    }
+
+    @if (moreLikeThis.length) {
+      <app-movie-row [title]="'More like this'" [category]="movie.category" [movies]="moreLikeThis" />
+    }
+  </div>
+} @else {
+  <div class="min-h-screen flex items-center justify-center text-neutral-300">
+    <p i18n="@@movieDetails.notFound">Movie not found.</p>
+  </div>
+}

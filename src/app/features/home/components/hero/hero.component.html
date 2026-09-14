@@ -1,0 +1,118 @@
+<section class="relative w-full h-[70vh] min-h-[420px] overflow-hidden bg-neutral-950 text-white">
+  @for (movie of movies(); track movie.id; let i = $index) {
+    <div
+      class="absolute inset-0 transition-opacity duration-1000 ease-in-out"
+      [class.opacity-100]="i === activeIndex()"
+      [class.opacity-0]="i !== activeIndex()"
+      [class.pointer-events-none]="i !== activeIndex()"
+    >
+      <div
+        class="absolute inset-0 bg-cover bg-center hero-zoom"
+        [class.hero-zoom-active]="i === activeIndex()"
+        [style.background-image]="'url(' + movie.backdrop + ')'"
+      ></div>
+
+      <div class="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-neutral-950/90 via-neutral-950/20 to-transparent"></div>
+
+      <div class="relative z-10 h-full flex flex-col justify-end sm:justify-center gap-3 px-4 sm:px-8 lg:px-12 pb-16 sm:pb-0 max-w-2xl">
+        <div class="flex items-center gap-2 text-red-500 font-semibold text-sm tracking-wide">
+          <span class="inline-block w-4 h-0.5 bg-red-500"></span>
+          <span i18n="@@home.hero.trendingNow">TRENDING NOW</span>
+        </div>
+
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold uppercase tracking-tight drop-shadow-lg">
+          {{ movie.title }}
+        </h1>
+
+        <div class="flex items-center gap-3 text-sm sm:text-base text-neutral-300">
+          <span class="text-green-500 font-semibold">{{ (movie.rating / 10) * 100 | number:'1.0-0' }}% <span i18n="@@home.hero.match">match</span></span>
+          <span>{{ movie.year }}</span>
+          <span>{{ movie.duration }}</span>
+          <span class="hidden sm:inline">{{ movie.genres.join(' • ') }}</span>
+        </div>
+
+        <p class="text-sm sm:text-base text-neutral-200 max-w-xl line-clamp-3 drop-shadow">
+          {{ movie.description }}
+        </p>
+
+        <div class="flex items-center gap-3 pt-2">
+          <button
+            type="button"
+            (click)="goToDetails(movie)"
+            class="flex items-center gap-2 bg-white text-black font-semibold px-5 py-2.5 rounded hover:bg-neutral-200 transition-colors cursor-pointer"
+          >
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+            <span i18n="@@home.hero.play">Play</span>
+          </button>
+
+          <button
+            type="button"
+            (click)="openTrailer(movie)"
+            class="flex items-center gap-2 bg-neutral-700/70 text-white font-semibold px-5 py-2.5 rounded hover:bg-neutral-600/70 transition-colors cursor-pointer backdrop-blur-sm"
+          >
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none" />
+            </svg>
+            <span i18n="@@home.hero.watchTrailer">Watch Trailer</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="absolute bottom-4 sm:bottom-6 right-4 sm:right-8 z-20 flex items-center gap-1.5">
+    @for (movie of movies(); track movie.id; let i = $index) {
+      <button
+        type="button"
+        (click)="selectMovie(i)"
+        class="h-1.5 rounded-full transition-all duration-300 cursor-pointer"
+        [class]="i === activeIndex() ? 'w-6 bg-white' : 'w-1.5 bg-white/50'"
+        [attr.aria-label]="'Show ' + movie.title"
+      ></button>
+    }
+  </div>
+</section>
+
+@if (trailerMovie(); as trailer) {
+  <div
+    (click)="closeTrailer()"
+    class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+  >
+    <div (click)="$event.stopPropagation()" class="relative w-full max-w-3xl">
+      <button
+        type="button"
+        (click)="closeTrailer()"
+        aria-label="Close trailer"
+        i18n-aria-label="@@home.hero.closeTrailer"
+        class="absolute -top-10 right-0 sm:-top-2 sm:-right-10 flex items-center justify-center w-9 h-9 rounded-full bg-neutral-800/80 text-white hover:bg-neutral-700 transition-colors cursor-pointer"
+      >
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" />
+        </svg>
+      </button>
+
+      <div class="rounded-lg overflow-hidden bg-neutral-900 shadow-2xl ring-1 ring-white/10">
+        <div class="relative aspect-video bg-black flex items-center justify-center">
+          <div class="absolute inset-0 bg-cover bg-center opacity-50" [style.background-image]="'url(' + trailer.backdrop + ')'"></div>
+          <div class="relative z-10 flex flex-col items-center gap-3 text-center px-4">
+            <svg class="w-16 h-16 text-white/90" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+            <p class="text-neutral-200 font-medium" i18n="@@home.hero.trailerDemo">
+              {{ trailer.title }} — Trailer (demo playback, no real video source)
+            </p>
+          </div>
+        </div>
+
+        <div class="p-4 flex flex-col gap-1">
+          <h3 class="text-lg font-semibold text-white">{{ trailer.title }}</h3>
+          <div class="flex items-center gap-3 text-sm text-neutral-300">
+            <span>{{ trailer.year }}</span>
+            <span>{{ trailer.duration }}</span>
+            <span class="hidden sm:inline">{{ trailer.genres.join(' • ') }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
