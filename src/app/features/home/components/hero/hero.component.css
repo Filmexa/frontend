@@ -1,0 +1,8 @@
+.hero-zoom {
+  transform: scale(1.08);
+  transition: transform 8s ease-out;
+}
+
+.hero-zoom-active {
+  transform: scale(1);
+}

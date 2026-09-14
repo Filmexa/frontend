@@ -1,0 +1,80 @@
+<div class="relative group/card">
+  <div
+    (click)="goToDetails()"
+    class="relative rounded overflow-hidden bg-neutral-800 aspect-[2/3] cursor-pointer"
+  >
+    <img
+      [src]="movie.poster"
+      [alt]="movie.title"
+      loading="lazy"
+      class="w-full h-full object-cover"
+    />
+
+    <span
+      class="absolute top-1.5 left-1.5 text-[10px] font-bold uppercase tracking-wide bg-red-600 text-white px-1.5 py-0.5 rounded"
+    >
+      {{ movie.type === 'tv' ? 'TV' : 'Movie' }}
+    </span>
+  </div>
+
+  <div class="mt-1.5 flex items-center gap-1.5 text-xs text-neutral-400">
+    <span class="text-green-500 font-semibold">{{ movie.rating }}%</span>
+    <span>·</span>
+    <span>{{ movie.year }}</span>
+  </div>
+
+  <p class="text-sm text-neutral-100 font-medium truncate">{{ movie.title }}</p>
+
+  <!-- Hover preview popup -->
+  <div
+    class="hidden sm:block absolute -top-4 left-0 right-0 z-30 origin-top opacity-0 invisible scale-95
+           transition-all duration-200 pointer-events-none
+           group-hover/card:opacity-100 group-hover/card:visible group-hover/card:scale-100 group-hover/card:pointer-events-auto"
+  >
+    <div class="rounded-lg overflow-hidden bg-neutral-900 shadow-2xl shadow-black/70 ring-1 ring-white/10">
+      <div (click)="goToDetails()" class="relative aspect-video cursor-pointer">
+        <img [src]="movie.backdrop" [alt]="movie.title" loading="lazy" class="w-full h-full object-cover" />
+        <div class="absolute inset-0 bg-gradient-to-t from-neutral-900 via-transparent to-transparent"></div>
+      </div>
+
+      <div class="p-3 flex flex-col gap-2">
+        <p (click)="goToDetails()" class="font-semibold text-white text-sm truncate cursor-pointer">
+          {{ movie.title }}
+        </p>
+
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            (click)="goToDetails()"
+            aria-label="Play"
+            i18n-aria-label="@@movieCard.play"
+            class="flex items-center justify-center w-8 h-8 rounded-full bg-white text-black hover:bg-neutral-200 transition-colors cursor-pointer"
+          >
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+          </button>
+
+          <button
+            type="button"
+            (click)="goToDetails()"
+            aria-label="More info"
+            i18n-aria-label="@@movieCard.moreInfo"
+            class="ml-auto flex items-center justify-center w-8 h-8 rounded-full border-2 border-neutral-400 text-white hover:border-white transition-colors cursor-pointer"
+          >
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 11v5M12 8v.01" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2 text-xs">
+          <span class="text-green-500 font-semibold">{{ movie.rating }}% <span i18n="@@movieCard.match">Match</span></span>
+          <span class="border border-neutral-500 text-neutral-300 text-[10px] px-1 rounded">HD</span>
+          <span class="text-neutral-300">{{ movie.year }}</span>
+        </div>
+
+        <p class="text-xs text-neutral-400 line-clamp-2">{{ movie.description }}</p>
+      </div>
+    </div>
+  </div>
+</div>

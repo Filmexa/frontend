@@ -1,0 +1,55 @@
+<section class="px-4 sm:px-8 lg:px-12 py-4 group/row">
+  <div class="relative z-20 flex items-center justify-between mb-3">
+    <h2 class="text-lg sm:text-xl font-semibold text-white">{{ title }}</h2>
+
+    <a
+      [routerLink]="['/movies', category]"
+      class="text-sm font-medium text-neutral-300 hover:text-white transition-colors cursor-pointer"
+      i18n="@@home.movieRow.seeAll"
+    >
+      See All
+    </a>
+  </div>
+
+  <div class="relative flow-root">
+    @if (canScrollPrev()) {
+      <button
+        type="button"
+        (click)="scrollPrev()"
+        aria-label="Scroll left"
+        i18n-aria-label="@@home.movieRow.scrollLeft"
+        class="hidden sm:flex absolute left-0 top-0 bottom-2 z-10 items-center justify-center w-10 bg-gradient-to-r from-neutral-950/90 to-transparent opacity-0 group-hover/row:opacity-100 transition-opacity cursor-pointer"
+      >
+        <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+      </button>
+    }
+
+    <div
+      #rowScroll
+      (scroll)="onScroll()"
+      class="flex gap-3 overflow-x-auto scrollbar-hide scroll-smooth snap-x snap-mandatory py-10 -my-10"
+    >
+      @for (movie of movies; track movie.id) {
+        <div class="shrink-0 w-32 sm:w-40 snap-start">
+          <app-movie-card [movie]="movie" />
+        </div>
+      }
+    </div>
+
+    @if (canScrollNext()) {
+      <button
+        type="button"
+        (click)="scrollNext()"
+        aria-label="Scroll right"
+        i18n-aria-label="@@home.movieRow.scrollRight"
+        class="hidden sm:flex absolute right-0 top-0 bottom-2 z-10 items-center justify-center w-10 bg-gradient-to-l from-neutral-950/90 to-transparent opacity-0 group-hover/row:opacity-100 transition-opacity cursor-pointer"
+      >
+        <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 18l6-6-6-6" />
+        </svg>
+      </button>
+    }
+  </div>
+</section>

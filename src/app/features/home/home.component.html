@@ -1,1 +1,5 @@
-<p i18n="@@home.title">Home Page</p>
+<app-hero />
+
+@for (category of categories; track category) {
+  <app-movie-row [title]="category" [category]="category" [movies]="moviesByCategory.get(category) ?? []" />
+}
