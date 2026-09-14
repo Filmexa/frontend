@@ -43,9 +43,11 @@
     </div>
 
     <div class="flex items-center gap-2 sm:gap-4">
-      <a routerLink="/search" title="Search movies" i18n-title="@@header.searchMovies" class="hidden sm:block p-2 rounded hover:bg-neutral-800 transition-colors">
-        <img src="/assets/search-icon.svg" alt="Search movies" i18n-alt="@@header.searchMovies" class="h-5 w-5 brightness-0 invert" />
-      </a>
+      @if (authService.isLoggedIn()) {
+        <a routerLink="/search" title="Search movies" i18n-title="@@header.searchMovies" class="hidden sm:block p-2 rounded hover:bg-neutral-800 transition-colors">
+          <img src="/assets/search-icon.svg" alt="Search movies" i18n-alt="@@header.searchMovies" class="h-5 w-5 brightness-0 invert" />
+        </a>
+      }
 
       @if (authService.isLoggedIn()) {
         <a
@@ -133,9 +135,8 @@
         </div>
       }
 
-      <a routerLink="/search" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.searchMovies">Search movies</a>
-
       @if (authService.isLoggedIn()) {
+        <a routerLink="/search" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.searchMovies">Search movies</a>
         <a routerLink="/my-list" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.myList">My List</a>
         <a routerLink="/profile" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.profile">Profile</a>
       }
