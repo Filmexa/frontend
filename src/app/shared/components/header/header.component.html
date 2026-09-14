@@ -25,11 +25,11 @@
             <div class="absolute top-full left-0 mt-2 w-56 max-h-96 overflow-y-auto rounded-lg bg-neutral-900 shadow-2xl ring-1 ring-white/10 py-2 z-50">
               @for (category of categories; track category) {
                 <a
-                  [routerLink]="['/movies', category]"
+                  [routerLink]="['/movies', category.name]"
                   (click)="closeBrowse()"
                   class="block px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-800 hover:text-white transition-colors"
                 >
-                  {{ category }}
+                  {{ category.name }}
                 </a>
               }
             </div>
