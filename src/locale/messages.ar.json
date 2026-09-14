@@ -3,6 +3,7 @@
   "translations": {
     "authCallback.signingIn": "جارٍ تسجيل الدخول{$INTERPOLATION}",
     "authCallback.hangTight": "لحظة من فضلك، لن يستغرق الأمر سوى ثوانٍ.",
+    "authCallback.loginFailed": "فشل تسجيل الدخول",
     "authCallback.redirecting": "جارٍ إعادة توجيهك إلى صفحة تسجيل الدخول...",
     
     "forgotPassword.title": "هل نسيت كلمة المرور؟",
@@ -62,8 +63,51 @@
     "verifyAccount.submit": "تحقق من الحساب",
     "verifyAccount.loginPrompt": " تم التحقق بالفعل؟ {$START_LINK}العودة لتسجيل الدخول{$CLOSE_LINK}",
     
-    "home.title": "الصفحة الرئيسية",
-    
+    "home.hero.trendingNow": "الأكثر رواجًا الآن",
+    "home.hero.match": "تطابق",
+    "home.hero.play": "تشغيل",
+    "home.hero.watchTrailer": "مشاهدة الإعلان",
+    "home.hero.closeTrailer": "إغلاق الإعلان",
+    "home.hero.trailerDemo": " {$INTERPOLATION} — إعلان (تشغيل تجريبي، لا يوجد مصدر فيديو حقيقي) ",
+    "home.movieRow.seeAll": " عرض الكل ",
+    "home.movieRow.scrollLeft": "التمرير لليسار",
+    "home.movieRow.scrollRight": "التمرير لليمين",
+    "toast.home.moviesError": "تعذر تحميل الأفلام لـ \"{$PH}\".",
+    "toast.home.categoriesError": "تعذر تحميل فئات الأفلام.",
+
+    "movieDetails.back": "رجوع",
+    "movieDetails.match": "تطابق",
+    "movieDetails.play": "تشغيل",
+    "movieDetails.inMyList": "في قائمتي",
+    "movieDetails.addToMyList": "قائمتي",
+    "movieDetails.demoPlayback": "التشغيل الآن لـ \"{$INTERPOLATION}\" (تشغيل تجريبي — لا يوجد مصدر فيديو حقيقي)",
+    "movieDetails.notFound": "الفيلم غير موجود.",
+
+    "movies.back": "رجوع",
+
+    "myList.title": " قائمتي ",
+    "myList.empty": "قائمتك فارغة.",
+    "myList.emptyHint": " أضف أفلامًا ومسلسلات من صفحة تفاصيلها لمشاهدتها لاحقًا. ",
+    "myList.browse": " تصفح الأفلام ",
+
+    "search.placeholder": "ابحث عن أفلام ومسلسلات...",
+    "search.searchButton": " بحث ",
+    "search.allGenres": "جميع الأنواع",
+    "search.anyRating": "أي تقييم",
+    "search.anyYear": "أي سنة",
+    "search.sortPopular": "الأكثر شعبية",
+    "search.sortNewest": "الأحدث",
+    "search.sortOldest": "الأقدم",
+    "search.sortTitle": "العنوان أ-ي",
+    "search.clearFilters": " مسح الفلاتر ",
+    "search.resultsFound": "نتيجة موجودة",
+    "search.noResults": "لا توجد أفلام مطابقة لبحثك.",
+    "search.prompt": "ابحث بالعنوان أو استخدم الفلاتر أعلاه لتصفح الأفلام.",
+
+    "movieCard.play": "تشغيل",
+    "movieCard.moreInfo": "مزيد من المعلومات",
+    "movieCard.match": "تطابق",
+
     "profile.avatar": "صورة الملف الشخصي",
     "profile.uploadingAvatar": "جارٍ الرفع...",
     "profile.changeAvatar": "تغيير صورة الملف الشخصي",
@@ -94,13 +138,16 @@
 
     "footer.copyright": "© {$INTERPOLATION} Filmexa. جميع الحقوق محفوظة.",
 
+    "header.logoAlt": "Filmexa",
     "header.home": "الرئيسية",
-    "header.movies": "الأفلام",
+    "header.browse": "تصفح",
     "header.myList": "قائمتي",
     "header.profile": "الملف الشخصي",
     "header.searchMovies": "البحث عن الأفلام",
     "header.logout": "تسجيل الخروج",
     "header.login": " تسجيل الدخول ",
+    "header.menu": "القائمة",
+    "toast.header.categoriesError": "تعذر تحميل فئات الأفلام.",
 
     "notFound.title": "المشهد غير موجود",
     "notFound.description": " يبدو أن هذه الصفحة قد ضلّت طريقها إلى قاعة العرض. لنعد بك إلى الصفحة الرئيسية. ",
