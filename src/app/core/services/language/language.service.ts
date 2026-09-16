@@ -17,8 +17,12 @@ export class LanguageService {
     return this.localeId.split('-')[0];
   }
 
+  localeFromPreferredLanguage(preferredLanguage: string | undefined | null): SupportedLocale | undefined {
+    return preferredLanguage ? PREFERRED_LANGUAGE_TO_LOCALE[preferredLanguage] : undefined;
+  }
+
   redirectToPreferredLanguage(preferredLanguage: string | undefined | null): void {
-    const targetLocale = preferredLanguage ? PREFERRED_LANGUAGE_TO_LOCALE[preferredLanguage] : undefined;
+    const targetLocale = this.localeFromPreferredLanguage(preferredLanguage);
     if (!targetLocale) {
       return;
     }

@@ -25,11 +25,11 @@
             <div class="absolute top-full left-0 mt-2 w-56 max-h-96 overflow-y-auto rounded-lg bg-neutral-900 shadow-2xl ring-1 ring-white/10 py-2 z-50">
               @for (category of categories; track category) {
                 <a
-                  [routerLink]="['/movies', category]"
+                  [routerLink]="['/movies', category.name]"
                   (click)="closeBrowse()"
                   class="block px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-800 hover:text-white transition-colors"
                 >
-                  {{ category }}
+                  {{ category.name }}
                 </a>
               }
             </div>
@@ -43,9 +43,11 @@
     </div>
 
     <div class="flex items-center gap-2 sm:gap-4">
-      <a routerLink="/search" title="Search movies" i18n-title="@@header.searchMovies" class="hidden sm:block p-2 rounded hover:bg-neutral-800 transition-colors">
-        <img src="/assets/search-icon.svg" alt="Search movies" i18n-alt="@@header.searchMovies" class="h-5 w-5 brightness-0 invert" />
-      </a>
+      @if (authService.isLoggedIn()) {
+        <a routerLink="/search" title="Search movies" i18n-title="@@header.searchMovies" class="hidden sm:block p-2 rounded hover:bg-neutral-800 transition-colors">
+          <img src="/assets/search-icon.svg" alt="Search movies" i18n-alt="@@header.searchMovies" class="h-5 w-5 brightness-0 invert" />
+        </a>
+      }
 
       @if (authService.isLoggedIn()) {
         <a
@@ -133,9 +135,8 @@
         </div>
       }
 
-      <a routerLink="/search" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.searchMovies">Search movies</a>
-
       @if (authService.isLoggedIn()) {
+        <a routerLink="/search" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.searchMovies">Search movies</a>
         <a routerLink="/my-list" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.myList">My List</a>
         <a routerLink="/profile" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.profile">Profile</a>
       }

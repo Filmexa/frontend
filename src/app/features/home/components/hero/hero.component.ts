@@ -1,12 +1,11 @@
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { HeroMovie } from '../../../../core/interfaces/movie/HeroMovie';
-import { HeroService } from '../../../../core/services/movie/hero.service';
+import { MovieService } from '../../../../core/services/movie/movie.service';
 
 @Component({
   selector: 'app-hero',
-  imports: [DecimalPipe],
+  imports: [],
   templateUrl: './hero.component.html',
   styleUrl: './hero.component.css'
 })
@@ -19,13 +18,15 @@ export class HeroComponent implements OnInit, OnDestroy {
   private readonly rotationDelayMs = 6000;
 
   constructor(
-    private heroService: HeroService,
+    private movieService: MovieService,
     private router: Router,
   ) { }
 
   ngOnInit(): void {
-    this.movies.set(this.heroService.getTopMovies());
-    this.startRotation();
+    this.movieService.getTopMovies().subscribe((movies) => {
+      this.movies.set(movies);
+      this.startRotation();
+    });
   }
 
   ngOnDestroy(): void {
