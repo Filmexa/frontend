@@ -1,9 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { Movie, MovieType } from '../../interfaces/movie/Movie';
+import { environment } from '../../../../environments/environment';
+import { Movie } from '../../interfaces/movie/Movie';
 import { MovieSearchFilters } from '../../interfaces/movie/MovieSearchFilters';
+import { MovieSummaryResponse } from '../../interfaces/movie/MovieSummaryResponse';
 import { Page } from '../../../shared/interfaces/Page';
+import { ErrorResponse } from '../../../shared/interfaces/ErrorResponse';
+import { AuthService } from '../auth/auth.service';
+import { UserService } from '../user/user.service';
+import { LanguageService } from '../language/language.service';
+import { HeroMovieResponse } from '../../interfaces/movie/HeroMovieResponse';
+import { HeroMovie } from '../../interfaces/movie/HeroMovie';
 
 const CATEGORIES = [
   'Trending Now', 'Popular Movies', 'Action', 'Comedy', 'Horror', 'Drama', 'Romance',
@@ -28,6 +37,8 @@ const GENRE_POOL = [
   providedIn: 'root'
 })
 export class MovieService {
+  private readonly apiUrl = `${environment.apiUrl}/movies`;
+
   private readonly moviesByCategory = new Map<string, Movie[]>(
     CATEGORIES.map((category, categoryIndex) => [
       category,
@@ -40,6 +51,43 @@ export class MovieService {
       .flat()
       .map((movie) => [movie.id, movie]),
   );
+
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+    private userService: UserService,
+    private languageService: LanguageService,
+  ) { }
+
+  getHomeCategories(): Observable<Record<string, Movie[]>> {
+    return this.http.get<Record<string, MovieSummaryResponse[]>>(`${this.apiUrl}/home`, {
+      params: { language: this.resolveLanguage() },
+    }).pipe(
+      map((categories) => this.toMovieMap(categories)),
+      catchError(this.mapError),
+    );
+  }
+
+  getTopMovies(): Observable<HeroMovie[]> {
+    return this.http.get<HeroMovieResponse[]>(`${this.apiUrl}/trending/week`, {
+      params: { language: this.resolveLanguage() },
+    }).pipe(
+      map((movies) => movies.map((movie) => this.toHeroMovie(movie))),
+      catchError(this.mapError),
+    );
+  }
+
+  private toHeroMovie(movie: HeroMovieResponse): HeroMovie {
+    return {
+      id: movie.id,
+      title: movie.title,
+      description: movie.overview,
+      thumbnail: movie.thumbnail,
+      backdrop: movie.backdropUrl,
+      year: new Date(movie.releaseDate).getFullYear(),
+      genres: movie.genres,
+    };
+  }
 
   getCategories(): readonly string[] {
     return CATEGORIES;
@@ -116,7 +164,6 @@ export class MovieService {
     return Array.from({ length: count }, (_, i) => {
       const id = categoryIndex * 100 + i + 1;
       const title = TITLE_POOL[(i + categoryIndex * 3) % TITLE_POOL.length];
-      const type: MovieType = i % 4 === 2 ? 'tv' : 'movie';
       const seed = encodeURIComponent(category.toLowerCase().replace(/\s+/g, '-'));
 
       return {
@@ -124,7 +171,6 @@ export class MovieService {
         title,
         poster: `https://picsum.photos/seed/${seed}-${i}/300/450`,
         backdrop: `https://picsum.photos/seed/${seed}-${i}-backdrop/1280/720`,
-        type,
         year: 2000 + ((categoryIndex * 7 + i * 3) % 26),
         rating: 60 + ((categoryIndex * 11 + i * 5) % 40),
         duration: DURATION_POOL[(categoryIndex + i) % DURATION_POOL.length],
@@ -139,5 +185,56 @@ export class MovieService {
         category,
       };
     });
+  }
+
+  private toMovieMap(categories: Record<string, MovieSummaryResponse[]>): Record<string, Movie[]> {
+    const result: Record<string, Movie[]> = {};
+    for (const [category, movies] of Object.entries(categories)) {
+      result[category] = movies.map((movie) => this.toMovie(movie, category));
+    }
+    return result;
+  }
+
+  private toMovie(movie: MovieSummaryResponse, category: string): Movie {
+    return {
+      id: movie.id,
+      title: movie.title,
+      poster: movie.thumbnail,
+      backdrop: movie.thumbnail,
+      year: new Date(movie.releaseDate).getFullYear(),
+      rating: 0,
+      duration: '',
+      genres: [],
+      description: '',
+      category,
+    };
+  }
+
+  private resolveLanguage(): string {
+    if (this.authService.isLoggedIn()) {
+      const preferredLanguage = this.userService.profile()?.preferredLanguage;
+      const locale = this.languageService.localeFromPreferredLanguage(preferredLanguage);
+      if (locale) {
+        return locale;
+      }
+    }
+    return 'en';
+  }
+
+  private mapError(error: HttpErrorResponse) {
+    let body = error.error;
+    if (typeof body === 'string') {
+      try {
+        body = JSON.parse(body);
+      } catch {
+        body = null;
+      }
+    }
+
+    const errorResponse: ErrorResponse = {
+      status: error.status,
+      message: body?.message ?? error.message,
+    };
+    return throwError(() => errorResponse);
   }
 }

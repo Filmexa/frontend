@@ -72,7 +72,7 @@
     "home.movieRow.seeAll": " عرض الكل ",
     "home.movieRow.scrollLeft": "التمرير لليسار",
     "home.movieRow.scrollRight": "التمرير لليمين",
-    "toast.home.moviesError": "تعذر تحميل الأفلام لـ \"{$PH}\".",
+    "toast.home.moviesError": "تعذر تحميل الأفلام.",
     "toast.home.categoriesError": "تعذر تحميل فئات الأفلام.",
 
     "movieDetails.back": "رجوع",

@@ -79,7 +79,7 @@
     "home.movieRow.seeAll": " See All ",
     "home.movieRow.scrollLeft": "Scroll left",
     "home.movieRow.scrollRight": "Scroll right",
-    "toast.home.moviesError": "Failed to load movies for \"{$PH}\".",
+    "toast.home.moviesError": "Failed to load movies.",
     "toast.home.categoriesError": "Failed to load movie categories.",
     "movieDetails.back": "Back",
     "movieDetails.match": "match",

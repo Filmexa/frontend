@@ -1,5 +1,5 @@
 <app-hero />
 
 @for (category of categories; track category) {
-  <app-movie-row [title]="category.name" [category]="category.name" [movies]="moviesByCategory.get(category.name) ?? []" />
+  <app-movie-row [title]="category | titlecase" [category]="category" [movies]="moviesByCategory()[category]" />
 }

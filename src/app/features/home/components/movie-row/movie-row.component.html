@@ -29,7 +29,7 @@
     <div
       #rowScroll
       (scroll)="onScroll()"
-      class="flex gap-3 overflow-x-auto scrollbar-hide scroll-smooth snap-x snap-mandatory py-10 -my-10"
+      class="flex gap-3 overflow-x-auto scrollbar-hide scroll-smooth snap-x snap-mandatory py-2"
     >
       @for (movie of movies; track movie.id) {
         <div class="shrink-0 w-32 sm:w-40 snap-start">

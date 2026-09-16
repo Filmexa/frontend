@@ -72,7 +72,7 @@
     "home.movieRow.seeAll": " Voir tout ",
     "home.movieRow.scrollLeft": "Défiler à gauche",
     "home.movieRow.scrollRight": "Défiler à droite",
-    "toast.home.moviesError": "Échec du chargement des films pour « {$PH} ».",
+    "toast.home.moviesError": "Échec du chargement des films.",
     "toast.home.categoriesError": "Échec du chargement des catégories de films.",
 
     "movieDetails.back": "Retour",
