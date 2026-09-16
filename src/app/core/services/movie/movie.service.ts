@@ -218,7 +218,7 @@ export class MovieService {
         return locale;
       }
     }
-    return 'en';
+    return this.languageService.currentLocale;
   }
 
   private mapError(error: HttpErrorResponse) {
