@@ -8,8 +8,13 @@ services:
       - 443:443
     networks:
       - shared-network
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+
 
 networks:
   shared-network:
     external: true
     name: filmexa-net
+volumes:
+  letsencrypt:
