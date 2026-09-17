@@ -7,10 +7,11 @@ import { MovieService } from '../../core/services/movie/movie.service';
 import { MyListService } from '../../core/services/movie/my-list.service';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { MovieRowComponent } from '../home/components/movie-row/movie-row.component';
+import { CommentsComponent } from './components/comments/comments.component';
 
 @Component({
   selector: 'app-movie-details',
-  imports: [MovieRowComponent],
+  imports: [MovieRowComponent, CommentsComponent],
   templateUrl: './movie-details.component.html',
   styleUrl: './movie-details.component.css'
 })
