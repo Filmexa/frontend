@@ -1,0 +1,9 @@
+/* That's it! Everything else is handled by Tailwind in your HTML */
+ul::-webkit-scrollbar {
+  width: 6px;
+}
+
+ul::-webkit-scrollbar-thumb {
+  background-color: #525252; /* Tailwind neutral-600 */
+  border-radius: 4px;
+}

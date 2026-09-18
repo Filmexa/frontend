@@ -56,7 +56,7 @@ describe('CommentService', () => {
       expect(result.content[0].content).toBe('Great movie!');
     });
 
-    const req = httpMock.expectOne(`${environment.apiUrl}/movies/101/comments?page=0&size=20`);
+    const req = httpMock.expectOne(`${environment.apiUrl}/movie/101/comments?page=0&size=20`);
     expect(req.request.method).toBe('GET');
     expect(req.request.headers.get('Authorization')).toBe('Bearer token-123');
     req.flush(page);
@@ -67,7 +67,7 @@ describe('CommentService', () => {
       expect(result.id).toBe('c1');
     });
 
-    const req = httpMock.expectOne(`${environment.apiUrl}/movies/101/comments`);
+    const req = httpMock.expectOne(`${environment.apiUrl}/movie/101/comments`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({ content: 'Great movie!' });
     req.flush(comment);
@@ -78,7 +78,7 @@ describe('CommentService', () => {
       expect(result.content).toBe('Edited');
     });
 
-    const req = httpMock.expectOne(`${environment.apiUrl}/movies/101/comments/c1`);
+    const req = httpMock.expectOne(`${environment.apiUrl}/movie/101/comments/c1`);
     expect(req.request.method).toBe('PATCH');
     req.flush({ ...comment, content: 'Edited' });
   });
@@ -86,7 +86,7 @@ describe('CommentService', () => {
   it('should delete a comment', () => {
     service.deleteComment(101, 'c1').subscribe();
 
-    const req = httpMock.expectOne(`${environment.apiUrl}/movies/101/comments/c1`);
+    const req = httpMock.expectOne(`${environment.apiUrl}/movie/101/comments/c1`);
     expect(req.request.method).toBe('DELETE');
     req.flush(null);
   });
