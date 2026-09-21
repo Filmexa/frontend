@@ -41,22 +41,6 @@
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
             <span i18n="@@movieDetails.play">Play</span>
           </button>
-
-          @if (authService.isLoggedIn()) {
-            <button
-              type="button"
-              (click)="toggleMyList()"
-              class="flex items-center gap-2 bg-neutral-700/70 text-white font-semibold px-5 py-2.5 rounded hover:bg-neutral-600/70 transition-colors cursor-pointer backdrop-blur-sm"
-            >
-              @if (myListService.isInList(movie.id)) {
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" /></svg>
-                <span i18n="@@movieDetails.inMyList">In My List</span>
-              } @else {
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14" stroke-linecap="round" /></svg>
-                <span i18n="@@movieDetails.addToMyList">My List</span>
-              }
-            </button>
-          }
         </div>
       </div>
     </section>

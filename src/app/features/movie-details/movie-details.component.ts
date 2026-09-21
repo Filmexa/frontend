@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Movie } from '../../core/interfaces/movie/Movie';
 import { HeroMovie } from '../../core/interfaces/movie/HeroMovie';
 import { MovieService } from '../../core/services/movie/movie.service';
-import { MyListService } from '../../core/services/movie/my-list.service';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { MovieRowComponent } from '../home/components/movie-row/movie-row.component';
 import { CommentsComponent } from './components/comments/comments.component';
@@ -23,7 +22,6 @@ export class MovieDetailsComponent {
   constructor(
     private route: ActivatedRoute,
     private movieService: MovieService,
-    protected myListService: MyListService,
     protected authService: AuthService,
     private location: Location,
   ) {
@@ -56,12 +54,6 @@ export class MovieDetailsComponent {
 
   play(): void {
     this.isPlaying.set(true);
-  }
-
-  toggleMyList(): void {
-    if (this.movie && this.authService.isLoggedIn()) {
-      this.myListService.toggle(this.movie.id);
-    }
   }
 
   goBack(): void {
