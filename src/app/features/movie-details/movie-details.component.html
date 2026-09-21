@@ -57,10 +57,13 @@
       </section>
     }
     <app-movie-comments [movieId]="movie.id" />
-    @if (moreLikeThis.length) {
-      <app-movie-row [title]="'More like this'" [category]="movie.category" [movies]="moreLikeThis" />
+    @if (movie.actors.length) {
+      <app-actor-row [actors]="movie.actors" />
     }
-
+  </div>
+} @else if (isLoading()) {
+  <div class="min-h-screen flex items-center justify-center text-neutral-300">
+    <p i18n="@@movieDetails.loading">Loading movie...</p>
   </div>
 } @else {
   <div class="min-h-screen flex items-center justify-center text-neutral-300">
