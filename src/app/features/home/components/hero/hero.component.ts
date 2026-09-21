@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { HeroMovie } from '../../../../core/interfaces/movie/HeroMovie';
 import { MovieService } from '../../../../core/services/movie/movie.service';
+import { AuthService } from '../../../../core/services/auth/auth.service';
+import { ToastService } from '../../../../shared/services/toast/toast.service';
 
 @Component({
   selector: 'app-hero',
@@ -20,6 +22,8 @@ export class HeroComponent implements OnInit, OnDestroy {
   constructor(
     private movieService: MovieService,
     private router: Router,
+    private authService: AuthService,
+    private toastService: ToastService,
   ) { }
 
   ngOnInit(): void {
@@ -43,6 +47,13 @@ export class HeroComponent implements OnInit, OnDestroy {
   }
 
   goToDetails(movie: HeroMovie): void {
+    if (!this.authService.isLoggedIn()) {
+      this.toastService.error(
+        $localize`:@@toast.movieCard.signInRequired:Please sign in to view movie details.`
+      );
+      return;
+    }
+
     this.router.navigate(['/movie', movie.id]);
   }
 

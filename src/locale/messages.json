@@ -81,6 +81,7 @@
     "home.movieRow.scrollRight": "Scroll right",
     "toast.home.moviesError": "Failed to load movies.",
     "toast.home.categoriesError": "Failed to load movie categories.",
+    "toast.movieCard.signInRequired": "Please sign in to view movie details.",
     "movieDetails.back": "Back",
     "movieDetails.match": "match",
     "movieDetails.play": "Play",

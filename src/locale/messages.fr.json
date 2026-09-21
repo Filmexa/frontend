@@ -74,6 +74,7 @@
     "home.movieRow.scrollRight": "Défiler à droite",
     "toast.home.moviesError": "Échec du chargement des films.",
     "toast.home.categoriesError": "Échec du chargement des catégories de films.",
+    "toast.movieCard.signInRequired": "Veuillez vous connecter pour afficher les détails du film.",
 
     "movieDetails.back": "Retour",
     "movieDetails.match": "correspondance",
