@@ -20,7 +20,7 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'movies/:category', component: MoviesComponent },
   { path: 'movie/:id', component: MovieDetailsComponent, canActivate: [authGuard] },
-  { path: 'search', component: SearchComponent },
+  { path: 'search', component: SearchComponent, canActivate: [authGuard]},
   { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
   { path: 'users/:id', component: UsersComponent, canActivate: [authGuard] },
   { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
