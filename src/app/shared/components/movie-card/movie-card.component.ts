@@ -13,6 +13,8 @@ import { ToastService } from '../../services/toast/toast.service';
 export class MovieCardComponent {
   @Input({ required: true }) movie!: Movie;
 
+  readonly defaultPoster = '/assets/default-movie.svg';
+
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -28,5 +30,16 @@ export class MovieCardComponent {
     }
 
     this.router.navigate(['/movie', this.movie.id]);
+  }
+
+  get posterUrl(): string {
+    return this.movie.poster?.trim() || this.defaultPoster;
+  }
+
+  useDefaultPoster(event: Event): void {
+    const image = event.target as HTMLImageElement;
+    if (!image.src.endsWith(this.defaultPoster)) {
+      image.src = this.defaultPoster;
+    }
   }
 }
