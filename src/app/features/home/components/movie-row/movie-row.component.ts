@@ -12,7 +12,7 @@ import { MovieCardComponent } from '../../../../shared/components/movie-card/mov
 export class MovieRowComponent implements AfterViewInit, OnDestroy {
   @Input({ required: true }) title!: string;
   @Input({ required: true }) movies: Movie[] = [];
-  @Input() category!: string;
+  @Input({ required: true }) categoryName!: string;
 
   @ViewChild('rowScroll') private rowScroll?: ElementRef<HTMLElement>;
 

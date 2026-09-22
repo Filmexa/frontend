@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 450" role="img" aria-label="Default movie poster">
+  <rect width="300" height="450" fill="#171717"/>
+  <rect x="38" y="115" width="224" height="160" rx="12" fill="#262626" stroke="#525252" stroke-width="4"/>
+  <path d="M126 158v74l64-37-64-37Z" fill="#a3a3a3"/>
+  <path d="M65 320h170M88 350h124" stroke="#525252" stroke-width="12" stroke-linecap="round"/>
+</svg>

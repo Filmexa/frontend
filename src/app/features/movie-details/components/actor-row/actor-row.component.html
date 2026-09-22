@@ -1,0 +1,45 @@
+<section class="group/row px-4 py-6 sm:px-8 lg:px-12">
+  <h2 class="mb-4 text-lg font-semibold text-white sm:text-xl" i18n="@@movieDetails.actors">Actors</h2>
+
+  <div class="relative flow-root">
+    @if (canScrollPrev()) {
+      <button
+        type="button"
+        (click)="scrollPrev()"
+        aria-label="Scroll actors left"
+        i18n-aria-label="@@movieDetails.actorsScrollLeft"
+        class="absolute bottom-2 left-0 top-0 z-10 hidden w-10 cursor-pointer items-center justify-center bg-gradient-to-r from-neutral-950/90 to-transparent opacity-0 transition-opacity group-hover/row:opacity-100 sm:flex"
+      >
+        <svg class="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+      </button>
+    }
+
+    <div
+      #rowScroll
+      (scroll)="onScroll()"
+      class="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth py-2"
+    >
+      @for (actor of actors; track actor.id) {
+        <div class="w-28 shrink-0 snap-start sm:w-36">
+          <app-actor-card [actor]="actor" />
+        </div>
+      }
+    </div>
+
+    @if (canScrollNext()) {
+      <button
+        type="button"
+        (click)="scrollNext()"
+        aria-label="Scroll actors right"
+        i18n-aria-label="@@movieDetails.actorsScrollRight"
+        class="absolute bottom-2 right-0 top-0 z-10 hidden w-10 cursor-pointer items-center justify-center bg-gradient-to-l from-neutral-950/90 to-transparent opacity-0 transition-opacity group-hover/row:opacity-100 sm:flex"
+      >
+        <svg class="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 18l6-6-6-6" />
+        </svg>
+      </button>
+    }
+  </div>
+</section>

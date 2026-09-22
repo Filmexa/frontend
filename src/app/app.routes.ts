@@ -11,7 +11,6 @@ import { UsersComponent } from './features/users/users.component';
 import { MoviesComponent } from './features/movies/movies.component';
 import { MovieDetailsComponent } from './features/movie-details/movie-details.component';
 import { SearchComponent } from './features/search/search.component';
-import { MyListComponent } from './features/my-list/my-list.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
@@ -20,9 +19,8 @@ export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: 'movies/:category', component: MoviesComponent },
-  { path: 'movie/:id', component: MovieDetailsComponent },
-  { path: 'search', component: SearchComponent },
-  { path: 'my-list', component: MyListComponent, canActivate: [authGuard] },
+  { path: 'movie/:id', component: MovieDetailsComponent, canActivate: [authGuard] },
+  { path: 'search', component: SearchComponent, canActivate: [authGuard]},
   { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
   { path: 'users/:id', component: UsersComponent, canActivate: [authGuard] },
   { path: 'login', component: LoginComponent, canActivate: [guestGuard] },

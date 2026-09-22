@@ -22,7 +22,14 @@
         </h1>
 
         <div class="flex items-center gap-3 text-sm sm:text-base text-neutral-300">
-          <span class="text-green-500 font-semibold">{{ movie.rating }}% <span i18n="@@movieDetails.match">match</span></span>
+          @if (movie.rating > 0) {
+            <span class="flex items-center gap-1 font-semibold text-neutral-200">
+              <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="m12 2.5 2.9 5.88 6.49.94-4.7 4.58 1.11 6.47L12 17.32l-5.8 3.05 1.11-6.47-4.7-4.58 6.49-.94L12 2.5Z" />
+              </svg>
+              {{ movie.rating.toFixed(1) }}
+            </span>
+          }
           <span>{{ movie.year }}</span>
           <span>{{ movie.duration }}</span>
           <span class="hidden sm:inline">{{ movie.genres.join(' • ') }}</span>
@@ -41,22 +48,6 @@
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
             <span i18n="@@movieDetails.play">Play</span>
           </button>
-
-          @if (authService.isLoggedIn()) {
-            <button
-              type="button"
-              (click)="toggleMyList()"
-              class="flex items-center gap-2 bg-neutral-700/70 text-white font-semibold px-5 py-2.5 rounded hover:bg-neutral-600/70 transition-colors cursor-pointer backdrop-blur-sm"
-            >
-              @if (myListService.isInList(movie.id)) {
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" /></svg>
-                <span i18n="@@movieDetails.inMyList">In My List</span>
-              } @else {
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14" stroke-linecap="round" /></svg>
-                <span i18n="@@movieDetails.addToMyList">My List</span>
-              }
-            </button>
-          }
         </div>
       </div>
     </section>
@@ -73,10 +64,13 @@
       </section>
     }
     <app-movie-comments [movieId]="movie.id" />
-    @if (moreLikeThis.length) {
-      <app-movie-row [title]="'More like this'" [category]="movie.category" [movies]="moreLikeThis" />
+    @if (movie.actors.length) {
+      <app-actor-row [actors]="movie.actors" />
     }
-
+  </div>
+} @else if (isLoading()) {
+  <div class="min-h-screen flex items-center justify-center text-neutral-300">
+    <p i18n="@@movieDetails.loading">Loading movie...</p>
   </div>
 } @else {
   <div class="min-h-screen flex items-center justify-center text-neutral-300">
