@@ -74,6 +74,9 @@
     "home.movieRow.scrollRight": "التمرير لليمين",
     "toast.home.moviesError": "تعذر تحميل الأفلام.",
     "toast.home.categoriesError": "تعذر تحميل فئات الأفلام.",
+    "toast.movies.categoryNotFound": "فئة الأفلام غير موجودة.",
+    "toast.movies.categoryError": "تعذر تحميل فئة الأفلام.",
+    "toast.movies.loadError": "تعذر تحميل الأفلام.",
     "toast.movieCard.signInRequired": "يرجى تسجيل الدخول لعرض تفاصيل الفيلم.",
 
     "movieDetails.back": "رجوع",

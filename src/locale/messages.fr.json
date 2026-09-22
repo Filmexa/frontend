@@ -74,6 +74,9 @@
     "home.movieRow.scrollRight": "Défiler à droite",
     "toast.home.moviesError": "Échec du chargement des films.",
     "toast.home.categoriesError": "Échec du chargement des catégories de films.",
+    "toast.movies.categoryNotFound": "Catégorie de films introuvable.",
+    "toast.movies.categoryError": "Échec du chargement de la catégorie de films.",
+    "toast.movies.loadError": "Échec du chargement des films.",
     "toast.movieCard.signInRequired": "Veuillez vous connecter pour afficher les détails du film.",
 
     "movieDetails.back": "Retour",

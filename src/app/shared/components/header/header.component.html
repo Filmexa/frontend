@@ -121,11 +121,11 @@
         <div class="flex flex-col gap-1 pl-4 pb-1 max-h-64 overflow-y-auto">
           @for (category of categories; track category) {
             <a
-              [routerLink]="['/movies', category]"
+              [routerLink]="['/movies', category.name]"
               (click)="closeMobileMenu()"
               class="py-1.5 text-neutral-300 hover:text-white transition-colors"
             >
-              {{ category }}
+              {{ category.name }}
             </a>
           }
         </div>
@@ -133,7 +133,6 @@
 
       @if (authService.isLoggedIn()) {
         <a routerLink="/search" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.searchMovies">Search movies</a>
-        <a routerLink="/my-list" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.myList">My List</a>
         <a routerLink="/profile" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.profile">Profile</a>
       }
     </nav>

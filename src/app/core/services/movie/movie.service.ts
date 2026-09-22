@@ -14,6 +14,7 @@ import { LanguageService } from '../language/language.service';
 import { HeroMovieResponse } from '../../interfaces/movie/HeroMovieResponse';
 import { HeroMovie } from '../../interfaces/movie/HeroMovie';
 import { MovieDetailsResponse } from '../../interfaces/movie/MovieDetailsResponse';
+import { GenreMoviesResponse } from '../../interfaces/movie/GenreMoviesResponse';
 
 const CATEGORIES = [
   'Trending Now', 'Popular Movies', 'Action', 'Comedy', 'Horror', 'Drama', 'Romance',
@@ -104,6 +105,37 @@ export class MovieService {
       headers: this.authHeaders(),
     }).pipe(
       map((movie) => this.toMovieDetails(movie)),
+      catchError(this.mapError),
+    );
+  }
+
+  getMoviesByGenre(
+    genreId: number,
+    category: string,
+    page: number = 0,
+    size: number = 20,
+    sort?: string,
+  ): Observable<Page<Movie>> {
+    const params: Record<string, string | number> = {
+      language: this.resolveLanguage(),
+      page,
+      size,
+    };
+
+    if (sort) {
+      params['sort'] = sort;
+    }
+
+    return this.http.get<GenreMoviesResponse>(`${this.apiUrl}/genre/${genreId}`, {
+      params,
+    }).pipe(
+      map((response) => ({
+        content: response.movies.map((movie) => this.toMovie(movie, category)),
+        totalElements: response.totalResults,
+        totalPages: response.totalPages,
+        number: Math.max(0, response.page - 1),
+        size,
+      })),
       catchError(this.mapError),
     );
   }
