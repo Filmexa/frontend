@@ -52,7 +52,9 @@ export class MoviesComponent implements AfterViewInit, OnDestroy {
       next: (categories) => {
         const normalizedId = this.normalizeCategory(categoryId);
         const category = categories.find((item) =>
-          item.id === categoryId || this.normalizeCategory(item.name) === normalizedId
+          item.id === categoryId ||
+          item.name === categoryId ||
+          this.normalizeCategory(item.name) === normalizedId
         );
         if (!category) {
           this.loading = false;
@@ -75,7 +77,10 @@ export class MoviesComponent implements AfterViewInit, OnDestroy {
   }
 
   private normalizeCategory(value: string): string {
-    return value.toLowerCase().replace(/[^a-z0-9]/g, '');
+    return value
+      .normalize('NFKC')
+      .toLocaleLowerCase()
+      .replace(/[^\p{L}\p{N}]/gu, '');
   }
 
   ngAfterViewInit(): void {
