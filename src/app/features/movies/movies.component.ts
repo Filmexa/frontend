@@ -87,7 +87,7 @@ export class MoviesComponent implements AfterViewInit, OnDestroy {
       if (entries[0].isIntersecting) {
         this.loadMore();
       }
-    });
+    }, { rootMargin: '200px' });
     this.observer.observe(this.scrollSentinel.nativeElement);
   }
 
@@ -107,6 +107,7 @@ export class MoviesComponent implements AfterViewInit, OnDestroy {
         this.page++;
         this.hasMore = this.page < result.totalPages;
         this.loading = false;
+        setTimeout(() => this.loadIfSentinelVisible());
       },
       error: () => {
         this.loading = false;
@@ -114,6 +115,13 @@ export class MoviesComponent implements AfterViewInit, OnDestroy {
         this.toastService.error($localize`:@@toast.movies.loadError:Failed to load movies.`);
       },
     });
+  }
+
+  private loadIfSentinelVisible(): void {
+    const sentinel = this.scrollSentinel?.nativeElement;
+    if (sentinel && sentinel.getBoundingClientRect().top <= window.innerHeight + 200) {
+      this.loadMore();
+    }
   }
 
   goBack(): void {

@@ -77,6 +77,11 @@
     "toast.movies.categoryNotFound": "فئة الأفلام غير موجودة.",
     "toast.movies.categoryError": "تعذر تحميل فئة الأفلام.",
     "toast.movies.loadError": "تعذر تحميل الأفلام.",
+    "toast.search.genresError": "تعذر تحميل الأنواع.",
+    "toast.search.loadError": "تعذر البحث عن الأفلام.",
+    "search.sortRating": "الأعلى تقييمًا",
+    "search.sortReleaseDate": "تاريخ الإصدار",
+    "search.loading": "جارٍ تحميل نتائج البحث",
     "toast.movieCard.signInRequired": "يرجى تسجيل الدخول لعرض تفاصيل الفيلم.",
 
     "movieDetails.back": "رجوع",

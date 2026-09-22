@@ -1,8 +1,8 @@
-export type MovieSortOption = 'popular' | 'newest' | 'oldest' | 'title';
+export type MovieSortOption = 'popularity' | 'rating' | 'releaseDate';
 
 export interface MovieSearchFilters {
   query?: string;
-  genre?: string;
+  genreId?: number;
   minRating?: number;
   year?: number;
   sort?: MovieSortOption;

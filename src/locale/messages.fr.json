@@ -77,6 +77,11 @@
     "toast.movies.categoryNotFound": "Catégorie de films introuvable.",
     "toast.movies.categoryError": "Échec du chargement de la catégorie de films.",
     "toast.movies.loadError": "Échec du chargement des films.",
+    "toast.search.genresError": "Échec du chargement des genres.",
+    "toast.search.loadError": "Échec de la recherche de films.",
+    "search.sortRating": "Les mieux notés",
+    "search.sortReleaseDate": "Date de sortie",
+    "search.loading": "Chargement des résultats de recherche",
     "toast.movieCard.signInRequired": "Veuillez vous connecter pour afficher les détails du film.",
 
     "movieDetails.back": "Retour",
