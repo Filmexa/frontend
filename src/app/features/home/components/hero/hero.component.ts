@@ -18,6 +18,7 @@ export class HeroComponent implements OnInit, OnDestroy {
 
   private intervalId?: ReturnType<typeof setInterval>;
   private readonly rotationDelayMs = 6000;
+  private touchStartX?: number;
 
   constructor(
     private movieService: MovieService,
@@ -46,6 +47,39 @@ export class HeroComponent implements OnInit, OnDestroy {
     this.restartRotation();
   }
 
+  previousMovie(): void {
+    const count = this.movies().length;
+    if (count > 1) {
+      this.selectMovie((this.activeIndex() - 1 + count) % count);
+    }
+  }
+
+  nextMovie(): void {
+    const count = this.movies().length;
+    if (count > 1) {
+      this.selectMovie((this.activeIndex() + 1) % count);
+    }
+  }
+
+  onTouchStart(event: TouchEvent): void {
+    this.touchStartX = event.touches[0]?.clientX;
+  }
+
+  onTouchEnd(event: TouchEvent): void {
+    if (this.touchStartX === undefined) {
+      return;
+    }
+
+    const endX = event.changedTouches[0]?.clientX;
+    if (endX !== undefined) {
+      const distance = endX - this.touchStartX;
+      if (Math.abs(distance) >= 50) {
+        distance < 0 ? this.nextMovie() : this.previousMovie();
+      }
+    }
+    this.touchStartX = undefined;
+  }
+
   goToDetails(movie: HeroMovie): void {
     if (!this.authService.isLoggedIn()) {
       this.toastService.error(
@@ -68,6 +102,10 @@ export class HeroComponent implements OnInit, OnDestroy {
   }
 
   private startRotation(): void {
+    if (this.movies().length <= 1) {
+      return;
+    }
+
     this.intervalId = setInterval(() => {
       const nextIndex = (this.activeIndex() + 1) % this.movies().length;
       this.activeIndex.set(nextIndex);
@@ -77,6 +115,7 @@ export class HeroComponent implements OnInit, OnDestroy {
   private stopRotation(): void {
     if (this.intervalId) {
       clearInterval(this.intervalId);
+      this.intervalId = undefined;
     }
   }
 

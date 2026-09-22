@@ -75,6 +75,8 @@
     "home.hero.play": "Play",
     "home.hero.watchTrailer": "Watch Trailer",
     "home.hero.closeTrailer": "Close trailer",
+    "home.hero.previous": "Previous featured movie",
+    "home.hero.next": "Next featured movie",
     "home.hero.trailerDemo": " {$INTERPOLATION} — Trailer (demo playback, no real video source) ",
     "home.movieRow.seeAll": " See All ",
     "home.movieRow.scrollLeft": "Scroll left",

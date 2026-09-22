@@ -68,6 +68,8 @@
     "home.hero.play": "تشغيل",
     "home.hero.watchTrailer": "مشاهدة الإعلان",
     "home.hero.closeTrailer": "إغلاق الإعلان",
+    "home.hero.previous": "الفيلم المميز السابق",
+    "home.hero.next": "الفيلم المميز التالي",
     "home.hero.trailerDemo": " {$INTERPOLATION} — إعلان (تشغيل تجريبي، لا يوجد مصدر فيديو حقيقي) ",
     "home.movieRow.seeAll": " عرض الكل ",
     "home.movieRow.scrollLeft": "التمرير لليسار",
