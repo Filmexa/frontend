@@ -123,7 +123,7 @@ export class MovieService {
       poster: movie.backdropPath,
       backdrop: movie.backdropPath,
       year: this.releaseYear(movie.releaseDate),
-      rating: 0,
+      rating: this.toRating(movie.rating),
       duration: '',
       genres: movie.genres ?? [],
       description: movie.overview,
@@ -201,7 +201,7 @@ export class MovieService {
       poster: movie.thumbnail,
       backdrop: movie.thumbnail,
       year: new Date(movie.releaseDate).getFullYear(),
-      rating: 0,
+      rating: this.toRating(movie.rating),
       duration: '',
       genres: [],
       description: '',
@@ -224,6 +224,14 @@ export class MovieService {
   private releaseYear(releaseDate: string): number {
     const year = new Date(releaseDate).getFullYear();
     return Number.isNaN(year) ? 0 : year;
+  }
+
+  private toRating(rating: number | undefined | null): number {
+    if (rating === undefined || rating === null || !Number.isFinite(rating)) {
+      return 0;
+    }
+
+    return Math.min(10, Math.max(0, rating));
   }
 
   private mapError(error: HttpErrorResponse) {

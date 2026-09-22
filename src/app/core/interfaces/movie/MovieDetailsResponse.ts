@@ -6,6 +6,7 @@ export interface MovieDetailsResponse {
   genres: string[];
   overview: string;
   releaseDate: string;
+  rating?: number;
   title: string;
   imdbId: string;
   actors: Actor[];
