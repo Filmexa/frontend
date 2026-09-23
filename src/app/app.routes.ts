@@ -18,8 +18,8 @@ import { guestGuard } from './core/guards/guest.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { path: 'home', component: HomeComponent },
-  { path: 'movies/:category', component: MoviesComponent },
+  { path: 'home', component: HomeComponent, canActivate: [authGuard] },
+  { path: 'movies/:category', component: MoviesComponent, canActivate: [authGuard] },
   { path: 'movie/:id', component: MovieDetailsComponent, canActivate: [authGuard] },
   { path: 'search', component: SearchComponent, canActivate: [authGuard]},
   { path: 'my-list', component: MyListComponent, canActivate: [authGuard] },
