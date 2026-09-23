@@ -12,6 +12,7 @@ import { ErrorResponse } from '../../shared/interfaces/ErrorResponse';
 import { StreamSubtitle } from '../../core/interfaces/stream/StreamSubtitle';
 import { Subscription } from 'rxjs';
 import { StreamVariant } from '../../core/interfaces/stream/StreamVariant';
+import { MyListService } from '../../core/services/movie/my-list.service';
 
 @Component({
   selector: 'app-movie-details',
@@ -45,6 +46,7 @@ export class MovieDetailsComponent implements OnDestroy {
     private route: ActivatedRoute,
     private movieService: MovieService,
     private streamService: StreamService,
+    protected myListService: MyListService,
     private toastService: ToastService,
     private location: Location,
   ) {
@@ -101,6 +103,12 @@ export class MovieDetailsComponent implements OnDestroy {
         );
       },
     });
+  }
+
+  toggleMyList(): void {
+    if (this.movie) {
+      this.myListService.toggle(this.movie.id);
+    }
   }
 
   selectQuality(value: string): void {

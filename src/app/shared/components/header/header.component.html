@@ -35,6 +35,10 @@
             </div>
           }
         </div>
+
+        @if (authService.isLoggedIn()) {
+          <a routerLink="/my-list" class="hover:text-white transition-colors" i18n="@@header.myList">My List</a>
+        }
       </nav>
     </div>
 
@@ -133,6 +137,7 @@
 
       @if (authService.isLoggedIn()) {
         <a routerLink="/search" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.searchMovies">Search movies</a>
+        <a routerLink="/my-list" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.myList">My List</a>
         <a routerLink="/profile" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.profile">Profile</a>
       }
     </nav>
