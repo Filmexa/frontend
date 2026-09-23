@@ -39,7 +39,7 @@
           {{ movie.description }}
         </p>
 
-        <div class="flex items-center gap-3 pt-2">
+        <div class="flex flex-wrap items-center gap-3 pt-2">
           <button
             type="button"
             (click)="play()"
@@ -49,6 +49,20 @@
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
             <span i18n="@@movieDetails.play">Play</span>
           </button>
+
+          @if (movie.trailer) {
+            <button
+              type="button"
+              (click)="openTrailer()"
+              class="flex items-center gap-2 bg-neutral-700/70 text-white font-semibold px-5 py-2.5 rounded hover:bg-neutral-600/70 transition-colors cursor-pointer backdrop-blur-sm"
+            >
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none" />
+              </svg>
+              <span i18n="@@movieDetails.trailer">Trailer</span>
+            </button>
+          }
 
           <button
             type="button"
@@ -67,6 +81,14 @@
         </div>
       </div>
     </section>
+
+    @if (isTrailerOpen() && movie.trailer) {
+      <app-trailer-modal
+        [trailerUrl]="movie.trailer"
+        [title]="movie.title"
+        (closed)="closeTrailer()"
+      />
+    }
 
     @if (isPlaying()) {
       <section class="px-4 sm:px-8 lg:px-12 py-6">

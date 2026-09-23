@@ -13,10 +13,11 @@ import { StreamSubtitle } from '../../core/interfaces/stream/StreamSubtitle';
 import { Observable, Subscription } from 'rxjs';
 import { StreamVariant } from '../../core/interfaces/stream/StreamVariant';
 import { MyListService } from '../../core/services/movie/my-list.service';
+import { TrailerModalComponent } from '../../shared/components/trailer-modal/trailer-modal.component';
 
 @Component({
   selector: 'app-movie-details',
-  imports: [ActorRowComponent, CommentsComponent],
+  imports: [ActorRowComponent, CommentsComponent, TrailerModalComponent],
   templateUrl: './movie-details.component.html',
   styleUrl: './movie-details.component.css'
 })
@@ -38,6 +39,7 @@ export class MovieDetailsComponent implements OnDestroy {
   readonly volume = signal(1);
   readonly isMuted = signal(false);
   readonly isMyListLoading = signal(false);
+  readonly isTrailerOpen = signal(false);
 
   private hls?: Hls;
   private streamSubscription?: Subscription;
@@ -132,6 +134,14 @@ export class MovieDetailsComponent implements OnDestroy {
         );
       },
     });
+  }
+
+  openTrailer(): void {
+    this.isTrailerOpen.set(Boolean(this.movie?.trailer));
+  }
+
+  closeTrailer(): void {
+    this.isTrailerOpen.set(false);
   }
 
   selectQuality(value: string): void {

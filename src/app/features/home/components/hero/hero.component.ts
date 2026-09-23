@@ -4,10 +4,11 @@ import { HeroMovie } from '../../../../core/interfaces/movie/HeroMovie';
 import { MovieService } from '../../../../core/services/movie/movie.service';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import { ToastService } from '../../../../shared/services/toast/toast.service';
+import { TrailerModalComponent } from '../../../../shared/components/trailer-modal/trailer-modal.component';
 
 @Component({
   selector: 'app-hero',
-  imports: [],
+  imports: [TrailerModalComponent],
   templateUrl: './hero.component.html',
   styleUrl: './hero.component.css'
 })
@@ -92,6 +93,9 @@ export class HeroComponent implements OnInit, OnDestroy {
   }
 
   openTrailer(movie: HeroMovie): void {
+    if (!movie.trailerUrl) {
+      return;
+    }
     this.trailerMovie.set(movie);
     this.stopRotation();
   }
