@@ -2,7 +2,6 @@ import { Component, ElementRef, HostListener, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { UserService } from '../../../core/services/user/user.service';
-import { MovieService } from '../../../core/services/movie/movie.service';
 import { MovieCategoryService } from '../../../core/services/movie/movie-category.service';
 import { MovieCategoryResponse } from '../../../core/interfaces/movie/MovieCategoryResponse';
 import { ErrorResponse } from '../../interfaces/ErrorResponse';
@@ -22,24 +21,22 @@ export class HeaderComponent {
   constructor(
     protected authService: AuthService,
     protected userService: UserService,
-    private movieService: MovieService,
     private movieCategoryService: MovieCategoryService,
     private toastService: ToastService,
     private router: Router,
     private elementRef: ElementRef<HTMLElement>,
   ) {
-    this.movieCategoryService.getCategories().subscribe({
-      next: (categories) => {
-        this.categories = categories;
-      },
-      error: (error: ErrorResponse) => {
-        this.toastService.error(
-          error.message ?? $localize`:@@toast.header.categoriesError:Failed to load movie categories.`
-        );
-      },
-    });
-
     if (this.authService.isLoggedIn()) {
+      this.movieCategoryService.getCategories().subscribe({
+        next: (categories) => {
+          this.categories = categories;
+        },
+        error: (error: ErrorResponse) => {
+          this.toastService.error(
+            error.message ?? $localize`:@@toast.header.categoriesError:Failed to load movie categories.`
+          );
+        },
+      });
       this.userService.loadCurrentUser();
     }
   }
