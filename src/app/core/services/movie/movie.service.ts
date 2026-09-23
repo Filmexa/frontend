@@ -32,6 +32,7 @@ export class MovieService {
   getHomeCategories(): Observable<Record<string, Movie[]>> {
     return this.http.get<Record<string, MovieSummaryResponse[]>>(`${this.apiUrl}/home`, {
       params: { language: this.resolveLanguage() },
+      headers: this.authHeaders(),
     }).pipe(
       map((categories) => this.toMovieMap(categories)),
       catchError(this.mapError),
@@ -46,6 +47,7 @@ export class MovieService {
   getTopMovies(): Observable<HeroMovie[]> {
     return this.http.get<HeroMovieResponse[]>(`${this.apiUrl}/trending/week`, {
       params: { language: this.resolveLanguage() },
+      headers: this.authHeaders(),
     }).pipe(
       map((movies) => movies.map((movie) => this.toHeroMovie(movie))),
       catchError(this.mapError),

@@ -117,6 +117,8 @@
     "movieDetails.commentDelete": "حذف",
     "movieDetails.commentSave": "حفظ",
     "movieDetails.commentCancel": "إلغاء",
+    "movieDetails.commentMore": "المزيد",
+    "movieDetails.commentLess": "أقل",
     "movieDetails.commentLoadMore": "عرض المزيد",
     "movieDetails.commentRequired": "لا يمكن أن يكون التعليق فارغًا.",
     "movieDetails.commentTooLong": "لا يمكن أن يتجاوز التعليق 2000 حرف.",

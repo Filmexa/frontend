@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { MovieCategoryResponse } from '../../interfaces/movie/MovieCategoryResponse';
 import { catchError, Observable, throwError } from 'rxjs';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { ErrorResponse } from '../../../shared/interfaces/ErrorResponse';
 import { AuthService } from '../auth/auth.service';
 import { LanguageService } from '../language/language.service';
@@ -25,10 +25,16 @@ export class MovieCategoryService {
     getCategories(): Observable<MovieCategoryResponse[]> {
         return this.http.get<MovieCategoryResponse[]>(this.apiUrl, {
           params: {language: this.resolveLanguage()},
+          headers: this.authHeaders(),
         }).pipe(
             catchError(this.mapError),
         );
     }
+
+  private authHeaders(): HttpHeaders {
+    const token = this.authService.getAccessToken();
+    return token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : new HttpHeaders();
+  }
 
   private resolveLanguage(): string {
     if (this.authService.isLoggedIn()) {
