@@ -1,0 +1,39 @@
+<div class="px-4 sm:px-8 lg:px-12 pt-24 sm:pt-28 pb-12 min-h-screen">
+  <h1 class="text-2xl sm:text-3xl font-extrabold uppercase tracking-tight text-white mb-6" i18n="@@myList.title">
+    My List
+  </h1>
+
+  @if (!movies().length && isLoading()) {
+    <div class="flex justify-center py-24">
+      <div class="h-10 w-10 animate-spin rounded-full border-2 border-neutral-600 border-t-white"></div>
+    </div>
+  } @else if (movies().length) {
+    <div class="grid gap-4 grid-cols-[repeat(auto-fill,minmax(140px,1fr))]">
+      @for (movie of movies(); track movie.id) {
+        <app-movie-card [movie]="movie" />
+      }
+    </div>
+  } @else {
+    <div class="flex flex-col items-center justify-center gap-3 py-24 text-center">
+      <p class="text-neutral-400" i18n="@@myList.empty">Your list is empty.</p>
+      <p class="text-neutral-500 text-sm" i18n="@@myList.emptyHint">
+        Add movies from their details page to watch them later.
+      </p>
+      <a
+        routerLink="/home"
+        class="mt-2 rounded px-5 py-2.5 text-sm font-semibold bg-red-600 hover:bg-red-500 transition-colors"
+        i18n="@@myList.browse"
+      >
+        Browse movies
+      </a>
+    </div>
+  }
+
+  @if (movies().length && isLoading()) {
+    <div class="flex justify-center py-8">
+      <div class="h-8 w-8 animate-spin rounded-full border-2 border-neutral-600 border-t-white"></div>
+    </div>
+  }
+
+  <div #scrollSentinel class="h-1"></div>
+</div>

@@ -112,6 +112,8 @@ export class MovieService {
       thumbnail: movie.thumbnail,
       backdrop: movie.backdropUrl,
       year: new Date(movie.releaseDate).getFullYear(),
+      rating: this.toRating(movie.rating),
+      trailerUrl: this.youtubeTrailerUrl(movie.trailerUrl ?? movie.trailer),
       genres: movie.genres,
     };
   }
@@ -130,6 +132,7 @@ export class MovieService {
       category: movie.genres?.[0] ?? '',
       actors: movie.actors ?? [],
       imdbId: movie.imdbId,
+      trailer: this.youtubeTrailerUrl(movie.trailer),
     };
   }
 
@@ -232,6 +235,20 @@ export class MovieService {
     }
 
     return Math.min(10, Math.max(0, rating));
+  }
+
+  private youtubeTrailerUrl(trailer: string | undefined | null): string | undefined {
+    if (!trailer) {
+      return undefined;
+    }
+
+    try {
+      const url = new URL(trailer);
+      const hostname = url.hostname.replace(/^www\./, '');
+      return hostname === 'youtube.com' || hostname === 'youtu.be' ? url.toString() : undefined;
+    } catch {
+      return undefined;
+    }
   }
 
   private mapError(error: HttpErrorResponse) {

@@ -9,5 +9,6 @@ export interface MovieDetailsResponse {
   rating?: number;
   title: string;
   imdbId: string;
+  trailer?: string | null;
   actors: Actor[];
 }

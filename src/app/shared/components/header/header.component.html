@@ -6,7 +6,8 @@
         <span class="text-xl sm:text-2xl font-bold">Filmexa</span>
       </a>
 
-      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-neutral-200">
+      @if (authService.isLoggedIn()) {
+        <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-neutral-200">
         <a routerLink="/home" class="hover:text-white transition-colors" i18n="@@header.home">Home</a>
 
         <div class="relative">
@@ -35,7 +36,10 @@
             </div>
           }
         </div>
-      </nav>
+
+          <a routerLink="/my-list" class="hover:text-white transition-colors" i18n="@@header.myList">My List</a>
+        </nav>
+      }
     </div>
 
     <div class="flex items-center gap-2 sm:gap-4">
@@ -82,27 +86,29 @@
         </button>
       }
 
-      <button
-        type="button"
-        (click)="toggleMobileMenu()"
-        title="Menu"
-        i18n-title="@@header.menu"
-        class="md:hidden p-2 rounded hover:bg-neutral-800 transition-colors cursor-pointer"
-      >
-        @if (mobileMenuOpen()) {
-          <img src="/assets/close-x-icon.svg" alt="Menu" i18n-alt="@@header.menu" class="h-6 w-6 brightness-0 invert" />
-        } @else {
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
-            <path d="M4 6h16" />
-            <path d="M4 12h16" />
-            <path d="M4 18h16" />
-          </svg>
-        }
-      </button>
+      @if (authService.isLoggedIn()) {
+        <button
+          type="button"
+          (click)="toggleMobileMenu()"
+          title="Menu"
+          i18n-title="@@header.menu"
+          class="md:hidden p-2 rounded hover:bg-neutral-800 transition-colors cursor-pointer"
+        >
+          @if (mobileMenuOpen()) {
+            <img src="/assets/close-x-icon.svg" alt="Menu" i18n-alt="@@header.menu" class="h-6 w-6 brightness-0 invert" />
+          } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+              <path d="M4 6h16" />
+              <path d="M4 12h16" />
+              <path d="M4 18h16" />
+            </svg>
+          }
+        </button>
+      }
     </div>
   </div>
 
-  @if (mobileMenuOpen()) {
+  @if (mobileMenuOpen() && authService.isLoggedIn()) {
     <nav class="md:hidden flex flex-col gap-1 px-4 pb-4 text-sm font-medium text-neutral-200 border-t border-neutral-800">
       <a routerLink="/home" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.home">Home</a>
 
@@ -133,6 +139,7 @@
 
       @if (authService.isLoggedIn()) {
         <a routerLink="/search" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.searchMovies">Search movies</a>
+        <a routerLink="/my-list" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.myList">My List</a>
         <a routerLink="/profile" (click)="closeMobileMenu()" class="py-2 hover:text-white transition-colors" i18n="@@header.profile">Profile</a>
       }
     </nav>

@@ -3,11 +3,11 @@ import { Router } from '@angular/router';
 import { HeroMovie } from '../../../../core/interfaces/movie/HeroMovie';
 import { MovieService } from '../../../../core/services/movie/movie.service';
 import { AuthService } from '../../../../core/services/auth/auth.service';
-import { ToastService } from '../../../../shared/services/toast/toast.service';
+import { TrailerModalComponent } from '../../../../shared/components/trailer-modal/trailer-modal.component';
 
 @Component({
   selector: 'app-hero',
-  imports: [],
+  imports: [TrailerModalComponent],
   templateUrl: './hero.component.html',
   styleUrl: './hero.component.css'
 })
@@ -24,7 +24,6 @@ export class HeroComponent implements OnInit, OnDestroy {
     private movieService: MovieService,
     private router: Router,
     private authService: AuthService,
-    private toastService: ToastService,
   ) { }
 
   ngOnInit(): void {
@@ -82,9 +81,7 @@ export class HeroComponent implements OnInit, OnDestroy {
 
   goToDetails(movie: HeroMovie): void {
     if (!this.authService.isLoggedIn()) {
-      this.toastService.error(
-        $localize`:@@toast.movieCard.signInRequired:Please sign in to view movie details.`
-      );
+      this.router.navigate(['/login']);
       return;
     }
 
@@ -92,6 +89,9 @@ export class HeroComponent implements OnInit, OnDestroy {
   }
 
   openTrailer(movie: HeroMovie): void {
+    if (!movie.trailerUrl) {
+      return;
+    }
     this.trailerMovie.set(movie);
     this.stopRotation();
   }

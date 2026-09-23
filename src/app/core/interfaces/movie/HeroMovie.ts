@@ -5,5 +5,7 @@ export interface HeroMovie {
   thumbnail: string;
   backdrop: string;
   year: number;
+  rating: number;
+  trailerUrl?: string;
   genres: string[];
 }

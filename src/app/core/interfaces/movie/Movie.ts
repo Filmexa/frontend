@@ -13,4 +13,5 @@ export interface Movie {
   category: string;
   actors: Actor[];
   imdbId?: string;
+  trailer?: string;
 }

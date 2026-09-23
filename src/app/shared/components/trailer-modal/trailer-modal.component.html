@@ -1,0 +1,38 @@
+<div
+  class="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Movie trailer"
+  i18n-aria-label="@@trailerModal.dialog"
+  (click)="close()"
+>
+  <div class="relative w-full max-w-5xl overflow-hidden rounded-xl bg-neutral-900 shadow-2xl ring-1 ring-white/10" (click)="$event.stopPropagation()">
+    <button
+      type="button"
+      (click)="close()"
+      class="absolute right-3 top-3 z-10 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-black/75 text-white transition hover:bg-red-600"
+      aria-label="Close trailer"
+      i18n-aria-label="@@trailerModal.close"
+    >
+      <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="m6 6 12 12M18 6 6 18" />
+      </svg>
+    </button>
+
+    <div class="aspect-video w-full bg-black">
+      @if (embedUrl) {
+        <iframe
+          [src]="embedUrl"
+          class="h-full w-full"
+          [title]="title"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
+      }
+    </div>
+
+    <div class="px-4 py-3">
+      <h3 class="text-lg font-semibold text-white">{{ title }}</h3>
+    </div>
+  </div>
+</div>
