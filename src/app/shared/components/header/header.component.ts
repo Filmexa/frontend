@@ -68,7 +68,7 @@ export class HeaderComponent {
   onLogout(): void {
     this.authService.logout().subscribe(() => {
       this.userService.clearUser();
-      this.router.navigate(['/']);
+      this.router.navigate(['/login']);
     });
   }
 }
