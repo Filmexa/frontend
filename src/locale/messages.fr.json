@@ -117,6 +117,8 @@
     "movieDetails.commentDelete": "Supprimer",
     "movieDetails.commentSave": "Enregistrer",
     "movieDetails.commentCancel": "Annuler",
+    "movieDetails.commentMore": "plus",
+    "movieDetails.commentLess": "moins",
     "movieDetails.commentLoadMore": "Afficher plus",
     "movieDetails.commentRequired": "Le commentaire ne peut pas être vide.",
     "movieDetails.commentTooLong": "Le commentaire ne peut pas dépasser 2000 caractères.",

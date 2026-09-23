@@ -123,6 +123,8 @@
     "movieDetails.commentDelete": "Delete",
     "movieDetails.commentSave": "Save",
     "movieDetails.commentCancel": "Cancel",
+    "movieDetails.commentMore": "more",
+    "movieDetails.commentLess": "less",
     "movieDetails.commentLoadMore": "Load more",
     "movieDetails.commentRequired": "Comment cannot be empty.",
     "movieDetails.commentTooLong": "Comment cannot exceed 2000 characters.",
