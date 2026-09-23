@@ -137,6 +137,8 @@
     "myList.empty": "قائمتك فارغة.",
     "myList.emptyHint": " أضف أفلامًا ومسلسلات من صفحة تفاصيلها لمشاهدتها لاحقًا. ",
     "myList.browse": " تصفح الأفلام ",
+    "toast.myList.loadError": "تعذر تحميل قائمتك.",
+    "toast.myList.updateError": "تعذر تحديث قائمتك.",
 
     "search.placeholder": "ابحث عن أفلام ومسلسلات...",
     "search.searchButton": " بحث ",

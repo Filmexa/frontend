@@ -137,6 +137,8 @@
     "myList.empty": "Votre liste est vide.",
     "myList.emptyHint": " Ajoutez des films et séries depuis leur page de détails pour les regarder plus tard. ",
     "myList.browse": " Parcourir les films ",
+    "toast.myList.loadError": "Impossible de charger votre liste.",
+    "toast.myList.updateError": "Impossible de mettre à jour votre liste.",
 
     "search.placeholder": "Rechercher des films et séries...",
     "search.searchButton": " Rechercher ",

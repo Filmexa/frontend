@@ -141,6 +141,8 @@
     "myList.empty": "Your list is empty.",
     "myList.emptyHint": " Add movies and shows from their details page to watch them later. ",
     "myList.browse": " Browse movies ",
+    "toast.myList.loadError": "Failed to load your list.",
+    "toast.myList.updateError": "Could not update your list.",
     "profile.avatar": "Profile picture",
     "profile.uploadingAvatar": "Uploading...",
     "profile.changeAvatar": "Change profile picture",

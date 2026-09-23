@@ -10,7 +10,7 @@ import { ActorRowComponent } from './components/actor-row/actor-row.component';
 import { ToastService } from '../../shared/services/toast/toast.service';
 import { ErrorResponse } from '../../shared/interfaces/ErrorResponse';
 import { StreamSubtitle } from '../../core/interfaces/stream/StreamSubtitle';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { StreamVariant } from '../../core/interfaces/stream/StreamVariant';
 import { MyListService } from '../../core/services/movie/my-list.service';
 
@@ -37,6 +37,7 @@ export class MovieDetailsComponent implements OnDestroy {
   readonly videoDuration = signal(0);
   readonly volume = signal(1);
   readonly isMuted = signal(false);
+  readonly isMyListLoading = signal(false);
 
   private hls?: Hls;
   private streamSubscription?: Subscription;
@@ -72,6 +73,13 @@ export class MovieDetailsComponent implements OnDestroy {
   private setMovie(movie: Movie | undefined): void {
     this.movie = movie;
     this.isLoading.set(false);
+    if (movie) {
+      this.isMyListLoading.set(true);
+      this.myListService.loadMembership().subscribe({
+        next: () => this.isMyListLoading.set(false),
+        error: () => this.isMyListLoading.set(false),
+      });
+    }
   }
 
   play(): void {
@@ -106,9 +114,24 @@ export class MovieDetailsComponent implements OnDestroy {
   }
 
   toggleMyList(): void {
-    if (this.movie) {
-      this.myListService.toggle(this.movie.id);
+    if (!this.movie || this.isMyListLoading()) {
+      return;
     }
+
+    this.isMyListLoading.set(true);
+    const request: Observable<unknown> = this.myListService.isInList(this.movie.id)
+      ? this.myListService.remove(this.movie.id)
+      : this.myListService.add(this.movie.id);
+
+    request.subscribe({
+      next: () => this.isMyListLoading.set(false),
+      error: (error: ErrorResponse) => {
+        this.isMyListLoading.set(false);
+        this.toastService.error(
+          error.message || $localize`:@@toast.myList.updateError:Could not update your list.`
+        );
+      },
+    });
   }
 
   selectQuality(value: string): void {

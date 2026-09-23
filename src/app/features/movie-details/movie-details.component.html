@@ -53,7 +53,8 @@
           <button
             type="button"
             (click)="toggleMyList()"
-            class="flex items-center gap-2 bg-neutral-700/70 text-white font-semibold px-5 py-2.5 rounded hover:bg-neutral-600/70 transition-colors cursor-pointer backdrop-blur-sm"
+            [disabled]="isMyListLoading()"
+            class="flex items-center gap-2 bg-neutral-700/70 text-white font-semibold px-5 py-2.5 rounded hover:bg-neutral-600/70 transition-colors cursor-pointer backdrop-blur-sm disabled:cursor-not-allowed disabled:opacity-60"
           >
             @if (myListService.isInList(movie.id)) {
               <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" /></svg>

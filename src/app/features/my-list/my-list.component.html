@@ -3,7 +3,7 @@
     My List
   </h1>
 
-  @if (isLoading()) {
+  @if (!movies().length && isLoading()) {
     <div class="flex justify-center py-24">
       <div class="h-10 w-10 animate-spin rounded-full border-2 border-neutral-600 border-t-white"></div>
     </div>
@@ -28,4 +28,12 @@
       </a>
     </div>
   }
+
+  @if (movies().length && isLoading()) {
+    <div class="flex justify-center py-8">
+      <div class="h-8 w-8 animate-spin rounded-full border-2 border-neutral-600 border-t-white"></div>
+    </div>
+  }
+
+  <div #scrollSentinel class="h-1"></div>
 </div>
