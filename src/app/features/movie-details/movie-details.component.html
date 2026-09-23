@@ -43,7 +43,8 @@
           <button
             type="button"
             (click)="play()"
-            class="flex items-center gap-2 bg-white text-black font-semibold px-5 py-2.5 rounded hover:bg-neutral-200 transition-colors cursor-pointer"
+            [disabled]="isStreamLoading()"
+            class="flex items-center gap-2 bg-white text-black font-semibold px-5 py-2.5 rounded hover:bg-neutral-200 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
           >
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
             <span i18n="@@movieDetails.play">Play</span>
@@ -54,13 +55,147 @@
 
     @if (isPlaying()) {
       <section class="px-4 sm:px-8 lg:px-12 py-6">
-        <div class="relative w-full aspect-video rounded overflow-hidden bg-black flex items-center justify-center">
+        <div #playerContainer class="relative w-full aspect-video rounded overflow-hidden bg-black">
           <div class="absolute inset-0 bg-cover bg-center opacity-40" [style.background-image]="'url(' + movie.backdrop + ')'"></div>
-          <div class="relative z-10 flex flex-col items-center gap-3 text-center px-4">
-            <svg class="w-14 h-14 text-white/90" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-            <p class="text-neutral-200 font-medium" i18n="@@movieDetails.demoPlayback">Now playing "{{ movie.title }}" (demo playback — no real video source)</p>
+          <div class="absolute inset-0 z-10">
+            <video
+              #videoPlayer
+              playsinline
+              crossorigin="anonymous"
+              [poster]="movie.backdrop"
+              class="h-full w-full bg-black object-contain"
+              (click)="togglePlayback()"
+              (play)="updatePlaybackState()"
+              (pause)="updatePlaybackState()"
+              (timeupdate)="updatePlaybackState()"
+              (loadedmetadata)="updatePlaybackState()"
+              (durationchange)="updatePlaybackState()"
+              (volumechange)="updatePlaybackState()"
+            >
+              @for (subtitle of subtitles(); track subtitle.url) {
+                <track
+                  kind="subtitles"
+                  [src]="subtitle.url"
+                  [srclang]="subtitle.language"
+                  [label]="subtitle.label"
+                />
+              }
+            </video>
+
+            <div class="absolute inset-x-0 bottom-0 z-30 bg-gradient-to-t from-black via-black/80 to-transparent px-3 pb-3 pt-10 sm:px-5 sm:pb-4">
+              <label for="stream-progress" class="sr-only" i18n="@@movieDetails.progress">Playback progress</label>
+              <input
+                id="stream-progress"
+                type="range"
+                min="0"
+                [max]="videoDuration() || 0"
+                step="0.1"
+                [value]="currentTime()"
+                (input)="seek($any($event.target).value)"
+                class="mb-3 h-1 w-full cursor-pointer accent-red-600"
+              />
+
+              <div class="flex items-center justify-between gap-3">
+                <div class="flex min-w-0 items-center gap-3">
+                  <button
+                    type="button"
+                    (click)="togglePlayback()"
+                    class="shrink-0 cursor-pointer text-white transition hover:text-red-500"
+                    [attr.aria-label]="isPaused() ? 'Play' : 'Pause'"
+                  >
+                    @if (isPaused()) {
+                      <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+                    } @else {
+                      <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h4v14H6zm8 0h4v14h-4z" /></svg>
+                    }
+                  </button>
+                  <span class="truncate text-xs text-neutral-200 sm:text-sm">
+                    {{ formatTime(currentTime()) }} / {{ formatTime(videoDuration()) }}
+                  </span>
+                </div>
+
+                <div class="flex shrink-0 items-center gap-2 sm:gap-3">
+                  <button
+                    type="button"
+                    (click)="toggleMute()"
+                    class="cursor-pointer text-white transition hover:text-red-500"
+                    [attr.aria-label]="isMuted() ? 'Unmute' : 'Mute'"
+                  >
+                    @if (isMuted() || volume() === 0) {
+                      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="m22 9-6 6m0-6 6 6"/></svg>
+                    } @else {
+                      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18 6a8.5 8.5 0 0 1 0 12"/></svg>
+                    }
+                  </button>
+
+                  <label for="stream-volume" class="sr-only" i18n="@@movieDetails.volume">Volume</label>
+                  <input
+                    id="stream-volume"
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    [value]="isMuted() ? 0 : volume()"
+                    (input)="setVolume($any($event.target).value)"
+                    class="hidden h-1 w-16 cursor-pointer accent-red-600 sm:block lg:w-24"
+                  />
+
+                  @if (subtitles().length) {
+                    <label for="stream-subtitles" class="sr-only" i18n="@@movieDetails.subtitles">Subtitles</label>
+                    <select
+                      id="stream-subtitles"
+                      [value]="selectedSubtitle()"
+                      (change)="selectSubtitle($any($event.target).value)"
+                      class="max-w-28 cursor-pointer rounded bg-neutral-900/90 px-2 py-1.5 text-xs text-white outline-none ring-1 ring-white/20 focus:ring-red-500 sm:max-w-40 sm:text-sm"
+                      aria-label="Subtitles"
+                      i18n-aria-label="@@movieDetails.subtitles"
+                    >
+                      <option value="off" i18n="@@movieDetails.subtitlesOff">Subtitles off</option>
+                      @for (subtitle of subtitles(); track subtitle.url; let index = $index) {
+                        <option [value]="index">{{ subtitle.label }}</option>
+                      }
+                    </select>
+                  }
+
+                @if (qualities().length) {
+                  <label for="stream-quality" class="sr-only" i18n="@@movieDetails.quality">Quality</label>
+                  <select
+                    id="stream-quality"
+                    [value]="selectedQuality()"
+                    (change)="selectQuality($any($event.target).value)"
+                    class="max-w-24 cursor-pointer rounded bg-neutral-900/90 px-2 py-1.5 text-xs text-white outline-none ring-1 ring-white/20 focus:ring-red-500 sm:max-w-32 sm:text-sm"
+                    aria-label="Quality"
+                    i18n-aria-label="@@movieDetails.quality"
+                  >
+                    <option value="auto" i18n="@@movieDetails.qualityAuto">Auto</option>
+                    @for (quality of qualities(); track quality.height) {
+                      <option [value]="quality.height">{{ quality.label }}</option>
+                    }
+                  </select>
+                }
+
+                  <button
+                    type="button"
+                    (click)="toggleFullscreen()"
+                    class="cursor-pointer text-white transition hover:text-red-500"
+                    aria-label="Fullscreen"
+                    i18n-aria-label="@@movieDetails.fullscreen"
+                  >
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M8 21H3v-5m13 5h5v-5"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            @if (isStreamLoading()) {
+              <div class="absolute inset-0 z-40 flex flex-col items-center justify-center gap-3 bg-black/70">
+                <div class="h-10 w-10 animate-spin rounded-full border-2 border-neutral-600 border-t-white"></div>
+                <p class="text-sm text-neutral-200" i18n="@@movieDetails.startingStream">Preparing movie...</p>
+              </div>
+            }
           </div>
         </div>
+
       </section>
     }
     <app-movie-comments [movieId]="movie.id" />
