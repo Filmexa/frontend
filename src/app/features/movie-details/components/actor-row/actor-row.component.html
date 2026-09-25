@@ -1,4 +1,4 @@
-<section class="group/row px-4 py-6 sm:px-8 lg:px-12">
+<section class="group/row py-8">
   <h2 class="mb-4 text-lg font-semibold text-white sm:text-xl" i18n="@@movieDetails.actors">Actors</h2>
 
   <div class="relative flow-root">
@@ -22,7 +22,7 @@
       class="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth py-2"
     >
       @for (actor of actors; track actor.id) {
-        <div class="w-28 shrink-0 snap-start sm:w-36">
+        <div class="w-24 shrink-0 snap-start sm:w-28">
           <app-actor-card [actor]="actor" />
         </div>
       }

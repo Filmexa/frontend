@@ -1,5 +1,5 @@
 import { Component, effect, input, signal, untracked } from '@angular/core';
-import { SlicePipe, DatePipe, NgClass} from '@angular/common';
+import { SlicePipe, DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CommentService } from '../../../../core/services/comment/comment.service';
@@ -11,7 +11,7 @@ import { ToastService } from '../../../../shared/services/toast/toast.service';
 
 @Component({
   selector: 'app-movie-comments',
-  imports: [ReactiveFormsModule, RouterLink, DatePipe, SlicePipe, NgClass],
+  imports: [ReactiveFormsModule, RouterLink, DatePipe, SlicePipe],
   templateUrl: './comments.component.html',
   styleUrl: './comments.component.css',
 })

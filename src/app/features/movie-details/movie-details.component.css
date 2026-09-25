@@ -5,3 +5,45 @@ video::cue {
     0 1px 2px rgb(0 0 0 / 100%),
     0 0 4px rgb(0 0 0 / 90%);
 }
+
+.video-progress {
+  appearance: none;
+  border-radius: 9999px;
+  background: linear-gradient(
+    to right,
+    rgb(220 38 38) 0 var(--played-position),
+    rgb(255 255 255 / 65%) var(--played-position) var(--playable-position),
+    rgb(255 255 255 / 25%) var(--playable-position) 100%
+  );
+}
+
+.video-progress::-webkit-slider-runnable-track {
+  height: 4px;
+  background: transparent;
+}
+
+.video-progress::-webkit-slider-thumb {
+  width: 14px;
+  height: 14px;
+  margin-top: -5px;
+  appearance: none;
+  border-radius: 50%;
+  background: white;
+}
+
+.video-progress::-moz-range-track {
+  height: 4px;
+  background: transparent;
+}
+
+.video-progress::-moz-range-progress {
+  background: transparent;
+}
+
+.video-progress::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  border-radius: 50%;
+  background: white;
+}

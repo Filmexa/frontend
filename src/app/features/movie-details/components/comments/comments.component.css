@@ -1,9 +1,17 @@
-/* That's it! Everything else is handled by Tailwind in your HTML */
-ul::-webkit-scrollbar {
+.comments-list {
+  scrollbar-color: #525252 transparent;
+  scrollbar-width: thin;
+}
+
+.comments-list::-webkit-scrollbar {
   width: 6px;
 }
 
-ul::-webkit-scrollbar-thumb {
-  background-color: #525252; /* Tailwind neutral-600 */
-  border-radius: 4px;
+.comments-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.comments-list::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background: #525252;
 }
