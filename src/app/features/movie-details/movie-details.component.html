@@ -212,6 +212,23 @@
                     </select>
                   }
 
+                  <label for="stream-speed" class="sr-only" i18n="@@movieDetails.speed">Playback speed</label>
+                  <select
+                    id="stream-speed"
+                    [value]="selectedPlaybackRate()"
+                    (change)="selectPlaybackRate($any($event.target).value)"
+                    class="max-w-24 cursor-pointer rounded bg-neutral-900/90 px-2 py-1.5 text-xs text-white outline-none ring-1 ring-white/20 focus:ring-red-500 sm:text-sm"
+                    aria-label="Playback speed"
+                    i18n-aria-label="@@movieDetails.speed"
+                  >
+                    <option value="0.5">0.5×</option>
+                    <option value="0.75">0.75×</option>
+                    <option value="1" i18n="@@movieDetails.speedNormal">Normal</option>
+                    <option value="1.25">1.25×</option>
+                    <option value="1.5">1.5×</option>
+                    <option value="2">2×</option>
+                  </select>
+
                 @if (qualities().length) {
                   <label for="stream-quality" class="sr-only" i18n="@@movieDetails.quality">Quality</label>
                   <select
@@ -247,8 +264,12 @@
               <div class="absolute inset-0 z-40 flex flex-col items-center justify-center gap-3 bg-black/70">
                 <div class="h-10 w-10 animate-spin rounded-full border-2 border-neutral-600 border-t-white"></div>
                 <p class="text-sm text-neutral-200">
-                  <span i18n="@@movieDetails.startingStream">Preparing movie...</span>
-                  {{ downloadProgress().toFixed(0) }}%
+                  @if (streamStarted()) {
+                    <span i18n="@@movieDetails.buffering">Buffering...</span>
+                  } @else {
+                    <span i18n="@@movieDetails.startingStream">Preparing movie...</span>
+                    {{ downloadProgress().toFixed(0) }}%
+                  }
                 </p>
               </div>
             }

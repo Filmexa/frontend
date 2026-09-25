@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, ViewChild, signal } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, ViewChild, signal } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import Hls, { ErrorData, Events } from 'hls.js';
@@ -45,12 +45,16 @@ export class MovieDetailsComponent implements OnDestroy {
   readonly controlsVisible = signal(true);
   readonly downloadProgress = signal(0);
   readonly playableSeconds = signal(0);
+  readonly streamStarted = signal(false);
+  readonly selectedPlaybackRate = signal(1);
 
   private hls?: Hls;
   private streamSubscription?: Subscription;
   private progressSubscription?: Subscription;
   private masterManifestUrl?: string;
   private controlsTimeout?: ReturnType<typeof setTimeout>;
+  private networkRetryTimeout?: ReturnType<typeof setTimeout>;
+  private networkRetryCount = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -212,6 +216,16 @@ export class MovieDetailsComponent implements OnDestroy {
     setTimeout(() => this.raiseSubtitles());
   }
 
+  selectPlaybackRate(value: string): void {
+    const rate = Number(value);
+    const video = this.videoPlayer?.nativeElement;
+    if (!video || !Number.isFinite(rate)) {
+      return;
+    }
+    video.playbackRate = rate;
+    this.selectedPlaybackRate.set(rate);
+  }
+
   raiseSubtitles(): void {
     const tracks = this.videoPlayer?.nativeElement.textTracks;
     if (!tracks) {
@@ -250,6 +264,52 @@ export class MovieDetailsComponent implements OnDestroy {
       return;
     }
     video.paused ? void video.play() : video.pause();
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handlePlayerKeyboard(event: KeyboardEvent): void {
+    if (!this.isPlaying()) {
+      return;
+    }
+
+    const target = event.target as HTMLElement | null;
+    if (target?.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target?.tagName ?? '')) {
+      return;
+    }
+
+    const video = this.videoPlayer?.nativeElement;
+    if (!video) {
+      return;
+    }
+
+    switch (event.key) {
+      case ' ':
+      case 'Spacebar':
+        event.preventDefault();
+        this.togglePlayback();
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        video.muted = false;
+        video.volume = Math.min(1, video.volume + 0.1);
+        this.showPlayerControls();
+        break;
+      case 'ArrowDown':
+        event.preventDefault();
+        video.volume = Math.max(0, video.volume - 0.1);
+        this.showPlayerControls();
+        break;
+      case 'ArrowRight':
+        event.preventDefault();
+        video.currentTime = Math.min(video.duration || Infinity, video.currentTime + 5);
+        this.showPlayerControls();
+        break;
+      case 'ArrowLeft':
+        event.preventDefault();
+        video.currentTime = Math.max(0, video.currentTime - 5);
+        this.showPlayerControls();
+        break;
+    }
   }
 
   seek(value: string): void {
@@ -342,12 +402,35 @@ export class MovieDetailsComponent implements OnDestroy {
     }
 
     if (Hls.isSupported()) {
-      this.hls = new Hls();
+      this.hls = new Hls({
+        fragLoadPolicy: {
+          default: {
+            maxTimeToFirstByteMs: 15000,
+            maxLoadTimeMs: 120000,
+            timeoutRetry: {
+              maxNumRetry: 12,
+              retryDelayMs: 1000,
+              maxRetryDelayMs: 5000,
+            },
+            errorRetry: {
+              maxNumRetry: 120,
+              retryDelayMs: 1000,
+              maxRetryDelayMs: 5000,
+            },
+          },
+        },
+      });
       this.hls.loadSource(manifestUrl);
       this.hls.attachMedia(video);
       this.hls.on(Events.MANIFEST_PARSED, () => {
+        this.streamStarted.set(true);
         this.isStreamLoading.set(false);
         void video.play().catch(() => undefined);
+      });
+      this.hls.on(Events.FRAG_BUFFERED, () => {
+        this.networkRetryCount = 0;
+        this.clearNetworkRetry();
+        this.isStreamLoading.set(false);
       });
       this.hls.on(Events.ERROR, (_event, data) => this.handleHlsError(data));
       return;
@@ -356,6 +439,7 @@ export class MovieDetailsComponent implements OnDestroy {
     if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = manifestUrl;
       video.addEventListener('loadedmetadata', () => {
+        this.streamStarted.set(true);
         this.isStreamLoading.set(false);
         void video.play().catch(() => undefined);
       }, { once: true });
@@ -370,13 +454,31 @@ export class MovieDetailsComponent implements OnDestroy {
   }
 
   private handleHlsError(data: ErrorData): void {
-    if (!data.fatal || !this.hls) {
+    if (!this.hls) {
+      return;
+    }
+
+    const statusCode = data.response?.code;
+    if (data.type === Hls.ErrorTypes.NETWORK_ERROR && statusCode === 503) {
+      this.isStreamLoading.set(true);
+      if (data.fatal) {
+        this.scheduleNetworkRetry();
+      }
+      return;
+    }
+
+    if (!data.fatal) {
       return;
     }
 
     switch (data.type) {
       case Hls.ErrorTypes.NETWORK_ERROR:
-        this.showPlaybackError();
+        if (this.networkRetryCount < 3) {
+          this.isStreamLoading.set(true);
+          this.scheduleNetworkRetry();
+        } else {
+          this.showPlaybackError();
+        }
         break;
       case Hls.ErrorTypes.MEDIA_ERROR:
         this.hls.recoverMediaError();
@@ -401,6 +503,8 @@ export class MovieDetailsComponent implements OnDestroy {
 
   private destroyPlayer(): void {
     this.clearControlsTimeout();
+    this.clearNetworkRetry();
+    this.networkRetryCount = 0;
     this.streamSubscription?.unsubscribe();
     this.streamSubscription = undefined;
     this.progressSubscription?.unsubscribe();
@@ -416,6 +520,8 @@ export class MovieDetailsComponent implements OnDestroy {
     this.videoDuration.set(0);
     this.downloadProgress.set(0);
     this.playableSeconds.set(0);
+    this.streamStarted.set(false);
+    this.selectedPlaybackRate.set(1);
     this.controlsVisible.set(true);
     this.masterManifestUrl = undefined;
 
@@ -431,6 +537,22 @@ export class MovieDetailsComponent implements OnDestroy {
     if (this.controlsTimeout) {
       clearTimeout(this.controlsTimeout);
       this.controlsTimeout = undefined;
+    }
+  }
+
+  private scheduleNetworkRetry(): void {
+    this.clearNetworkRetry();
+    this.networkRetryCount++;
+    this.networkRetryTimeout = setTimeout(() => {
+      this.networkRetryTimeout = undefined;
+      this.hls?.startLoad();
+    }, 1500);
+  }
+
+  private clearNetworkRetry(): void {
+    if (this.networkRetryTimeout) {
+      clearTimeout(this.networkRetryTimeout);
+      this.networkRetryTimeout = undefined;
     }
   }
 
