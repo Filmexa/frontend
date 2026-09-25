@@ -291,9 +291,12 @@ export class MovieDetailsComponent implements OnDestroy {
     if (!Number.isFinite(seconds)) {
       return '0:00';
     }
-    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
     const remaining = Math.floor(seconds % 60).toString().padStart(2, '0');
-    return `${minutes}:${remaining}`;
+    return hours > 0
+      ? `${hours}:${minutes.toString().padStart(2, '0')}:${remaining}`
+      : `${minutes}:${remaining}`;
   }
 
   private attachStream(manifestUrl: string): void {
