@@ -13,6 +13,7 @@ export interface StreamSession {
   expiresInSeconds?: number;
   manifestUrl?: string;
   durationSeconds?: number;
+  playableSeconds: number;
   variants?: StreamVariant[];
   subtitles?: StreamSubtitle[];
 }

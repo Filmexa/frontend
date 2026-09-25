@@ -14,6 +14,7 @@ import { Observable, Subscription } from 'rxjs';
 import { StreamVariant } from '../../core/interfaces/stream/StreamVariant';
 import { MyListService } from '../../core/services/movie/my-list.service';
 import { TrailerModalComponent } from '../../shared/components/trailer-modal/trailer-modal.component';
+import { StreamSession } from '../../core/interfaces/stream/StreamSession';
 
 @Component({
   selector: 'app-movie-details',
@@ -41,9 +42,12 @@ export class MovieDetailsComponent implements OnDestroy {
   readonly isMyListLoading = signal(false);
   readonly isTrailerOpen = signal(false);
   readonly controlsVisible = signal(true);
+  readonly downloadProgress = signal(0);
+  readonly playableSeconds = signal(0);
 
   private hls?: Hls;
   private streamSubscription?: Subscription;
+  private progressSubscription?: Subscription;
   private masterManifestUrl?: string;
   private controlsTimeout?: ReturnType<typeof setTimeout>;
 
@@ -103,8 +107,13 @@ export class MovieDetailsComponent implements OnDestroy {
     this.isStreamLoading.set(true);
     this.destroyPlayer();
 
-    this.streamSubscription = this.streamService.waitUntilReady(this.movie.id, imdbId).subscribe({
+    this.streamSubscription = this.streamService.waitUntilReady(
+      this.movie.id,
+      imdbId,
+      (session) => this.updateStreamProgress(session),
+    ).subscribe({
       next: (session) => {
+        this.updateStreamProgress(session);
         this.subtitles.set((session.subtitles ?? []).map((subtitle) => ({
           ...subtitle,
           url: this.streamService.absoluteMediaUrl(subtitle.url),
@@ -114,6 +123,10 @@ export class MovieDetailsComponent implements OnDestroy {
           url: this.streamService.absoluteMediaUrl(variant.url),
         })));
         this.masterManifestUrl = this.streamService.absoluteManifestUrl(session);
+        this.progressSubscription = this.streamService.watchProgress(this.movie!.id, imdbId).subscribe({
+          next: (progress) => this.updateStreamProgress(progress),
+          error: () => undefined,
+        });
         setTimeout(() => this.attachStream(this.masterManifestUrl!));
       },
       error: (error: ErrorResponse) => {
@@ -299,6 +312,27 @@ export class MovieDetailsComponent implements OnDestroy {
       : `${minutes}:${remaining}`;
   }
 
+  playedPercentage(): number {
+    return this.percentage(this.currentTime());
+  }
+
+  playablePercentage(): number {
+    return Math.max(this.playedPercentage(), this.percentage(this.playableSeconds()));
+  }
+
+  private percentage(seconds: number): number {
+    const duration = this.videoDuration();
+    return duration > 0 ? Math.min(100, Math.max(0, seconds / duration * 100)) : 0;
+  }
+
+  private updateStreamProgress(session: StreamSession): void {
+    this.downloadProgress.set(Math.min(100, Math.max(0, session.downloadProgressPercentage)));
+    this.playableSeconds.set(Math.max(0, session.playableSeconds ?? 0));
+    if (session.durationSeconds && session.durationSeconds > 0) {
+      this.videoDuration.set(session.durationSeconds);
+    }
+  }
+
   private attachStream(manifestUrl: string): void {
     const video = this.videoPlayer?.nativeElement;
     if (!video) {
@@ -368,6 +402,8 @@ export class MovieDetailsComponent implements OnDestroy {
     this.clearControlsTimeout();
     this.streamSubscription?.unsubscribe();
     this.streamSubscription = undefined;
+    this.progressSubscription?.unsubscribe();
+    this.progressSubscription = undefined;
     this.hls?.destroy();
     this.hls = undefined;
     this.subtitles.set([]);
@@ -377,6 +413,8 @@ export class MovieDetailsComponent implements OnDestroy {
     this.isPaused.set(true);
     this.currentTime.set(0);
     this.videoDuration.set(0);
+    this.downloadProgress.set(0);
+    this.playableSeconds.set(0);
     this.controlsVisible.set(true);
     this.masterManifestUrl = undefined;
 
