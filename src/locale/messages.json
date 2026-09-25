@@ -109,6 +109,7 @@
     "movieDetails.volume": "Volume",
     "movieDetails.fullscreen": "Fullscreen",
     "toast.movieDetails.streamError": "Could not start movie playback.",
+    "toast.movieDetails.missingImdbId": "This movie cannot be streamed because its IMDb ID is missing.",
     "toast.movieDetails.playbackError": "Movie playback failed. Please try again.",
     "toast.movieDetails.hlsUnsupported": "This browser does not support HLS playback.",
     "movieDetails.actors": "Actors",

@@ -40,10 +40,12 @@ export class MovieDetailsComponent implements OnDestroy {
   readonly isMuted = signal(false);
   readonly isMyListLoading = signal(false);
   readonly isTrailerOpen = signal(false);
+  readonly controlsVisible = signal(true);
 
   private hls?: Hls;
   private streamSubscription?: Subscription;
   private masterManifestUrl?: string;
+  private controlsTimeout?: ReturnType<typeof setTimeout>;
 
   constructor(
     private route: ActivatedRoute,
@@ -89,11 +91,19 @@ export class MovieDetailsComponent implements OnDestroy {
       return;
     }
 
+    const imdbId = this.movie.imdbId;
+    if (!imdbId) {
+      this.toastService.error(
+        $localize`:@@toast.movieDetails.missingImdbId:This movie cannot be streamed because its IMDb ID is missing.`
+      );
+      return;
+    }
+
     this.isPlaying.set(true);
     this.isStreamLoading.set(true);
     this.destroyPlayer();
 
-    this.streamSubscription = this.streamService.waitUntilReady(this.movie.id).subscribe({
+    this.streamSubscription = this.streamService.waitUntilReady(this.movie.id, imdbId).subscribe({
       next: (session) => {
         this.subtitles.set((session.subtitles ?? []).map((subtitle) => ({
           ...subtitle,
@@ -185,6 +195,39 @@ export class MovieDetailsComponent implements OnDestroy {
         ? 'showing'
         : 'disabled';
     }
+    setTimeout(() => this.raiseSubtitles());
+  }
+
+  raiseSubtitles(): void {
+    const tracks = this.videoPlayer?.nativeElement.textTracks;
+    if (!tracks) {
+      return;
+    }
+
+    for (let trackIndex = 0; trackIndex < tracks.length; trackIndex++) {
+      const cues = tracks[trackIndex].cues;
+      if (!cues) {
+        continue;
+      }
+      for (let cueIndex = 0; cueIndex < cues.length; cueIndex++) {
+        const cue = cues[cueIndex];
+        if ('line' in cue) {
+          (cue as VTTCue).line = -3;
+        }
+      }
+    }
+  }
+
+  showPlayerControls(): void {
+    this.controlsVisible.set(true);
+    this.schedulePlayerControlsHide();
+  }
+
+  schedulePlayerControlsHide(): void {
+    this.clearControlsTimeout();
+    if (!this.isPaused() && !this.isStreamLoading()) {
+      this.controlsTimeout = setTimeout(() => this.controlsVisible.set(false), 2500);
+    }
   }
 
   togglePlayback(): void {
@@ -230,11 +273,18 @@ export class MovieDetailsComponent implements OnDestroy {
     if (!video) {
       return;
     }
+    const wasPaused = this.isPaused();
     this.isPaused.set(video.paused);
     this.currentTime.set(video.currentTime);
     this.videoDuration.set(Number.isFinite(video.duration) ? video.duration : 0);
     this.volume.set(video.volume);
     this.isMuted.set(video.muted);
+    if (video.paused) {
+      this.clearControlsTimeout();
+      this.controlsVisible.set(true);
+    } else if (wasPaused) {
+      this.schedulePlayerControlsHide();
+    }
   }
 
   formatTime(seconds: number): string {
@@ -312,6 +362,7 @@ export class MovieDetailsComponent implements OnDestroy {
   }
 
   private destroyPlayer(): void {
+    this.clearControlsTimeout();
     this.streamSubscription?.unsubscribe();
     this.streamSubscription = undefined;
     this.hls?.destroy();
@@ -323,6 +374,7 @@ export class MovieDetailsComponent implements OnDestroy {
     this.isPaused.set(true);
     this.currentTime.set(0);
     this.videoDuration.set(0);
+    this.controlsVisible.set(true);
     this.masterManifestUrl = undefined;
 
     const video = this.videoPlayer?.nativeElement;
@@ -330,6 +382,13 @@ export class MovieDetailsComponent implements OnDestroy {
       video.pause();
       video.removeAttribute('src');
       video.load();
+    }
+  }
+
+  private clearControlsTimeout(): void {
+    if (this.controlsTimeout) {
+      clearTimeout(this.controlsTimeout);
+      this.controlsTimeout = undefined;
     }
   }
 

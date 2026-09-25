@@ -103,6 +103,7 @@
     "movieDetails.volume": "مستوى الصوت",
     "movieDetails.fullscreen": "ملء الشاشة",
     "toast.movieDetails.streamError": "تعذر بدء تشغيل الفيلم.",
+    "toast.movieDetails.missingImdbId": "لا يمكن تشغيل هذا الفيلم لأن معرّف IMDb مفقود.",
     "toast.movieDetails.playbackError": "فشل تشغيل الفيلم. يرجى المحاولة مرة أخرى.",
     "toast.movieDetails.hlsUnsupported": "هذا المتصفح لا يدعم تشغيل HLS.",
     "movieDetails.actors": "الممثلون",
