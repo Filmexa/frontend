@@ -1,118 +1,176 @@
-<section class="px-4 sm:px-8 lg:px-12 py-10 max-w-3xl">
-  <h2 class="text-xl sm:text-2xl font-bold mb-6" i18n="@@movieDetails.comments">Comments</h2>
+<section class="py-10">
+  <div class="mb-8 flex items-center gap-3">
+    <h2 class="text-xl font-bold sm:text-2xl">
+      <span>{{ totalElements() }}</span>
+      <span class="ms-2" i18n="@@movieDetails.comments">Comments</span>
+    </h2>
+  </div>
 
   @if (!authService.isLoggedIn()) {
     <p class="text-neutral-300" i18n="@@movieDetails.commentSignIn">
       <a routerLink="/login" class="text-red-500 hover:underline">Sign in</a> to view and post comments.
     </p>
   } @else {
+    <div class="mb-10 flex items-start gap-4">
+      <div class="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-red-600 text-sm font-semibold uppercase">
+        @if (userService.avatarUrl()) {
+          <img [src]="userService.avatarUrl()" alt="" class="h-full w-full object-cover" />
+        } @else {
+          {{ userService.profile()?.username?.charAt(0) }}
+        }
+      </div>
+
+      <form class="min-w-0 flex-1" [formGroup]="form" (ngSubmit)="submit()">
+        <label for="comment-content" class="sr-only" i18n="@@movieDetails.commentPlaceholder">Write a comment...</label>
+        <textarea
+          id="comment-content"
+          formControlName="content"
+          rows="1"
+          maxlength="2000"
+          i18n-placeholder="@@movieDetails.commentPlaceholder"
+          placeholder="Add a comment..."
+          class="w-full resize-none border-0 border-b border-neutral-600 bg-transparent px-0 py-2 text-sm text-white placeholder:text-neutral-400 focus:border-white focus:outline-none focus:ring-0"
+        ></textarea>
+
+        <div class="mt-3 flex items-center justify-end gap-3">
+          <span class="me-auto text-xs text-neutral-500">{{ remainingChars() }}</span>
+          <button
+            type="button"
+            (click)="form.reset({ content: '' })"
+            class="cursor-pointer rounded-full px-4 py-2 text-sm font-semibold text-neutral-200 transition hover:bg-neutral-800"
+            i18n="@@movieDetails.commentCancel"
+          >Cancel</button>
+          <button
+            type="submit"
+            [disabled]="posting() || form.invalid"
+            class="cursor-pointer rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            @if (posting()) {
+              <span i18n="@@movieDetails.commentPosting">Posting...</span>
+            } @else {
+              <span i18n="@@movieDetails.commentPost">Comment</span>
+            }
+          </button>
+        </div>
+
+        @if (form.controls['content'].invalid && form.controls['content'].touched) {
+          @if (form.controls['content'].errors?.['required'] || form.controls['content'].errors?.['pattern']) {
+            <p class="mt-1 text-xs text-red-400" i18n="@@movieDetails.commentRequired">Comment cannot be empty.</p>
+          }
+          @if (form.controls['content'].errors?.['maxlength']) {
+            <p class="mt-1 text-xs text-red-400" i18n="@@movieDetails.commentTooLong">Comment cannot exceed 2000 characters.</p>
+          }
+        }
+      </form>
+    </div>
 
     @if (loading() && comments().length === 0) {
       <p class="text-neutral-400" i18n="@@movieDetails.commentsLoading">Loading comments...</p>
     } @else if (comments().length === 0) {
       <p class="text-neutral-400" i18n="@@movieDetails.commentsEmpty">No comments yet. Be the first to share your thoughts.</p>
     } @else {
-      <ul class="flex flex-col gap-5" [ngClass]="{'max-h-[400px] overflow-y-auto pr-2': comments().length > 3}">
+      <ul class="comments-list flex max-h-[42rem] flex-col gap-8 overflow-y-auto pe-3">
         @for (comment of comments(); track comment.id) {
-          <li class="border-b border-neutral-800 pb-5">
-            <div class="flex items-start justify-between gap-3">
-              <div class="flex items-center gap-3 min-w-0">
-                <div class="h-9 w-9 rounded-full bg-red-600 flex items-center justify-center text-sm font-semibold uppercase shrink-0">
-                  {{ comment.author.username.charAt(0) }}
-                </div>
-                <div class="min-w-0">
-                  <a [routerLink]="['/users', comment.author.id]" class="font-semibold hover:underline truncate block">
-                    {{ comment.author.username }}
-                  </a>
-                  <time class="text-xs text-neutral-500" [attr.datetime]="comment.createdAt">
-                    {{ comment.createdAt | date:'medium' }}
-                  </time>
-                </div>
-              </div>
-
-              @if (isOwnComment(comment)) {
-                <div class="flex items-center gap-2 shrink-0">
-                  <button
-                    type="button"
-                    (click)="startEdit(comment)"
-                    class="text-sm text-neutral-300 hover:text-white cursor-pointer"
-                    i18n="@@movieDetails.commentEdit"
-                  >Edit</button>
-                  <button
-                    type="button"
-                    (click)="requestDelete(comment.id)"
-                    class="text-sm text-neutral-300 hover:text-red-400 cursor-pointer"
-                    i18n="@@movieDetails.commentDelete"
-                  >Delete</button>
-                </div>
-              }
+          <li class="flex min-h-[5.25rem] items-start gap-4">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-600 text-sm font-semibold uppercase">
+              {{ comment.author.username.charAt(0) }}
             </div>
 
-            @if (editingId() === comment.id) {
-              <form class="mt-3" [formGroup]="editForm" (ngSubmit)="saveEdit(comment)">
-                <textarea
-                  formControlName="content"
-                  rows="3"
-                  maxlength="2000"
-                  class="w-full rounded border border-neutral-700 bg-neutral-900 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-red-600 resize-y"
-                ></textarea>
-                <div class="mt-2 flex items-center gap-2">
-                  <button
-                    type="submit"
-                    [disabled]="savingId() === comment.id || editForm.invalid"
-                    class="bg-red-600 text-white font-semibold px-3 py-1.5 rounded hover:bg-red-500 transition-colors cursor-pointer disabled:opacity-50"
-                    i18n="@@movieDetails.commentSave"
-                  >Save</button>
-                  <button
-                    type="button"
-                    (click)="cancelEdit()"
-                    class="text-neutral-300 hover:text-white px-3 py-1.5 cursor-pointer"
-                    i18n="@@movieDetails.commentCancel"
-                  >Cancel</button>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex min-w-0 flex-wrap items-baseline gap-x-2">
+                  <a [routerLink]="['/users', comment.author.id]" class="truncate text-sm font-semibold hover:underline">
+                    &#64;{{ comment.author.username }}
+                  </a>
+                  <time class="text-xs text-neutral-500" [attr.datetime]="comment.createdAt">
+                    {{ comment.createdAt | date:'mediumDate' }}
+                  </time>
                 </div>
-              </form>
-            } @else {
-                <p class="mt-3 text-neutral-200 whitespace-pre-wrap break-words">
+
+                @if (isOwnComment(comment)) {
+                  <div class="flex shrink-0 items-center gap-1">
+                    <button
+                      type="button"
+                      (click)="startEdit(comment)"
+                      class="cursor-pointer rounded-full px-3 py-1.5 text-xs font-semibold text-neutral-300 transition hover:bg-neutral-800 hover:text-white"
+                      i18n="@@movieDetails.commentEdit"
+                    >Edit</button>
+                    <button
+                      type="button"
+                      (click)="requestDelete(comment.id)"
+                      class="cursor-pointer rounded-full px-3 py-1.5 text-xs font-semibold text-neutral-300 transition hover:bg-neutral-800 hover:text-red-400"
+                      i18n="@@movieDetails.commentDelete"
+                    >Delete</button>
+                  </div>
+                }
+              </div>
+
+              @if (editingId() === comment.id) {
+                <form class="mt-3" [formGroup]="editForm" (ngSubmit)="saveEdit(comment)">
+                  <textarea
+                    formControlName="content"
+                    rows="2"
+                    maxlength="2000"
+                    class="w-full resize-y border-0 border-b border-neutral-600 bg-transparent px-0 py-2 text-white focus:border-white focus:outline-none focus:ring-0"
+                  ></textarea>
+                  <div class="mt-3 flex justify-end gap-2">
+                    <button
+                      type="button"
+                      (click)="cancelEdit()"
+                      class="cursor-pointer rounded-full px-4 py-2 text-sm font-semibold text-neutral-300 hover:bg-neutral-800"
+                      i18n="@@movieDetails.commentCancel"
+                    >Cancel</button>
+                    <button
+                      type="submit"
+                      [disabled]="savingId() === comment.id || editForm.invalid"
+                      class="cursor-pointer rounded-full bg-white px-4 py-2 text-sm font-semibold text-black disabled:opacity-40"
+                      i18n="@@movieDetails.commentSave"
+                    >Save</button>
+                  </div>
+                </form>
+              } @else {
+                <p class="mt-1 whitespace-pre-wrap break-words text-sm leading-6 text-neutral-100">
                   @if (comment.content.length > 90 && !isExpanded(comment.id)) {
                     {{ comment.content | slice:0:80 }}...
-                    <button 
-                      type="button" 
-                      (click)="toggleExpand(comment.id)" 
-                      class="text-neutral-400 hover:text-white text-sm font-semibold cursor-pointer ml-1"
+                    <button
+                      type="button"
+                      (click)="toggleExpand(comment.id)"
+                      class="ms-1 cursor-pointer text-sm font-semibold text-neutral-400 hover:text-white"
                       i18n="@@movieDetails.commentMore"
                     >more</button>
                   } @else {
                     {{ comment.content }}
                     @if (comment.content.length > 90) {
-                      <button 
-                        type="button" 
-                        (click)="toggleExpand(comment.id)" 
-                        class="text-neutral-400 hover:text-white text-sm font-semibold cursor-pointer ml-1"
+                      <button
+                        type="button"
+                        (click)="toggleExpand(comment.id)"
+                        class="ms-1 cursor-pointer text-sm font-semibold text-neutral-400 hover:text-white"
                         i18n="@@movieDetails.commentLess"
                       >less</button>
                     }
                   }
                 </p>
-            }
+              }
 
-            @if (pendingDeleteId() === comment.id) {
-              <div class="mt-3 flex items-center gap-3 text-sm">
-                <span class="text-neutral-300" i18n="@@movieDetails.commentConfirmDelete">Delete this comment?</span>
-                <button
-                  type="button"
-                  (click)="confirmDelete(comment.id)"
-                  [disabled]="deletingId() === comment.id"
-                  class="text-red-400 hover:text-red-300 font-semibold cursor-pointer disabled:opacity-50"
-                  i18n="@@movieDetails.commentDelete"
-                >Delete</button>
-                <button
-                  type="button"
-                  (click)="cancelDelete()"
-                  class="text-neutral-400 hover:text-white cursor-pointer"
-                  i18n="@@movieDetails.commentCancel"
-                >Cancel</button>
-              </div>
-            }
+              @if (pendingDeleteId() === comment.id) {
+                <div class="mt-3 flex flex-wrap items-center gap-3 text-sm">
+                  <span class="text-neutral-300" i18n="@@movieDetails.commentConfirmDelete">Delete this comment?</span>
+                  <button
+                    type="button"
+                    (click)="confirmDelete(comment.id)"
+                    [disabled]="deletingId() === comment.id"
+                    class="cursor-pointer font-semibold text-red-400 hover:text-red-300 disabled:opacity-50"
+                    i18n="@@movieDetails.commentDelete"
+                  >Delete</button>
+                  <button
+                    type="button"
+                    (click)="cancelDelete()"
+                    class="cursor-pointer text-neutral-400 hover:text-white"
+                    i18n="@@movieDetails.commentCancel"
+                  >Cancel</button>
+                </div>
+              }
+            </div>
           </li>
         }
       </ul>
@@ -122,46 +180,10 @@
           type="button"
           (click)="loadMore()"
           [disabled]="loading()"
-          class="mt-6 text-neutral-200 hover:text-white font-medium cursor-pointer disabled:opacity-50"
+          class="mt-8 cursor-pointer rounded-full border border-neutral-700 px-5 py-2 text-sm font-semibold text-neutral-200 transition hover:bg-neutral-800 disabled:opacity-50"
           i18n="@@movieDetails.commentLoadMore"
         >Load more</button>
       }
     }
-    <form class="mb-8" [formGroup]="form" (ngSubmit)="submit()">
-      <label for="comment-content" class="sr-only" i18n="@@movieDetails.commentPlaceholder">Write a comment...</label>
-      <textarea
-        id="comment-content"
-        formControlName="content"
-        rows="3"
-        maxlength="2000"
-        i18n-placeholder="@@movieDetails.commentPlaceholder"
-        placeholder="Write a comment..."
-        class="w-full rounded border border-neutral-700 bg-neutral-900 px-3 py-2.5 text-white placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-red-600 resize-y"
-      ></textarea>
-
-      <div class="mt-2 flex items-center justify-between gap-3">
-        <span class="text-xs text-neutral-500">{{ remainingChars() }}</span>
-        <button
-          type="submit"
-          [disabled]="posting() || form.invalid"
-          class="bg-red-600 text-white font-semibold px-4 py-2 rounded hover:bg-red-500 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          @if (posting()) {
-            <span i18n="@@movieDetails.commentPosting">Posting...</span>
-          } @else {
-            <span i18n="@@movieDetails.commentPost">Post</span>
-          }
-        </button>
-      </div>
-
-      @if (form.controls['content'].invalid && form.controls['content'].touched) {
-        @if (form.controls['content'].errors?.['required'] || form.controls['content'].errors?.['pattern']) {
-          <p class="mt-1 text-red-400 text-xs" i18n="@@movieDetails.commentRequired">Comment cannot be empty.</p>
-        }
-        @if (form.controls['content'].errors?.['maxlength']) {
-          <p class="mt-1 text-red-400 text-xs" i18n="@@movieDetails.commentTooLong">Comment cannot exceed 2000 characters.</p>
-        }
-      }
-    </form>
   }
 </section>
