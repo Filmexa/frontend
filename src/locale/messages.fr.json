@@ -103,6 +103,7 @@
     "movieDetails.volume": "Volume",
     "movieDetails.fullscreen": "Plein écran",
     "toast.movieDetails.streamError": "Impossible de démarrer la lecture du film.",
+    "toast.movieDetails.missingImdbId": "Ce film ne peut pas être diffusé car son identifiant IMDb est manquant.",
     "toast.movieDetails.playbackError": "La lecture du film a échoué. Veuillez réessayer.",
     "toast.movieDetails.hlsUnsupported": "Ce navigateur ne prend pas en charge la lecture HLS.",
     "movieDetails.actors": "Acteurs",

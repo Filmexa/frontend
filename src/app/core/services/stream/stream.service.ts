@@ -15,7 +15,7 @@ export class StreamService {
     private authService: AuthService,
   ) { }
 
-  createSession(movieId: number): Observable<StreamSession> {
+  createSession(movieId: number, imdbId: string): Observable<StreamSession> {
     const token = this.authService.getAccessToken();
     const headers = token
       ? new HttpHeaders({ Authorization: `Bearer ${token}` })
@@ -24,13 +24,16 @@ export class StreamService {
     return this.http.post<StreamSession>(
       `${this.apiUrl}/${movieId}/session`,
       {},
-      { headers },
+      {
+        headers,
+        params: { imdbId },
+      },
     ).pipe(catchError(this.mapError));
   }
 
-  waitUntilReady(movieId: number): Observable<StreamSession> {
+  waitUntilReady(movieId: number, imdbId: string): Observable<StreamSession> {
     return timer(0, 2000).pipe(
-      switchMap(() => this.createSession(movieId)),
+      switchMap(() => this.createSession(movieId, imdbId)),
       mergeMap((session) => session.downloadStatus === 'FAILED'
         ? throwError((): ErrorResponse => ({ status: 0, message: 'Movie download failed.' }))
         : of(session)),

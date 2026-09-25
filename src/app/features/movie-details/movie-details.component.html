@@ -92,7 +92,13 @@
 
     @if (isPlaying()) {
       <section class="px-4 sm:px-8 lg:px-12 py-6">
-        <div #playerContainer class="relative w-full aspect-video rounded overflow-hidden bg-black">
+        <div
+          #playerContainer
+          class="relative w-full aspect-video rounded overflow-hidden bg-black"
+          (mousemove)="showPlayerControls()"
+          (touchstart)="showPlayerControls()"
+          (mouseleave)="schedulePlayerControlsHide()"
+        >
           <div class="absolute inset-0 bg-cover bg-center opacity-40" [style.background-image]="'url(' + movie.backdrop + ')'"></div>
           <div class="absolute inset-0 z-10">
             <video
@@ -115,11 +121,17 @@
                   [src]="subtitle.url"
                   [srclang]="subtitle.language"
                   [label]="subtitle.label"
+                  (load)="raiseSubtitles()"
                 />
               }
             </video>
 
-            <div class="absolute inset-x-0 bottom-0 z-30 bg-gradient-to-t from-black via-black/80 to-transparent px-3 pb-3 pt-10 sm:px-5 sm:pb-4">
+            <div
+              class="absolute inset-x-0 bottom-0 z-30 bg-gradient-to-t from-black via-black/80 to-transparent px-3 pb-3 pt-10 transition-opacity duration-300 sm:px-5 sm:pb-4"
+              [class.opacity-0]="!controlsVisible()"
+              [class.pointer-events-none]="!controlsVisible()"
+              (focusin)="showPlayerControls()"
+            >
               <label for="stream-progress" class="sr-only" i18n="@@movieDetails.progress">Playback progress</label>
               <input
                 id="stream-progress"
