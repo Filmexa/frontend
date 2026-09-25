@@ -15,10 +15,11 @@ import { StreamVariant } from '../../core/interfaces/stream/StreamVariant';
 import { MyListService } from '../../core/services/movie/my-list.service';
 import { TrailerModalComponent } from '../../shared/components/trailer-modal/trailer-modal.component';
 import { StreamSession } from '../../core/interfaces/stream/StreamSession';
+import { RelatedMoviesComponent } from './components/related-movies/related-movies.component';
 
 @Component({
   selector: 'app-movie-details',
-  imports: [ActorRowComponent, CommentsComponent, TrailerModalComponent],
+  imports: [ActorRowComponent, CommentsComponent, TrailerModalComponent, RelatedMoviesComponent],
   templateUrl: './movie-details.component.html',
   styleUrl: './movie-details.component.css'
 })

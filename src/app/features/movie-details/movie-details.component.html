@@ -40,16 +40,6 @@
         </p>
 
         <div class="flex flex-wrap items-center gap-3 pt-2">
-          <button
-            type="button"
-            (click)="play()"
-            [disabled]="isStreamLoading()"
-            class="flex items-center gap-2 bg-white text-black font-semibold px-5 py-2.5 rounded hover:bg-neutral-200 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-            <span i18n="@@movieDetails.play">Play</span>
-          </button>
-
           @if (movie.trailer) {
             <button
               type="button"
@@ -90,8 +80,9 @@
       />
     }
 
-    @if (isPlaying()) {
-      <section class="px-4 sm:px-8 lg:px-12 py-6">
+    <div class="grid items-stretch gap-8 px-4 py-6 sm:px-8 lg:px-12 xl:grid-cols-[minmax(0,1fr)_340px]">
+      <main class="min-w-0">
+      <section>
         <div
           #playerContainer
           class="relative w-full aspect-video rounded overflow-hidden bg-black"
@@ -107,7 +98,7 @@
               crossorigin="anonymous"
               [poster]="movie.backdrop"
               class="h-full w-full bg-black object-contain"
-              (click)="togglePlayback()"
+              (click)="isPlaying() ? togglePlayback() : play()"
               (play)="updatePlaybackState()"
               (pause)="updatePlaybackState()"
               (timeupdate)="updatePlaybackState()"
@@ -126,6 +117,19 @@
               }
             </video>
 
+            @if (!isPlaying() && !isStreamLoading()) {
+              <button
+                type="button"
+                (click)="play()"
+                class="absolute inset-0 z-20 m-auto flex h-20 w-20 cursor-pointer items-center justify-center rounded-full bg-white/90 text-black shadow-2xl transition hover:scale-105 hover:bg-white"
+                aria-label="Play movie"
+                i18n-aria-label="@@movieDetails.play"
+              >
+                <svg class="ml-1 h-10 w-10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+              </button>
+            }
+
+            @if (isPlaying()) {
             <div
               class="absolute inset-x-0 bottom-0 z-30 bg-gradient-to-t from-black via-black/80 to-transparent px-3 pb-3 pt-10 transition-opacity duration-300 sm:px-5 sm:pb-4"
               [class.opacity-0]="!controlsVisible()"
@@ -237,6 +241,7 @@
                 </div>
               </div>
             </div>
+            }
 
             @if (isStreamLoading()) {
               <div class="absolute inset-0 z-40 flex flex-col items-center justify-center gap-3 bg-black/70">
@@ -251,11 +256,17 @@
         </div>
 
       </section>
-    }
-    <app-movie-comments [movieId]="movie.id" />
-    @if (movie.actors.length) {
-      <app-actor-row [actors]="movie.actors" />
-    }
+      @if (movie.actors.length) {
+        <app-actor-row [actors]="movie.actors" />
+      }
+      <app-movie-comments [movieId]="movie.id" />
+      </main>
+
+      <div class="min-h-0 xl:relative">
+        <app-related-movies class="block xl:absolute xl:inset-0" [movie]="movie" />
+      </div>
+    </div>
+
   </div>
 } @else if (isLoading()) {
   <div class="min-h-screen flex items-center justify-center text-neutral-300">
