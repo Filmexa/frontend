@@ -95,6 +95,8 @@
     "movieDetails.notFound": "الفيلم غير موجود.",
     "movieDetails.loading": "جارٍ تحميل الفيلم...",
     "movieDetails.startingStream": "جارٍ تحضير الفيلم...",
+    "movieDetails.downloaded": "تم تنزيلها",
+    "movieDetails.preparingSegment": "جارٍ إعداد أول مقطع قابل للتشغيل...",
     "movieDetails.quality": "الجودة",
     "movieDetails.qualityAuto": "تلقائي",
     "movieDetails.subtitles": "الترجمة",

@@ -43,6 +43,8 @@ export class MovieDetailsComponent implements OnDestroy {
   readonly isTrailerOpen = signal(false);
   readonly controlsVisible = signal(true);
   readonly downloadProgress = signal(0);
+  readonly downloadedBytes = signal(0);
+  readonly downloadSpeedBps = signal(0);
   readonly playableSeconds = signal(0);
 
   private hls?: Hls;
@@ -50,6 +52,8 @@ export class MovieDetailsComponent implements OnDestroy {
   private progressSubscription?: Subscription;
   private masterManifestUrl?: string;
   private controlsTimeout?: ReturnType<typeof setTimeout>;
+  private networkRetryCount = 0;
+  private readonly maxNetworkRetries = 15;
 
   constructor(
     private route: ActivatedRoute,
@@ -327,10 +331,34 @@ export class MovieDetailsComponent implements OnDestroy {
 
   private updateStreamProgress(session: StreamSession): void {
     this.downloadProgress.set(Math.min(100, Math.max(0, session.downloadProgressPercentage)));
+    if (session.downloadedBytes !== undefined) {
+      this.downloadedBytes.set(session.downloadedBytes);
+    }
+    if (session.downloadSpeedBps !== undefined) {
+      this.downloadSpeedBps.set(session.downloadSpeedBps);
+    }
     this.playableSeconds.set(Math.max(0, session.playableSeconds ?? 0));
     if (session.durationSeconds && session.durationSeconds > 0) {
       this.videoDuration.set(session.durationSeconds);
     }
+  }
+
+  formatBytes(bytes: number): string {
+    if (!bytes || bytes <= 0) return '0 MB';
+    const mb = bytes / (1024 * 1024);
+    if (mb < 1) {
+      return `${(bytes / 1024).toFixed(0)} KB`;
+    }
+    return `${mb.toFixed(1)} MB`;
+  }
+
+  formatSpeed(speedBps: number): string {
+    if (!speedBps || speedBps <= 0) return '0 KB/s';
+    const kb = speedBps / 1024;
+    if (kb >= 1024) {
+      return `${(kb / 1024).toFixed(1)} MB/s`;
+    }
+    return `${kb.toFixed(0)} KB/s`;
   }
 
   private attachStream(manifestUrl: string): void {
@@ -341,10 +369,15 @@ export class MovieDetailsComponent implements OnDestroy {
     }
 
     if (Hls.isSupported()) {
-      this.hls = new Hls();
+      this.hls = new Hls({
+        fragLoadingMaxRetry: 10,
+        fragLoadingRetryDelay: 1500,
+        fragLoadingMaxRetryTimeout: 64000,
+      });
       this.hls.loadSource(manifestUrl);
       this.hls.attachMedia(video);
       this.hls.on(Events.MANIFEST_PARSED, () => {
+        this.networkRetryCount = 0;
         this.isStreamLoading.set(false);
         void video.play().catch(() => undefined);
       });
@@ -355,6 +388,7 @@ export class MovieDetailsComponent implements OnDestroy {
     if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = manifestUrl;
       video.addEventListener('loadedmetadata', () => {
+        this.networkRetryCount = 0;
         this.isStreamLoading.set(false);
         void video.play().catch(() => undefined);
       }, { once: true });
@@ -375,9 +409,18 @@ export class MovieDetailsComponent implements OnDestroy {
 
     switch (data.type) {
       case Hls.ErrorTypes.NETWORK_ERROR:
-        this.showPlaybackError();
+        if (this.networkRetryCount < this.maxNetworkRetries) {
+          this.networkRetryCount++;
+          console.warn(`HLS buffering/network error, retrying (${this.networkRetryCount}/${this.maxNetworkRetries})...`);
+          setTimeout(() => {
+            this.hls?.startLoad();
+          }, 1500);
+        } else {
+          this.showPlaybackError();
+        }
         break;
       case Hls.ErrorTypes.MEDIA_ERROR:
+        console.warn('HLS media error, recovering...');
         this.hls.recoverMediaError();
         break;
       default:
@@ -399,6 +442,7 @@ export class MovieDetailsComponent implements OnDestroy {
   }
 
   private destroyPlayer(): void {
+    this.networkRetryCount = 0;
     this.clearControlsTimeout();
     this.streamSubscription?.unsubscribe();
     this.streamSubscription = undefined;
@@ -414,6 +458,8 @@ export class MovieDetailsComponent implements OnDestroy {
     this.currentTime.set(0);
     this.videoDuration.set(0);
     this.downloadProgress.set(0);
+    this.downloadedBytes.set(0);
+    this.downloadSpeedBps.set(0);
     this.playableSeconds.set(0);
     this.controlsVisible.set(true);
     this.masterManifestUrl = undefined;

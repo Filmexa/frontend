@@ -101,6 +101,8 @@
     "movieDetails.notFound": "Movie not found.",
     "movieDetails.loading": "Loading movie...",
     "movieDetails.startingStream": "Preparing movie...",
+    "movieDetails.downloaded": "downloaded",
+    "movieDetails.preparingSegment": "Preparing the first playable segment...",
     "movieDetails.quality": "Quality",
     "movieDetails.qualityAuto": "Auto",
     "movieDetails.subtitles": "Subtitles",

@@ -95,6 +95,8 @@
     "movieDetails.notFound": "Film introuvable.",
     "movieDetails.loading": "Chargement du film...",
     "movieDetails.startingStream": "Préparation du film...",
+    "movieDetails.downloaded": "téléchargés",
+    "movieDetails.preparingSegment": "Préparation du premier segment lisible...",
     "movieDetails.quality": "Qualité",
     "movieDetails.qualityAuto": "Automatique",
     "movieDetails.subtitles": "Sous-titres",
