@@ -9,6 +9,9 @@ export interface StreamSession {
   state: StreamState;
   downloadStatus: DownloadStatus;
   downloadProgressPercentage: number;
+  downloadedBytes?: number;
+  totalBytes?: number;
+  downloadSpeedBps?: number;
   token?: string;
   expiresInSeconds?: number;
   manifestUrl?: string;

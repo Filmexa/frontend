@@ -95,6 +95,8 @@
     "movieDetails.notFound": "الفيلم غير موجود.",
     "movieDetails.loading": "جارٍ تحميل الفيلم...",
     "movieDetails.startingStream": "جارٍ تحضير الفيلم...",
+    "movieDetails.downloaded": "تم تنزيلها",
+    "movieDetails.preparingSegment": "جارٍ إعداد أول مقطع قابل للتشغيل...",
     "movieDetails.buffering": "جارٍ التخزين المؤقت...",
     "movieDetails.speed": "سرعة التشغيل",
     "movieDetails.speedNormal": "عادي",

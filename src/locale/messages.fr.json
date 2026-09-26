@@ -95,6 +95,8 @@
     "movieDetails.notFound": "Film introuvable.",
     "movieDetails.loading": "Chargement du film...",
     "movieDetails.startingStream": "Préparation du film...",
+    "movieDetails.downloaded": "téléchargés",
+    "movieDetails.preparingSegment": "Préparation du premier segment lisible...",
     "movieDetails.buffering": "Mise en mémoire tampon...",
     "movieDetails.speed": "Vitesse de lecture",
     "movieDetails.speedNormal": "Normale",

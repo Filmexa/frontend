@@ -261,16 +261,30 @@
             }
 
             @if (isStreamLoading()) {
-              <div class="absolute inset-0 z-40 flex flex-col items-center justify-center gap-3 bg-black/70">
+              <div class="absolute inset-0 z-40 flex flex-col items-center justify-center gap-3 bg-black/70 px-4 text-center">
                 <div class="h-10 w-10 animate-spin rounded-full border-2 border-neutral-600 border-t-white"></div>
-                <p class="text-sm text-neutral-200">
-                  @if (streamStarted()) {
-                    <span i18n="@@movieDetails.buffering">Buffering...</span>
-                  } @else {
-                    <span i18n="@@movieDetails.startingStream">Preparing movie...</span>
-                    {{ downloadProgress().toFixed(0) }}%
+                <div class="text-neutral-200">
+                  <p class="text-sm font-medium">
+                    @if (streamStarted()) {
+                      <span i18n="@@movieDetails.buffering">Buffering...</span>
+                    } @else {
+                      <span i18n="@@movieDetails.startingStream">Preparing movie...</span>
+                      {{ downloadProgress() >= 1 ? downloadProgress().toFixed(0) + '%' : (downloadProgress() > 0 ? downloadProgress().toFixed(2) + '%' : '0%') }}
+                    }
+                  </p>
+                  @if (downloadedBytes() > 0 || downloadSpeedBps() > 0) {
+                    <p class="text-xs text-neutral-400 mt-1">
+                      @if (downloadedBytes() < 8 * 1024 * 1024) {
+                        {{ formatBytes(downloadedBytes()) }} <span i18n="@@movieDetails.downloaded">downloaded</span>
+                      } @else if (!streamStarted()) {
+                        <span i18n="@@movieDetails.preparingSegment">Preparing the first playable segment...</span>
+                      }
+                      @if (downloadSpeedBps() > 0) {
+                        <span> &bull; {{ formatSpeed(downloadSpeedBps()) }}</span>
+                      }
+                    </p>
                   }
-                </p>
+                </div>
               </div>
             }
           </div>
