@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, HostListener, signal, untracked } from '@angular/core';
+import { Component, ElementRef, HostListener, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { UserService } from '../../../core/services/user/user.service';
@@ -27,31 +27,18 @@ export class HeaderComponent {
     private elementRef: ElementRef<HTMLElement>,
   ) {
     if (this.authService.isLoggedIn()) {
+      this.movieCategoryService.getCategories().subscribe({
+        next: (categories) => {
+          this.categories = categories;
+        },
+        error: (error: ErrorResponse) => {
+          this.toastService.error(
+            error.message ?? $localize`:@@toast.header.categoriesError:Failed to load movie categories.`
+          );
+        },
+      });
       this.userService.loadCurrentUser();
     }
-
-    // The header lives in the root component and is created before login,
-    // so react to auth changes instead of only checking once at construction.
-    effect(() => {
-      if (this.authService.isLoggedIn()) {
-        untracked(() => this.loadCategories());
-      } else {
-        this.categories = [];
-      }
-    });
-  }
-
-  private loadCategories(): void {
-    this.movieCategoryService.getCategories().subscribe({
-      next: (categories) => {
-        this.categories = categories;
-      },
-      error: (error: ErrorResponse) => {
-        this.toastService.error(
-          error.message ?? $localize`:@@toast.header.categoriesError:Failed to load movie categories.`
-        );
-      },
-    });
   }
 
   @HostListener('document:click', ['$event'])
