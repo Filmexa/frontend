@@ -55,7 +55,9 @@ export class MovieDetailsComponent implements OnDestroy {
   private progressSubscription?: Subscription;
   private masterManifestUrl?: string;
   private controlsTimeout?: ReturnType<typeof setTimeout>;
-  private readonly maxNetworkRetries = 15;
+  // A seek into a part of an active torrent can legitimately take a few minutes.
+  // Keep retrying while the backend prioritises those pieces.
+  private readonly maxNetworkRetries = 120;
   private networkRetryTimeout?: ReturnType<typeof setTimeout>;
   private networkRetryCount = 0;
 
@@ -364,6 +366,13 @@ export class MovieDetailsComponent implements OnDestroy {
     }
   }
 
+  setPlaybackBuffering(buffering: boolean): void {
+    const video = this.videoPlayer?.nativeElement;
+    this.isStreamLoading.set(
+      buffering && (!video || video.readyState < HTMLMediaElement.HAVE_FUTURE_DATA),
+    );
+  }
+
   formatTime(seconds: number): string {
     if (!Number.isFinite(seconds)) {
       return '0:00';
@@ -490,7 +499,10 @@ export class MovieDetailsComponent implements OnDestroy {
 
     const statusCode = data.response?.code;
     if (data.type === Hls.ErrorTypes.NETWORK_ERROR && statusCode === 503) {
-      this.isStreamLoading.set(true);
+      const video = this.videoPlayer?.nativeElement;
+      if (!video || video.readyState < HTMLMediaElement.HAVE_FUTURE_DATA) {
+        this.isStreamLoading.set(true);
+      }
       if (data.fatal) {
         if (this.networkRetryCount < this.maxNetworkRetries) {
           this.scheduleNetworkRetry();
