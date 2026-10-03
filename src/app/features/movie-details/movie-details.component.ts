@@ -60,6 +60,7 @@ export class MovieDetailsComponent implements OnDestroy {
   private readonly maxNetworkRetries = 120;
   private networkRetryTimeout?: ReturnType<typeof setTimeout>;
   private networkRetryCount = 0;
+  private pendingSeekTime?: number;
 
   constructor(
     private route: ActivatedRoute,
@@ -317,10 +318,25 @@ export class MovieDetailsComponent implements OnDestroy {
     }
   }
 
+  beginSeek(): void {
+    this.hls?.stopLoad();
+  }
+
+  previewSeek(value: string): void {
+    const target = Number(value);
+    if (Number.isFinite(target)) {
+      this.currentTime.set(target);
+    }
+  }
+
   seek(value: string): void {
     const video = this.videoPlayer?.nativeElement;
-    if (video) {
-      video.currentTime = Number(value);
+    const target = Number(value);
+    if (video && Number.isFinite(target)) {
+      this.pendingSeekTime = target;
+      this.isStreamLoading.set(true);
+      video.currentTime = target;
+      this.hls?.startLoad(target);
     }
   }
 
@@ -469,6 +485,11 @@ export class MovieDetailsComponent implements OnDestroy {
         this.networkRetryCount = 0;
         this.clearNetworkRetry();
         this.isStreamLoading.set(false);
+        const video = this.videoPlayer?.nativeElement;
+        if (video && this.pendingSeekTime !== undefined
+          && Math.abs(video.currentTime - this.pendingSeekTime) < 12) {
+          this.pendingSeekTime = undefined;
+        }
       });
       this.hls.on(Events.ERROR, (_event, data) => this.handleHlsError(data));
       return;
@@ -550,6 +571,7 @@ export class MovieDetailsComponent implements OnDestroy {
 
   private destroyPlayer(): void {
     this.networkRetryCount = 0;
+    this.pendingSeekTime = undefined;
     this.clearControlsTimeout();
     this.clearNetworkRetry();
     this.streamSubscription?.unsubscribe();
@@ -594,7 +616,8 @@ export class MovieDetailsComponent implements OnDestroy {
     this.networkRetryCount++;
     this.networkRetryTimeout = setTimeout(() => {
       this.networkRetryTimeout = undefined;
-      this.hls?.startLoad();
+      const video = this.videoPlayer?.nativeElement;
+      this.hls?.startLoad(this.pendingSeekTime ?? video?.currentTime ?? -1);
     }, 1500);
   }
 
