@@ -65,16 +65,27 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
-      - name: Copy docker-compose.yml to server
+
+      - name: Prepare deployment directory
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.ORACLE_INSTANCE_HOST }}
+          username: ${{ secrets.ORACLE_INSTANCE_USER }}
+          key: ${{ secrets.ORACLE_INSTANCE_KEY }}
+          script: mkdir -p "$HOME/frontend"
+
+      - name: Copy deployment files to server
         run: |
           echo "${{ secrets.ORACLE_INSTANCE_KEY }}" > ssh_key.pem
           chmod 600 ssh_key.pem
 
           scp -o StrictHostKeyChecking=no -i ssh_key.pem \
-            entryscript.sh docker-compose.yml ${{ secrets.ORACLE_INSTANCE_USER }}@${{ secrets.ORACLE_INSTANCE_HOST }}:/home/${{ secrets.ORACLE_INSTANCE_USER }}/frontend/
-          
-          rm ssh_key.pem
+            entryscript.sh \
+            docker-compose.yml \
+            filmexassl.conf \
+            ${{ secrets.ORACLE_INSTANCE_USER }}@${{ secrets.ORACLE_INSTANCE_HOST }}:/home/${{ secrets.ORACLE_INSTANCE_USER }}/frontend/
+
+          rm -f ssh_key.pem
       - name: Deploy application
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -83,8 +94,27 @@ jobs:
           key: ${{ secrets.ORACLE_INSTANCE_KEY }}
           
           script: |
-            cd /home/ubuntu/frontend/
+            set -eu
+
+            cd "$HOME/frontend"
+
+            docker network inspect filmexa-net >/dev/null 2>&1 || docker network create filmexa-net
             docker compose pull
             docker compose up -d --remove-orphans
+
+            for i in $(seq 1 30); do
+              status="$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' filmexa-frontend 2>/dev/null || true)"
+              if [ "$status" = "healthy" ]; then
+                break
+              fi
+              sleep 2
+            done
+
+            if [ "$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' filmexa-frontend 2>/dev/null || true)" != "healthy" ]; then
+              docker compose ps
+              docker compose logs --tail=200
+              exit 1
+            fi
+
+            sh ./entryscript.sh
             docker image prune -f
-            sh entryscript.sh

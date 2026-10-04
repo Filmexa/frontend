@@ -10,6 +10,12 @@ services:
       - shared-network
     volumes:
       - letsencrypt:/etc/letsencrypt
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+      start_period: 5s
 
 
 networks:
