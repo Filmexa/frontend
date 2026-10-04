@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 
 if docker exec filmexa-frontend test -f /etc/letsencrypt/live/filmexa.duckdns.org/fullchain.pem && docker exec filmexa-frontend openssl x509 -in /etc/letsencrypt/live/filmexa.duckdns.org/fullchain.pem -checkend 0 -noout
 then
